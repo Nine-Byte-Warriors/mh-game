@@ -1,0 +1,227 @@
+[
+    {
+        "m_fDelay": 0.0,
+        "m_iCount": 1,
+        "m_sID": "ID",
+        "m_sImagePath": "Resources\\Textures\\Base_Projectile.png",
+        "m_sName": "Default Pattern",
+        "m_vecProjectiles": [
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 0.0,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 1.5707963705062866,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 3.1415927410125732,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 4.71238899230957,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            }
+        ]
+    },
+    {
+        "m_fDelay": 0.5,
+        "m_iCount": 1,
+        "m_sID": "ID",
+        "m_sImagePath": "Resources\\Textures\\Base_Projectile.png",
+        "m_sName": "Default Pattern",
+        "m_vecProjectiles": [
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 0.1745329350233078,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 1.7453292608261108,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 3.3161258697509766,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 5.061454772949219,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            }
+        ]
+    },
+    {
+        "m_fDelay": 1.0,
+        "m_iCount": 1,
+        "m_sID": "ID",
+        "m_sImagePath": "Resources\\Textures\\Base_Projectile.png",
+        "m_sName": "Default Pattern",
+        "m_vecProjectiles": [
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 0.3490658700466156,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 1.919862151145935,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 3.4906585216522217,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 5.061454772949219,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            }
+        ]
+    },
+    {
+        "m_fDelay": 1.5,
+        "m_iCount": 1,
+        "m_sID": "ID",
+        "m_sImagePath": "Resources\\Textures\\Base_Projectile.png",
+        "m_sName": "Default Pattern",
+        "m_vecProjectiles": [
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 0.5235987901687622,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 2.094395160675049,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 3.665191650390625,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 5.235988140106201,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            }
+        ]
+    },
+    {
+        "m_fDelay": 2.0,
+        "m_iCount": 1,
+        "m_sID": "ID",
+        "m_sImagePath": "Resources\\Textures\\Base_Projectile.png",
+        "m_sName": "Default Pattern",
+        "m_vecProjectiles": [
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 0.6981317400932312,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 2.268928050994873,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 3.83972430229187,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            },
+            {
+                "m_fAmplitude": 0.0,
+                "m_fAngle": 5.410520553588867,
+                "m_fFrequency": 0.0,
+                "m_fLifeTime": 100.0,
+                "m_fSpeed": 10.0,
+                "m_fX": 0.0,
+                "m_fY": 0.0
+            }
+        ]
+    }
+]
