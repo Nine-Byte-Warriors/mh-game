@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Input.h"
+#include <iostream>
+using namespace std;
 
 void Input::Initialize( RenderWindow& window )
 {
@@ -61,11 +63,17 @@ void Input::UpdateKeyboard( const float dt )
 			DisableCursor();
 
 		// Update player health
-		if ( m_keyboard.KeyIsPressed( 'E' ) )
+		if ( m_keyboard.KeyIsPressed( 'E' ) ) //used to swap the seeds
 			*m_fPlayerHealth -= 10.0f;
 
-		if ( m_keyboard.KeyIsPressed( 'Q' ) )
+		if ( m_keyboard.KeyIsPressed( 'Q' ) ) //used to swap the seeds
 			*m_fPlayerHealth = 100.0f;
+
+		if (m_keyboard.KeyIsPressed('F')) // potential dash key
+			EventSystem::Instance()->AddEvent(EVENTID::PlayerDash);
+
+		if (m_keyboard.KeyIsPressed(' '))
+			EventSystem::Instance()->AddEvent(EVENTID::PlayerFire);
 
         // Close game
         if ( keycode == VK_ESCAPE )

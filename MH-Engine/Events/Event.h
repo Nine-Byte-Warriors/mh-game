@@ -36,7 +36,9 @@ enum class EVENTID
 	PlayerLeft,
 	PlayerDown,
 	PlayerRight,
+	PlayerDash,
 	PlayerFire,
+	PlayerInteract,
 	TargetPosition,
 	
 	// Utility

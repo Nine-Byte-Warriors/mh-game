@@ -8,6 +8,9 @@
 
 Player::Player()
 {
+	m_fXDirection = 0.0f;
+	m_fYDirection = 0.0f;
+
 	m_vPlayerPos = std::make_shared<Vector2f>();
 	m_sprite = std::make_shared<Sprite>();
 	m_transform = std::make_shared<Transform>( m_sprite );
@@ -56,17 +59,39 @@ void Player::AddToEvent() noexcept
 	EventSystem::Instance()->AddClient( EVENTID::PlayerLeft, this );
 	EventSystem::Instance()->AddClient( EVENTID::PlayerDown, this );
 	EventSystem::Instance()->AddClient( EVENTID::PlayerRight, this );
+	EventSystem::Instance()->AddClient(EVENTID::PlayerDash, this);
+
+	EventSystem::Instance()->AddClient(EVENTID::PlayerFire, this);
 }
 
 void Player::HandleEvent( Event* event )
 {
 	float movementFactor = 10.0f;
+	float movementDashFactor = 0.0f;
+	float DashValue = 100.0f;
 	switch ( event->GetEventID() )
 	{
-	case EVENTID::PlayerUp: m_physics->AddForce( { 0.0f, -movementFactor } ); break;
-	case EVENTID::PlayerLeft: m_physics->AddForce( { -movementFactor, 0.0f } ); break;
-	case EVENTID::PlayerDown: m_physics->AddForce( { 0.0f, movementFactor } ); break;
-	case EVENTID::PlayerRight: m_physics->AddForce( { movementFactor, 0.0f } ); break;
+	case EVENTID::PlayerUp: 
+		m_physics->AddForce( { 0.0f, -movementFactor } ); 
+		m_fYDirection = -DashValue;
+		break;
+	case EVENTID::PlayerLeft: 
+		m_physics->AddForce( { -movementFactor, 0.0f } ); 
+		m_fXDirection = -DashValue;
+		break;
+	case EVENTID::PlayerDown: 
+		m_physics->AddForce( { 0.0f, movementFactor } ); 
+		m_fYDirection = DashValue;
+		break;
+	case EVENTID::PlayerRight: 
+		m_physics->AddForce( { movementFactor, 0.0f } ); 
+		m_fXDirection = DashValue;
+		break;
+
+	case EVENTID::PlayerDash: m_physics->AddForce({ movementDashFactor + m_fXDirection,movementDashFactor + m_fYDirection }); 
+		m_fXDirection = 0.0f;
+		m_fYDirection = 0.0f;
+		break;
 	default: break;
 	}
 }

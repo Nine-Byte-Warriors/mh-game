@@ -33,6 +33,9 @@ private:
 	std::shared_ptr<Transform> m_transform;
 	std::shared_ptr<BoxCollider> m_collider;
 	std::shared_ptr<ProjectileManager> m_pProjectileManager;
+
+	float m_fXDirection;
+	float m_fYDirection;
 };
 
 #endif
