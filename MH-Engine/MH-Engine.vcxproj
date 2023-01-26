@@ -309,6 +309,7 @@
     <ClCompile Include="Objects\Player.cpp" />
     <ClCompile Include="Objects\Quad.cpp" />
     <ClCompile Include="Objects\Projectile.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="TileMap\TileMap.cpp" />
     <ClCompile Include="TileMap\TileMapDraw.cpp" />
     <ClCompile Include="TileMap\TileMapEditor.cpp" />
@@ -464,6 +465,7 @@
     <ClInclude Include="Objects\Player.h" />
     <ClInclude Include="Objects\Quad.h" />
     <ClInclude Include="Objects\Projectile.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="TileMap\TileMapLoader.h" />
     <ClInclude Include="Utility\Helper\FileHandler.h" />
     <ClInclude Include="Utility\Helper\RND.h" />
