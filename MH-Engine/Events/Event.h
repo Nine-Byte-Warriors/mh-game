@@ -45,7 +45,10 @@ enum class EVENTID
 	RemoveUIItemEvent,
 	ShowCursorEvent,
 	HideCursorEvent,
-	QuitGameEvent
+	QuitGameEvent,
+
+	//Score
+	AddScoreToPlayer
 };
 
 /// <summary>

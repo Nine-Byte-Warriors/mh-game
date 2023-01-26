@@ -24,6 +24,26 @@
 //	return (m_iPos <= m_iNumberofNames ? m_iPos : 0);
 //}
 
+void HighScoreTable::AddToEvent() noexcept
+{
+	EventSystem::Instance()->AddClient(EVENTID::AddScoreToPlayer, this);
+}
+
+void HighScoreTable::RemoveFromEvent() noexcept
+{
+	EventSystem::Instance()->RemoveClient(EVENTID::AddScoreToPlayer, this);
+}
+
+void HighScoreTable::HandleEvent(Event* event)
+{
+	switch (event->GetEventID())
+	{
+	case EVENTID::AddScoreToPlayer:
+		AddScoreToPlayerFunct(m_iScore);
+		break;
+	}
+}
+
 void HighScoreTable::SaveScore(std::string m_sfilePath)
 {
 	std::vector<Score> score1;
@@ -33,9 +53,14 @@ void HighScoreTable::SaveScore(std::string m_sfilePath)
 
 
 
+void HighScoreTable::AddScoreToPlayerFunct(int m_ithisScore)
+{
+	m_iScore += m_ithisScore;
+}
+
 void HighScoreTable::DisplayScores(std::string m_sNamesArray[], int m_iScoresArray[], int m_iCount)
 {
-
+	EventSystem::Instance()->AddEvent(EVENTID::AddScoreToPlayer);
 
 	std::cout << "Leaderboard" << std::endl;
 	for (int i = m_iCount - 1; i >= 0; i--)
