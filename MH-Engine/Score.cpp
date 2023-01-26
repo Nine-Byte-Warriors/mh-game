@@ -44,6 +44,11 @@ void HighScoreTable::HandleEvent(Event* event)
 	}
 }
 
+void HighScoreTable::AddScoreToPlayerFunct(int m_ithisScore)
+{
+	m_iScore += m_ithisScore;
+}
+
 void HighScoreTable::SaveScore(std::string m_sfilePath)
 {
 	std::vector<Score> score1;
@@ -51,12 +56,6 @@ void HighScoreTable::SaveScore(std::string m_sfilePath)
 	JsonLoading::SaveJson(score1, m_sfilePath);
 }
 
-
-
-void HighScoreTable::AddScoreToPlayerFunct(int m_ithisScore)
-{
-	m_iScore += m_ithisScore;
-}
 
 void HighScoreTable::DisplayScores(std::string m_sNamesArray[], int m_iScoresArray[], int m_iCount)
 {
@@ -71,8 +70,6 @@ void HighScoreTable::DisplayScores(std::string m_sNamesArray[], int m_iScoresArr
 
 void HighScoreTable::SortScores(std::string m_sNamesArray[], int m_iScoresArray[], int m_iCount)
 {
-
-
 
 	for (int i = 1; i < m_iCount; i++)
 	{
