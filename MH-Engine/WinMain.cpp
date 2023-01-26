@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "Application.h"
+//Only for Testing Score (needs cleaning after)
+#include "stdio.h"
+#include <iostream>
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
 {
@@ -21,6 +24,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
         {
             theApp.Update();
             theApp.Render();
+            //Only for Testing Score (needs cleaning after)
+            AllocConsole();
+            printf("Debugging Window:\n");
         }
     }
     theApp.CleanupDevice();

@@ -8,6 +8,7 @@
 // Registers client to specific event
 void EventSystem::AddClient( EVENTID eventid, Listener* client )
 {
+
 	// If the client event pair doenst exist
 	if ( !IsRegistered( eventid, client ) )
 		clients.insert( std::make_pair( eventid, client ) );

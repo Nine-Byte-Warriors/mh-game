@@ -7,11 +7,11 @@
 
 struct Score
 {
-	std::string m_sName;
-	int m_iScore;
+	std::string name;
+	int score;
 
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Score, m_sName, m_iScore)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Score, name, score)
 
 class HighScoreTable : public Listener
 {
@@ -32,7 +32,7 @@ public:
 
 	//last name that was written
 	std::string m_sName;
-	int m_iScore;
+	int m_iScore = 1;
 
 
 	std::multiset<Score, std::greater<Score>> Scores;
@@ -50,5 +50,5 @@ public:
 
 	int m_iHighScore(int m_iscore);
 
-	HighScoreTable() {}
+	HighScoreTable() {};
 };

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Score.h"
 #include "Input/Input.h"
-
+#include "stdio.h"
 
 //void HighScoreTable::AddScore(int m_iScoreToAdd)
 //{
@@ -145,4 +145,26 @@ int HighScoreTable::FindName(std::string m_sName, std::string m_sNamesArray[], i
 	}
 
 	return m_iIndex;
+}
+
+//int main() 
+//{
+//	
+//	AllocConsole();
+//	printf("Debugging Window:\n");
+//
+//}
+
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
+	//other code
+	AllocConsole();
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+
+	std::cout << "Hello\n"; //you should see this on the console
+	//other code
+
+	return 0;
 }
