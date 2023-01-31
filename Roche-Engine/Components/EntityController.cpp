@@ -75,6 +75,11 @@ std::string EntityController::GetAnimationType(int num)
 	return m_entityData[num].animationType;
 }
 
+void EntityController::SetAnimationType(std::string name, int num)
+{
+	m_entityData[num].animationType = name;
+}
+
 int EntityController::GetRows(int num)
 {
 	return m_entityData[num].rows;

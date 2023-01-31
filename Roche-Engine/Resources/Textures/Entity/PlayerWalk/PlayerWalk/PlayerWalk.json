@@ -1,0 +1,31 @@
+{
+  "frameCount": [
+      3,
+      3,
+      3,
+	  3
+  ],
+  "name": "Player",
+  "type": [
+      {
+          "alias": "Player Running Down",          
+          "frameTiming": 1.0,
+          "name": "Down"
+      },
+      {
+          "alias": " Player Running Left",
+          "frameTiming": 1.0,
+          "name": "Left"
+      },
+      {
+          "alias": " Player Running Right",
+          "frameTiming": 1.0,
+          "name": "Right"
+      },
+      {
+          "alias": " Player Running Up",
+          "frameTiming": 1.0,
+          "name": "Up"
+      }
+  ]
+}

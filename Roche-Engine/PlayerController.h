@@ -3,18 +3,22 @@
 #define PLAYERCONTROLLER_H
 
 class Entity;
+class PlayerMovement;
 #include "PlayerMovement.h"
+#include "Entity.h"
 
 class PlayerController
 {
 public:
-	PlayerController(Entity* entity);
+	void Initilise(EntityController& entityController, int num, std::shared_ptr<Physics> &physics, std::shared_ptr<Sprite> &sprite);
 	
 	void Update(const float dt);
 
 private:
-	Entity* m_Entity;
+	EntityController* m_EntityController;
 	std::shared_ptr<PlayerMovement> m_playerMovement;
+
+	int m_iEntityNum;
 };
 
 #endif 

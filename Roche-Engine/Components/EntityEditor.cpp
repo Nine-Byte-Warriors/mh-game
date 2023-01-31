@@ -438,7 +438,7 @@ void EntityEditor::SetAnimationType()
 
 	static int activeAnimationType = 0;
 	std::string previewEntityAnimationType = m_vEntityDataCopy[m_iIdentifier].animationType;
-	const char* animationTypeList[]{ "Walk", "Hit", "Death" };
+	const char* animationTypeList[]{ "Walk", "Hit", "Death", "Temp"};
 	std::string lable = "##Entity" + displayText + std::to_string(m_iIdentifier);
 
 	if (ImGui::BeginCombo(lable.c_str(), previewEntityAnimationType.c_str()))

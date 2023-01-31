@@ -3,6 +3,7 @@
 #define ENTITY_H
 
 class Graphics;
+class PlayerController;
 #include "EntityController.h"
 #include "Physics.h"
 #include "EventSystem.h"

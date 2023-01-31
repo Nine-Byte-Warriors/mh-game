@@ -59,6 +59,8 @@ public:
 	std::string GetAnimationFile(int num);
 	std::string GetAnimationType(int num);
 
+	void SetAnimationType(std::string name, int num);
+
 	int GetRows(int num);
 	int GetColumns(int num);
 

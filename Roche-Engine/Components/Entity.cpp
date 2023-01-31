@@ -51,7 +51,15 @@ void Entity::SetComponents()
 	}
 
 	if (GetType() == "Player")
-		m_playerController = std::make_shared<PlayerController>(this);
+	{
+		m_playerController = std::make_shared<PlayerController>();
+		m_playerController->Initilise(*m_entityController, m_iEntityNum, m_physics, m_sprite);
+	}
+	else
+	{
+		m_playerController = nullptr;
+	}
+
 }
 
 void Entity::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat)

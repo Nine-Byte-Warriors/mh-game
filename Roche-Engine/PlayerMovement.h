@@ -2,13 +2,15 @@
 #ifndef PLAYERMOVEMENT_H
 #define PLAYERMOVEMENT_H
 
+class Entity;
 #include "Physics.h"
 #include "Events/EventSystem.h"
+#include "Entity.h"
 
-class PlayerMovement : Listener
+class PlayerMovement : public Listener
 {
 public:
-	PlayerMovement(std::shared_ptr<Physics> physics, float speed);
+	void Initilise(EntityController& entityController, float speed, int entityNum, std::shared_ptr<Physics> &physics, std::shared_ptr<Sprite> &sprite);
 	~PlayerMovement();
 
 	void Update(const float dt);
@@ -21,11 +23,22 @@ public:
 
 private:
 	std::shared_ptr<Physics> m_physics;
+	std::shared_ptr<Sprite> m_sprite;
+	EntityController* m_entityController;
 	float m_speed;
 	float m_currentSpeed;
 	float m_dashSpeed;
 	bool m_bDash;
 	bool m_bshouldMove;
+	int m_iEntityNum;
+
+	enum PlayerDirection
+	{
+		Down = 0,
+		Left = 1,
+		Right = 2,
+		Up = 3
+	};
 
 };
 
