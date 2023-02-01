@@ -50,6 +50,8 @@ void Entity::SetComponents()
 		m_colliderBox = nullptr;
 	}
 
+	m_shooting = std::make_shared<Shooting>();
+
 	if (GetType() == "Player")
 		m_playerController = std::make_shared<PlayerController>(this);
 }

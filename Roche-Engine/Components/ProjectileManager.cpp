@@ -67,7 +67,7 @@ void ProjectileManager::SpawnProjectile()
 	std::shared_ptr<Projectile> pProjectile = GetFreeProjectile();
 
 	if (pProjectile != nullptr)
-		pProjectile->SpawnProjectile(m_vSpawnPosition, m_vTargetPosition, m_fLifeTime);
+		pProjectile->SpawnProjectile(m_vSpawnPosition, m_fLifeTime);
 }
 
 void ProjectileManager::UpdatePattern(std::string filepath)
@@ -98,14 +98,14 @@ void ProjectileManager::UpdateProjectilePool(std::vector<ProjectileData::Project
 	m_vecProjectilePool = vecProjectilePool;
 }
 
-void ProjectileManager::SpawnProjectile(Vector2f vSpawnPosition, float fLifeTime)
+void ProjectileManager::SpawnProjectile(Vector2f vSpawnPosition, Vector2f vTargetPosition, float fLifeTime)
 {
 	m_fCounter = m_fDelay;
 
 	std::shared_ptr<Projectile> pProjectile = GetFreeProjectile();
 
 	if(pProjectile != nullptr)
-		pProjectile->SpawnProjectile(vSpawnPosition, m_fLifeTime);
+		pProjectile->SpawnProjectile(vSpawnPosition, vTargetPosition, fLifeTime);
 }
 
 void ProjectileManager::SpawnProjectiles(Vector2f vSpawnPosition)
@@ -130,6 +130,7 @@ void ProjectileManager::AddToEvent() noexcept
 	EventSystem::Instance()->AddClient(EVENTID::PlayerPosition, this);
 	EventSystem::Instance()->AddClient(EVENTID::TargetPosition, this);
 	EventSystem::Instance()->AddClient(EVENTID::PlayerFire, this);
+	EventSystem::Instance()->AddClient(EVENTID::MousePosition, this);
 }
 
 void ProjectileManager::RemoveFromEvent() noexcept
@@ -137,20 +138,35 @@ void ProjectileManager::RemoveFromEvent() noexcept
 	EventSystem::Instance()->RemoveClient(EVENTID::PlayerPosition, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::TargetPosition, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::PlayerFire, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::MousePosition, this);
 }
 
 void ProjectileManager::HandleEvent(Event* event)
 {
+	
+	
 	switch (event->GetEventID())
 	{
 	case EVENTID::PlayerPosition:
-		m_vSpawnPosition = *static_cast<Vector2f*>(event->GetData());
+		//m_vSpawnPosition = *static_cast<Vector2f*>(event->GetData());
+		charSpriteandPos = static_cast<std::pair<Sprite*, Vector2f*>*>(event->GetData());
+		charSprite = charSpriteandPos->first;
+		m_vPosition = XMFLOAT2(charSpriteandPos->second->x + charSprite->GetWidth(), charSpriteandPos->second->y + charSprite->GetHeight());
+
+		m_vSpawnPosition = Vector2f(m_vPosition.x, m_vPosition.y);
+		
 		break;
 	case EVENTID::TargetPosition:
 		m_vTargetPosition = *static_cast<Vector2f*>(event->GetData());
 		break;
+	case EVENTID::MousePosition:
+		
+		mousePos = *(Vector2f*)event->GetData();
+		
+
+		break;
 	case EVENTID::PlayerFire:
-		SpawnProjectile();
+		SpawnProjectile(m_vSpawnPosition, mousePos, 1);
 		break;
 	default:
 		break;

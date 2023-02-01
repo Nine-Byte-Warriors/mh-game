@@ -23,7 +23,7 @@ public:
 
 	void UpdatePattern(std::string filepath);
 
-	void SpawnProjectile(Vector2f vSpawnPosition, float fLifeTime);
+	void SpawnProjectile(Vector2f vSpawnPosition, Vector2f vTargetPosition, float fLifeTime);
 	void SpawnProjectiles(Vector2f vSpawnPosition);
 
 	void AddToEvent() noexcept;
@@ -46,6 +46,14 @@ private:
 	std::vector<std::shared_ptr<Projectile>> m_vecProjectilePool;
 
 	std::vector<ProjectileData::ManagerJSON> m_vecManagers;
+	
+	//test
+	Vector2f pos;
+	Vector2f mousePos;
+	std::pair<Sprite*, Vector2f*>* charSpriteandPos;
+	Sprite* charSprite;
+	XMFLOAT2 m_vSizeOfScreen, m_vPosition, m_vInitPosition;
+	XMMATRIX m_mOrthoMatrix, m_mWorldMatrix;
 };
 
 #endif // !PROJECTILEMANAGER_H

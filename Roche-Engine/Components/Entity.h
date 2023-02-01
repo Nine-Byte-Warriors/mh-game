@@ -11,6 +11,7 @@ class Graphics;
 #include "Agent.h"
 #include "EntityAnimation.h"
 #include "PlayerController.h"
+#include "Shooting.h"
 
 class Entity
 {
@@ -34,6 +35,7 @@ public:
 		else if (m_entityController->GetColliderShape(m_iEntityNum) == "Box")
 			return m_colliderBox;		
 	};
+	inline std::shared_ptr<Shooting> GetShoot() const noexcept { return m_shooting; }
 
 	Vector2f GetPos() { return *m_vPosition; }
 
@@ -110,6 +112,8 @@ private:
 	std::shared_ptr<CircleCollider> m_colliderCircle;
 	std::shared_ptr<BoxCollider> m_colliderBox;
 	std::shared_ptr<PlayerController> m_playerController;
+
+	std::shared_ptr<Shooting> m_shooting;
 
 	EntityController* m_entityController;
 
