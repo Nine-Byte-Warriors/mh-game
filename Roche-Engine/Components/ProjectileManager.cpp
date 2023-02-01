@@ -161,12 +161,13 @@ void ProjectileManager::HandleEvent(Event* event)
 		break;
 	case EVENTID::MousePosition:
 		
-		mousePos = *(Vector2f*)event->GetData();
+		mousePos = *static_cast<Vector2f*>(event->GetData());
+		targetpos = Vector2f(mousePos.x + 200, mousePos.y - 450);
 		
-
 		break;
 	case EVENTID::PlayerFire:
-		SpawnProjectile(m_vSpawnPosition, mousePos, 1);
+		
+		SpawnProjectile(m_vSpawnPosition, targetpos, 1);
 		break;
 	default:
 		break;

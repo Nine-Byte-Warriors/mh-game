@@ -5,6 +5,8 @@
 #include "Projectile.h"
 #include "EventSystem.h"
 #include "ProjectileData.h"
+#include <Camera.h>
+#include "WidgetIncludes.h"
 
 class ProjectileManager : public Listener
 {
@@ -50,10 +52,14 @@ private:
 	//test
 	Vector2f pos;
 	Vector2f mousePos;
+	Vector2f targetpos;
+	MouseData m_mouseData;
 	std::pair<Sprite*, Vector2f*>* charSpriteandPos;
 	Sprite* charSprite;
 	XMFLOAT2 m_vSizeOfScreen, m_vPosition, m_vInitPosition;
 	XMMATRIX m_mOrthoMatrix, m_mWorldMatrix;
+	
+
 };
 
 #endif // !PROJECTILEMANAGER_H

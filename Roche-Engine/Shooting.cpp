@@ -18,7 +18,7 @@ void Shooting::Shoot(Vector2f Targetloc)
 	std::shared_ptr<Projectile> pProjectile;
 
 	if (pProjectile != nullptr)
-		pProjectile->SpawnProjectile(1, 1);
+		pProjectile->SpawnProjectile(Targetloc, mousePos,1);
 }
 
 
@@ -34,14 +34,19 @@ void Shooting::HandleEvent(Event* event)
 	switch (event->GetEventID())
 	{
 	case EVENTID::PlayerPosition:
+		charSpriteandPos = static_cast<std::pair<Sprite*, Vector2f*>*>(event->GetData());
+		charSprite = charSpriteandPos->first;
+		m_vPosition = XMFLOAT2(charSpriteandPos->second->x + charSprite->GetWidth(), charSpriteandPos->second->y + charSprite->GetHeight());
 
+		pos = Vector2f(m_vPosition.x, m_vPosition.y);
 		break;
 	case EVENTID::MousePosition:
-
+		mousePos = *static_cast<Vector2f*>(event->GetData());
+		targetpos = Vector2f(mousePos.x + 200, mousePos.y - 450);
 		break;
-	/*case EVENTID::PlayerFire:
+	case EVENTID::PlayerFire: Shoot(pos);
 		
-		break;*/
+		break;
 	default:
 		break;
 	}
