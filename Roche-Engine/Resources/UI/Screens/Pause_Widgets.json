@@ -1,0 +1,77 @@
+[
+    {
+        "action": "",
+        "hide": false,
+        "name": "Background",
+        "position": [
+            178.0,
+            0.0
+        ],
+        "scale": [
+            1611.0,
+            1080.0
+        ],
+        "type": "Image",
+        "zindex": 0
+    },
+    {
+        "action": "Resume",
+        "hide": false,
+        "name": "Resume",
+        "position": [
+            325.0,
+            530.0
+        ],
+        "scale": [
+            300.0,
+            300.0
+        ],
+        "type": "Button",
+        "zindex": 1
+    },
+    {
+        "action": "Settings",
+        "hide": false,
+        "name": "Settings",
+        "position": [
+            830.0,
+            530.0
+        ],
+        "scale": [
+            300.0,
+            300.0
+        ],
+        "type": "Button",
+        "zindex": 2
+    },
+    {
+        "action": "Close",
+        "hide": false,
+        "name": "Quit",
+        "position": [
+            1337.0,
+            530.0
+        ],
+        "scale": [
+            300.0,
+            300.0
+        ],
+        "type": "Button",
+        "zindex": 3
+    },
+    {
+        "action": "Pause Title",
+        "hide": false,
+        "name": "Pause Title",
+        "position": [
+            832.0,
+            94.0
+        ],
+        "scale": [
+            300.0,
+            300.0
+        ],
+        "type": "Image",
+        "zindex": 4
+    }
+]
