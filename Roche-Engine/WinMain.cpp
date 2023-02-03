@@ -28,9 +28,6 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
         {
             theApp.Update();
             theApp.Render();
-            //Only for Testing Score (needs cleaning after)
-            AllocConsole();
-            printf("Debugging Window:\n");
         }
     }
     theApp.CleanupDevice();
