@@ -6,6 +6,31 @@
 
 using json = nlohmann::json;
 
+void HighScoreTable::AddToEvent() noexcept
+{
+	EventSystem::Instance()->AddClient(EVENTID::AddScoreToPlayer, this);
+}
+
+void HighScoreTable::RemoveFromEvent() noexcept
+{
+	EventSystem::Instance()->RemoveClient(EVENTID::AddScoreToPlayer, this);
+}
+
+void HighScoreTable::HandleEvent(Event* event)
+{
+	switch (event->GetEventID())
+	{
+	case EVENTID::AddScoreToPlayer:
+		AddScoreToPlayerFunct(m_iAddedScore);
+		break;
+	}
+}
+
+void HighScoreTable::AddScoreToPlayerFunct(int m_ithisScore)
+{
+	m_iScore += m_ithisScore;
+	}
+
 void HighScoreTable::AddScoreToPlayerFunct(int m_ithisScore)
 {
 	m_iScore += m_ithisScore;

@@ -15,7 +15,7 @@ struct Score
 	bool operator<(const Score& other)const { return score > other.score; }
 };
 
-class HighScoreTable
+class HighScoreTable : Listener
 {
 private:
 
@@ -29,8 +29,11 @@ private:
 
 	void AddToEvent() noexcept;
 	void RemoveFromEvent() noexcept;
+	void HandleEvent(Event* event) override;
+
 
 public:
+	int m_iAddedScore;
 	std::string m_sFilePath = "Resources\\HighScore.json";
 
 	// The scores
@@ -40,7 +43,6 @@ public:
 	std::string m_sName;
 	int m_iScore = 1;
 
-	void NewScore(std::string m_sName, int m_iScore, int m_iEnemy);
 
 	void SaveScore(const std::vector<Score>& players, const std::string& file_name);
 

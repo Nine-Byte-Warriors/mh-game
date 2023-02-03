@@ -67,6 +67,7 @@ enum class EVENTID
 	MusicTab,
 	ControlTab,
 	OpenCredits,
+	AddScoreToPlayer,
 
 	// Utility
 	WindowSizeChangeEvent,
@@ -81,6 +82,9 @@ enum class EVENTID
 	PlayerHeal,
 	PlayerDeath,
 	EnemyDeath
+
+
+
 };
 
 /// <summary>
