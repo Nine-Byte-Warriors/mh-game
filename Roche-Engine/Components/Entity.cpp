@@ -377,5 +377,13 @@ void Entity::CheckAliveStatus()
 	}
 }
 
+void Entity::TomatoKamikaze()
+{
+	if (GetType() == "Tomato")
+	{
+		//if()
+	}
+}
+
 
 
