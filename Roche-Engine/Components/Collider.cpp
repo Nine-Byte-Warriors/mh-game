@@ -94,6 +94,10 @@ void Collider::LogCollision(std::shared_ptr<Collider>& col)
 
 void Collider::OnEnter(Collider& col)
 {
+    if (m_collisions.size() == 0)
+    {
+        return;
+    }
     for (auto& callback : m_onEnterCallbacks)
         callback(col);
 }

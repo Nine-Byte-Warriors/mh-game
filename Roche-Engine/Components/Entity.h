@@ -47,7 +47,8 @@ public:
 	void UpdateEntityNum(int num);
 
 	void CheckAliveStatus();
-	void TomatoKamikaze();
+	void AddCollisionCallback();
+	void EntityCollisions(Collider& col);
 
 private:
 	void SetPositionInit();
