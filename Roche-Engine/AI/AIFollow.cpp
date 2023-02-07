@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AIFollow.h"
+#include "AIStateData.h"
 
 using namespace AILogic;
 
@@ -34,7 +35,7 @@ void AIFollow::Update(const float dt)
 
 void AIFollow::GetFollowParams()
 {
-	FollowParams* pParams = (FollowParams*)m_params;
+	AIStateData::FollowParams* pParams = (AIStateData::FollowParams*)m_params;
 	m_fFollowRange = pParams->fFollowRange;
 	m_fRepulseRange = pParams->fRepulseRange;
 	m_bKeepRange = pParams->bKeepRange;

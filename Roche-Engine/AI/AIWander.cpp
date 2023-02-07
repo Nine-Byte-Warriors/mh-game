@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AIWander.h"
+#include "AIStateData.h"
 
 using namespace AILogic;
 
@@ -25,7 +26,7 @@ void AIWander::Update(const float dt)
 
 void AIWander::GetWanderParams()
 {
-	WanderParams* pParams = (WanderParams*)m_params;
+	AIStateData::WanderParams* pParams = (AIStateData::WanderParams*)m_params;
 	m_fWanderAngle = pParams->fWanderAngle;
 	m_fMaxDelay = pParams->fWanderDelay;
 }

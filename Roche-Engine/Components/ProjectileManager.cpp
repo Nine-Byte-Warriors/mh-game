@@ -17,6 +17,7 @@ ProjectileManager::ProjectileManager(Projectile::ProjectileOwner owner)
 		m_vecProjectilePool.push_back(std::make_shared<Projectile>(fSpeed));
 	
 	m_owner = owner;
+	m_bUseTarget = false;
 }
 
 ProjectileManager::~ProjectileManager()
@@ -69,6 +70,9 @@ std::vector<std::shared_ptr<ProjectileManager>> ProjectileManager::GenerateManag
 
 		if (jMan.m_bLoop)
 			pManager->EnableRepeat();
+		
+		if (jMan.m_bUseTarget)
+			pManager->EnableTargeting();
 
 		vecManagers.push_back(std::move(pManager));
 	}
@@ -139,10 +143,11 @@ void ProjectileManager::UpdatePattern(std::string filepath)
 {
 	JsonLoading::LoadJson(m_vecManagers, filepath);
 
-	for (int i = 0; i < m_vecManagers.size(); i++)
+	for (ProjectileData::ManagerJSON pManager : m_vecManagers)
 	{
-		m_fDelay = m_vecManagers[i].m_fDelay;
-		UpdateProjectilePool(m_vecManagers[i].m_vecProjectiles);
+		m_fDelay = pManager.m_fDelay;
+		m_bUseTarget = pManager.m_bUseTarget;
+		UpdateProjectilePool(pManager.m_vecProjectiles);
 	}
 }
 
@@ -194,7 +199,10 @@ void ProjectileManager::SpawnProjectiles(Vector2f vSpawnPosition)
 	for (std::shared_ptr<Projectile> pProjectile : m_vecProjectilePool)
 	{
 		pProjectile->SetOwner(m_owner);
-		pProjectile->SpawnProjectile(vSpawnPosition, m_vTargetPosition, -1.0f);
+		if(m_bUseTarget)
+			pProjectile->SpawnProjectile(vSpawnPosition, m_vTargetPosition, -1.0f);
+		else
+			pProjectile->SpawnProjectile(vSpawnPosition, -1.0f);
 	}
 }
 

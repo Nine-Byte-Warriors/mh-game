@@ -27,7 +27,7 @@ public:
 	inline float GetSpeed() const noexcept { return m_fSpeed; }
 	inline void SetSpeed(float speed) { m_fSpeed = speed; }
 	inline Vector2f GetTargetPosition() const noexcept { return m_vTargetPos; }
-	inline std::shared_ptr<Physics> GetPhysics() const noexcept { return m_physics; }
+	inline std::shared_ptr<Physics> GetPhysics() const noexcept { return m_pPhysics; }
 
 	void SetBehaviour(AILogic::AIStateTypes behaviour);
 	void ResetBehaviour();
@@ -42,7 +42,7 @@ public:
 private:
 	std::map<AILogic::AIStateTypes, AILogic::AIState*> m_mapStates;
 	AILogic::AIStateMachine* m_pStateMachine;
-	std::shared_ptr<Physics> m_physics;
+	std::shared_ptr<Physics> m_pPhysics;
 	bool m_bTargetMouse = true;
 	Vector2f m_vTargetPos;
 	float m_fSpeed;

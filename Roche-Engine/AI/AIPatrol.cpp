@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AIPatrol.h"
+#include "AIStateData.h"
 
 using namespace AILogic;
 
@@ -69,7 +70,7 @@ void AIPatrol::Enter()
 
 void AIPatrol::GetPatrolParams()
 {
-	PatrolParams* pParams = (PatrolParams*)m_params;
+	AIStateData::PatrolParams* pParams = (AIStateData::PatrolParams*)m_params;
 	m_ePatrolType = pParams->ePatrolType;
 	m_fSensingRange = pParams->fSensingRange;
 	m_fWaypointDistance = pParams->fDistanceToWaypoint;

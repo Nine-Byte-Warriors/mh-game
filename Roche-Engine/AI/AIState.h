@@ -14,34 +14,6 @@ namespace AILogic
 		Random
 	};
 
-	// TODO: find a better way to pass parameters to specific states
-	struct PatrolParams
-	{
-		float fSensingRange;
-		int iWaypointCount;
-		float fDistanceToWaypoint;
-		PatrolType ePatrolType;
-	};
-
-	struct FollowParams
-	{
-		float fFollowRange;
-		float fRepulseRange;
-		bool bKeepRange;
-	};
-
-	struct WanderParams
-	{
-		float fWanderAngle;
-		float fWanderDelay;
-	};
-
-	struct FireParams
-	{
-		float fRate;
-		float fRange;
-	};
-
 	class AIState
 	{
 	public:

@@ -39,6 +39,7 @@ public:
 	inline std::vector<std::shared_ptr<Projectile>> GetProjector() const noexcept { return m_vecProjectilePool; };
 	inline bool IsFinished() const noexcept { return m_fDuration <= 0.0f; }
 	inline void EnableRepeat() noexcept { m_bWillRepeat = true; }
+	inline void EnableTargeting() noexcept { m_bUseTarget = true; }
 
 	inline void SetOwner(const Projectile::ProjectileOwner owner) noexcept { m_owner = owner; }
 
@@ -54,6 +55,7 @@ private:
 	float m_fTotalDuration;
 	float m_fDuration;
 	bool m_bWillRepeat;
+	bool m_bUseTarget;
 	Vector2f m_vSpawnPosition;
 	Vector2f m_vTargetPosition;
 	std::vector<std::shared_ptr<Projectile>> m_vecProjectilePool;

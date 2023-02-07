@@ -18,33 +18,34 @@ Projectile::Projectile(float fSpeed, float fLifeTime)
 	m_fAmplitude = 0.0f;
 	m_fFrequency = 0.0f;
 	
-	m_sprite = std::make_shared<Sprite>();
-	m_transform = std::make_shared<Transform>( m_sprite );
-	m_physics = std::make_shared<Physics>(m_transform);
+	m_pSprite = std::make_shared<Sprite>();
+	m_pTransform = std::make_shared<Transform>( m_pSprite );
+	m_pPhysics = std::make_shared<Physics>(m_pTransform);
+	m_pColliderCircle = std::make_shared<CircleCollider>(m_pTransform, m_pSprite, true, 0, "entityType", 1.0f);
 
 	m_owner = ProjectileOwner::None;
 }
 
 void Projectile::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat, Sprite::Type type)
 {
-	m_sprite->Initialize(gfx.GetDevice(), gfx.GetContext(), type, mat);
-	m_transform->SetPositionInit(0.0f, 0.0f);
+	m_pSprite->Initialize(gfx.GetDevice(), gfx.GetContext(), type, mat);
+	m_pTransform->SetPositionInit(0.0f, 0.0f);
 }
 
 void Projectile::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat, const std::string& sSpritePath)
 {
-	m_sprite->Initialize(gfx.GetDevice(), gfx.GetContext(), sSpritePath, mat);
-	m_transform->SetPositionInit(0.0f, 0.0f);
+	m_pSprite->Initialize(gfx.GetDevice(), gfx.GetContext(), sSpritePath, mat);
+	m_pTransform->SetPositionInit(0.0f, 0.0f);
 }
 
 void Projectile::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat, const std::string& sSpritePath, Vector2f vSize)
 {
-	m_sprite->Initialize(gfx.GetDevice(), gfx.GetContext(), sSpritePath, mat);
-	m_transform->SetPositionInit(0.0f, 0.0f);
+	m_pSprite->Initialize(gfx.GetDevice(), gfx.GetContext(), sSpritePath, mat);
+	m_pTransform->SetPositionInit(0.0f, 0.0f);
 
-	float fWidth = vSize.x == 0.0f ? m_sprite->GetWidth() : vSize.x;
-	float fHeight = vSize.y == 0.0f ? m_sprite->GetHeight() : vSize.y;
-	m_sprite->SetWidthHeight( fWidth, fHeight );
+	float fWidth = vSize.x == 0.0f ? m_pSprite->GetWidth() : vSize.x;
+	float fHeight = vSize.y == 0.0f ? m_pSprite->GetHeight() : vSize.y;
+	m_pSprite->SetWidthHeight( fWidth, fHeight );
 }
 
 void Projectile::Update(const float dt)
@@ -62,13 +63,13 @@ void Projectile::Update(const float dt)
 	m_fLifeTime -= dt;
 
 	if (m_fAmplitude == 0.0f || m_fFrequency == 0.0f)
-		m_physics->AddForce(m_vDirection.Multiply(m_fSpeed));
+		m_pPhysics->AddForce(m_vDirection.Multiply(m_fSpeed));
 	else
 		CalcDirection();
 
-	m_sprite->Update(dt);
-	m_physics->Update(dt);
-	m_transform->Update();
+	m_pSprite->Update(dt);
+	m_pPhysics->Update(dt);
+	m_pTransform->Update();
 }
 
 void Projectile::Draw(ID3D11DeviceContext* context, XMMATRIX orthoMatrix)
@@ -79,8 +80,8 @@ void Projectile::Draw(ID3D11DeviceContext* context, XMMATRIX orthoMatrix)
 	if (m_fDelay > 0.0f)
 		return;
 	
-	m_sprite->UpdateBuffers(context);
-	m_sprite->Draw(m_transform->GetWorldMatrix(), orthoMatrix);
+	m_pSprite->UpdateBuffers(context);
+	m_pSprite->Draw(m_pTransform->GetWorldMatrix(), orthoMatrix);
 }
 
 void Projectile::SpawnProjectile(Vector2f vSpawnPosition, Vector2f vTargetPosition, float fLifeTime)
@@ -92,9 +93,9 @@ void Projectile::SpawnProjectile(Vector2f vSpawnPosition, Vector2f vTargetPositi
 		.Normalised();
 	
 	m_vAnchorPosition = vSpawnPosition;
-	m_transform->SetPosition(m_vAnchorPosition);
+	m_pTransform->SetPosition(m_vAnchorPosition);
 
-	m_physics->ResetForces();
+	m_pPhysics->ResetForces();
 }
 
 void Projectile::SpawnProjectile(Vector2f vSpawnPosition, float fLifeTime)
@@ -102,9 +103,9 @@ void Projectile::SpawnProjectile(Vector2f vSpawnPosition, float fLifeTime)
 	m_fLifeTime = fLifeTime <= 0.0f	? m_fMaxLifeTime : fLifeTime;
 
 	m_vAnchorPosition = vSpawnPosition.Add(m_vOffSet);
-	m_transform->SetPosition(m_vAnchorPosition);
+	m_pTransform->SetPosition(m_vAnchorPosition);
 
-	m_physics->ResetForces();
+	m_pPhysics->ResetForces();
 }
 
 void Projectile::CalcDirection()
@@ -116,5 +117,5 @@ void Projectile::CalcDirection()
 		sinf(fAngle) * fCurrentDist
 	);
 	m_vAnchorPosition = m_vAnchorPosition.Add(m_vDirection.Multiply(m_fSpeed));
-	m_transform->SetPosition(vWavePosition.Add(m_vAnchorPosition));
+	m_pTransform->SetPosition(vWavePosition.Add(m_vAnchorPosition));
 }

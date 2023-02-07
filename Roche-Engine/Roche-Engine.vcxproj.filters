@@ -273,6 +273,12 @@
     <ClCompile Include="Objects\ShopItem.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Components\EnemyController.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\AIFire.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -581,7 +587,7 @@
     <ClInclude Include="Utility\Helper\FileHandler.h">
       <Filter>Header Files\Utility\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Rendering\ProjectileData.h">
+    <ClInclude Include="Utility\Helper\ProjectileData.h">
       <Filter>Header Files\Utility\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Collisions\LayerMask.h">
@@ -634,6 +640,15 @@
     </ClInclude>
     <ClInclude Include="Components\BaseController.h">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Helper\AIStateData.h">
+      <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\EnemyController.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIFire.h">
+      <Filter>Header Files\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

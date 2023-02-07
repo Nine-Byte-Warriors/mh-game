@@ -1,8 +1,11 @@
-#include <string>
+#pragma once
+#ifndef PROJECTILEDATA_H
+#define PROJECTILEDATA_H
+
 #include "JsonLoading.h"
 
-namespace ProjectileData {
-
+namespace ProjectileData 
+{
 	struct ProjectileJSON
 	{
 		float m_fSpeed;
@@ -29,9 +32,12 @@ namespace ProjectileData {
 		bool m_bUseGlobalSpeed;
 		float m_fGlobalSpeed;
 		bool m_bLoop;
+		bool m_bUseTarget;
 		//shapeIdentifier/formation/pattern
 
 		std::vector<ProjectileJSON> m_vecProjectiles;
 	};
-	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ManagerJSON, m_sID, m_sName, m_sImagePath, m_fWidth, m_fHeight, m_fDelay, m_iCount, m_bLoop, m_vecProjectiles);
+	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ManagerJSON, m_sID, m_sName, m_sImagePath, m_fWidth, m_fHeight, m_fDelay, m_iCount, m_bLoop, m_vecProjectiles, m_bUseTarget);
 }
+
+#endif // PROJECTILEDATA_H

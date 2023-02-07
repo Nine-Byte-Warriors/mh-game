@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Agent.h"
+#include "AIStateData.h"
 
 #if _DEBUG
 #include <imgui/imgui.h>
@@ -7,7 +8,7 @@
 
 using namespace AILogic;
 
-Agent::Agent(const std::shared_ptr<Physics>& physics) : m_physics(physics)
+Agent::Agent(const std::shared_ptr<Physics>& physics) : m_pPhysics(physics)
 {
 	m_fSpeed = 5.0f;
 
@@ -27,7 +28,7 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_physics(physics)
 	pFleeState->SetActivation(0.0f);
 	m_mapStates.emplace(AIStateTypes::Flee, pFleeState);
 
-	PatrolParams* patrolParams = new PatrolParams();
+	AIStateData::PatrolParams* patrolParams = new AIStateData::PatrolParams();
 	patrolParams->fDistanceToWaypoint = 200.0f;
 	patrolParams->fSensingRange = 10.0f;
 	patrolParams->iWaypointCount = 6;
@@ -39,7 +40,7 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_physics(physics)
 	pPatrolState->SetParams((void*)patrolParams);
 	m_mapStates.emplace(AIStateTypes::Patrol, pPatrolState);
 
-	FollowParams* followParams = new FollowParams();
+	AIStateData::FollowParams* followParams = new AIStateData::FollowParams();
 	followParams->bKeepRange = true;
 	followParams->fFollowRange = 200.0f;
 	followParams->fRepulseRange = 100.0f;
@@ -50,7 +51,7 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_physics(physics)
 	pFollowState->SetParams(followParams);
 	m_mapStates.emplace(AIStateTypes::Follow, pFollowState);
 
-	WanderParams* pWanderParams = new WanderParams();
+	AIStateData::WanderParams* pWanderParams = new AIStateData::WanderParams();
 	pWanderParams->fWanderAngle = 5.0f;
 	pWanderParams->fWanderDelay = 0.5f;
 
@@ -60,7 +61,7 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_physics(physics)
 	pWanderState->SetParams(pWanderParams);
 	m_mapStates.emplace(AIStateTypes::Wander, pWanderState);
 
-	FireParams* pFireParams = new FireParams();
+	AIStateData::FireParams* pFireParams = new AIStateData::FireParams();
 	pFireParams->fRange = 200.0f;
 	pFireParams->fRate = 0.5f;
 
