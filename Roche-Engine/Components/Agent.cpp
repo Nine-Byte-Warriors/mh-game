@@ -102,6 +102,8 @@ void Agent::LoadBehaviourFile(const std::string sFilePath)
 
 	if (vecJsonStates.empty()) { m_sBehaviourFile = ""; return; }
 
+	ClearStates();
+	
 	for (AIStateData::AIStateJson jState : vecJsonStates)
 	{
 		AIState* pState = m_pStateMachine->NewState(jState.iStateType);
@@ -120,10 +122,18 @@ void Agent::LoadBehaviourFile(const std::string sFilePath)
 	}
 }
 
+void Agent::ClearStates()
+{
+	for (auto state : m_mapStates)
+		delete state.second;
+	
+	m_mapStates.clear();
+}
+
 void Agent::ResetBehaviour()
 {
 	for (std::pair<AIStateTypes, AILogic::AIState*> state : m_mapStates)
-		state.second->SetActivation(0.0f);
+		if(state.second != nullptr) state.second->SetActivation(0.0f);
 }
 
 void Agent::AddToEvent() noexcept

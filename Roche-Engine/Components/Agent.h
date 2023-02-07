@@ -31,6 +31,7 @@ public:
 	inline const bool HasBehaviourFile() { return !m_sBehaviourFile.empty(); }
 	void SetBehaviour(AILogic::AIStateTypes behaviour);
 	void LoadBehaviourFile(const std::string sFilePath);
+	void ClearStates();
 	void ResetBehaviour();
 
 	void SetEmitter(std::shared_ptr<Emitter>& pEmitter) { m_pEmitter = pEmitter; }
@@ -41,7 +42,7 @@ public:
 	void HandleEvent(Event* event) override;
 
 private:
-	std::map<AILogic::AIStateTypes, AILogic::AIState*> m_mapStates;
+	std::multimap<AILogic::AIStateTypes, AILogic::AIState*> m_mapStates;
 	AILogic::AIStateMachine* m_pStateMachine;
 	std::shared_ptr<Physics> m_pPhysics;
 	bool m_bTargetMouse = true;
