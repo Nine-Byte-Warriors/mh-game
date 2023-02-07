@@ -4,10 +4,10 @@
 Inventory::Inventory()
 {
 	AddToEvent();
+	m_vSeedOptions.emplace(std::pair<std::string, int>{ "Bean", 0 });
 	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Carrot", 0 } );
-	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Bean", 0 } );
+	m_vSeedOptions.emplace(std::pair<std::string, int>{ "Cauliflower", 0 });
 	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Onion", 0 } );
-	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Cauliflower", 0 } );
 	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Potato", 0 } );
 	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Tomato", 0 } );
 	m_iCurrentSeed = 0;
@@ -20,6 +20,31 @@ void Inventory::SetActiveSeedPacket( int currSeed )
 	m_iCurrentSeed = currSeed;
 	std::fill( m_vSelectedSeeds.begin(), m_vSelectedSeeds.end(), false );
 	m_vSelectedSeeds[m_iCurrentSeed] = true;
+}
+
+std::string Inventory::GetTexture()
+{
+	std::string texture = "Resources\\Textures\\Tiles\\Full" + GetKey() + ".png";
+	return texture;
+}
+
+std::string Inventory::GetName()
+{
+	return GetKey();
+}
+
+std::string Inventory::GetKey()
+{
+	int index = 0;
+	for (const auto& [key, value] : m_vSeedOptions)
+	{
+		if (index == m_iCurrentSeed)
+		{
+			return key;
+		}
+		index++;
+	}
+	return "None";
 }
 
 void Inventory::UpdateActiveSeedPacket( int currSeed )
@@ -72,7 +97,7 @@ void Inventory::ChangeSeedPacketValue( const std::string& seedName, int amountTo
 	{
 		if ( seedName == key )
 		{
-			value += 1;
+			value += amountToChange;
 			return;
 		}
 	}

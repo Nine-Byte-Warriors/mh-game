@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Graphics.h"
 #include <functional>
+#include <EnemyController.h>
 
 #define PI 3.1415
 
@@ -15,6 +16,7 @@ Entity::Entity(EntityController& entityController, int EntityNum)
 	m_colliderBox = nullptr;
 
 	m_playerController = nullptr;
+	m_pController = nullptr;
 	m_inventory = nullptr;
 
 	m_vPosition = new Vector2f();
@@ -61,14 +63,41 @@ void Entity::SetComponents()
 
 	if (GetType() == "Player")
 	{
+		bool trigger = m_entityController->GetColliderTrigger(m_iEntityNum);
+		m_colliderCircle = std::make_shared<CircleCollider> (m_transform, m_sprite, trigger, m_iEntityNum, m_sEntityType, 32);
+		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, trigger, m_iEntityNum, m_sEntityType, 32, 32);
+		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
+			pManager->SetOwner(Projectile::ProjectileOwner::Player);
+		
+		m_pController = std::make_shared<PlayerController>(m_physics, m_sprite, m_emitter);
+		m_inventory = std::make_shared<Inventory>();
+	}
+
+	if (GetType() == "Enemy")
+	{
+		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
+			pManager->SetOwner(Projectile::ProjectileOwner::Enemy);
+
+		m_pController = std::make_shared<EnemyController>(m_physics, m_sprite, m_emitter);
+		m_agent->SetEmitter(m_emitter);
+	}
+
+	if (GetType() == "Item")
+	{
 		m_playerController = std::make_shared<PlayerController>(m_physics, m_sprite, m_emitter);
 		m_inventory = std::make_shared<Inventory>();
+		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
+			pManager->SetOwner(Projectile::ProjectileOwner::Item);
+		
+		m_shopItem = std::make_shared<ShopItem>(GetCollider(), m_entityController->GetName(m_iEntityNum));
 	}
 }
 
 void Entity::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat)
 {
 	m_device = gfx.GetDevice();
+	m_context = gfx.GetContext();
+	m_mat = &mat;
 
 	SetProjectileManagerInit(gfx, mat);
 
@@ -113,6 +142,10 @@ void Entity::Update(const float dt)
 	if (m_playerController)
 		m_playerController->Update(dt);
 
+	}
+
+	if (m_pController)
+		m_pController->Update(dt);
 }
 
 std::string Entity::GetType()
@@ -133,6 +166,7 @@ void Entity::UpdateFromEntityData(const float dt, bool positionLocked)
 	UpdateProjectilePattern();
 	UpdateTexture();
 	UpdateColliderRadius();
+	UpdateColliderTrigger();
 	UpdateAnimation();
 	UpdateRowsColumns();
 	UpdateAudio();
@@ -209,7 +243,10 @@ void Entity::UpdateAnimation()
 		}
 
 		m_sprite->SetMaxFrame(m_iMaxFrameX, m_iMaxFrameY);
-		//m_sprite->SetCurFrameY(m_iCurFrameY);
+		if (GetType() != "Player")
+		{
+			m_sprite->SetCurFrameY(m_iCurFrameY);
+		}
 
 		if (m_entityController->HasProjectileBullet(m_iEntityNum))
 		{
@@ -241,7 +278,16 @@ void Entity::UpdateTexture()
 		for (std::shared_ptr<ProjectileManager> pManager : m_vecProjectileManagers)
 		{
 			for (std::shared_ptr<Projectile> pProjectile : pManager->GetProjector())
-				pProjectile->GetSprite()->UpdateTex(m_device, m_sBulletTex);
+			{
+				if (pProjectile->GetSprite()->HasTexture())
+				{
+					pProjectile->GetSprite()->UpdateTex(m_device, m_sBulletTex);
+				}
+				else
+				{
+					pProjectile->GetSprite()->Initialize(m_device, m_context, m_entityController->GetTexture(m_iEntityNum), *m_mat);
+				}
+			}
 		}
 	}
 }
@@ -305,11 +351,17 @@ void Entity::UpdateBehaviour()
 		{
 			m_agent->SetBehaviour(AILogic::AIStateTypes::Wander);
 		}
+		else if ( m_sBehaviour == "Fire" )
+		{
+			m_agent->SetBehaviour( AILogic::AIStateTypes::Fire );
+		}
 	}
 }
 
-void Entity::UpdateProjectilePattern() //TODO
+void Entity::UpdateProjectilePattern()
 {
+	
+	//TODO
 	//if (m_entityType != EntityType::Projectile)
 	//{
 	//	m_sBulletPattern = m_entityController->GetProjectileBullet(m_iEntityNum)->projectilePattern;
@@ -351,6 +403,15 @@ void Entity::UpdateColliderRadius()
 			m_colliderBox->SetHeight(m_fColliderRadiusY);
 			m_colliderCircle->SetRadius(0);
 		}
+	}
+}
+
+void Entity::UpdateColliderTrigger()
+{
+	if (m_entityController->HasCollider(m_iEntityNum) && m_colliderCircle != nullptr)
+	{
+		m_colliderBox->SetIsTrigger(m_entityController->GetColliderTrigger(m_iEntityNum));
+		m_colliderCircle->SetIsTrigger(m_entityController->GetColliderTrigger(m_iEntityNum));
 	}
 }
 

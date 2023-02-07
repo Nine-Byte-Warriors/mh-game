@@ -25,6 +25,18 @@ int EntityController::GetSize()
 	return m_entityData.size();
 }
 
+int EntityController::GetEntityNumFromName(std::string name)
+{
+	for (int i = 0; i < m_entityData.size(); i++)
+	{
+		if (GetName(i).contains(name) && !GetName(i).contains("Item"))
+		{
+			return i;
+		}
+	}
+	return 0;
+}
+
 std::string EntityController::GetTexture(int num)
 {
 	return m_entityData[num].texture;
@@ -138,6 +150,14 @@ std::string EntityController::GetSoundBankName(int num)
 void EntityController::SetEntityData(std::vector<EntityData> entityData)
 {
 	m_entityData = entityData;
+}
+
+void EntityController::AddEntityData(std::vector<EntityData> entityData)
+{
+	for (int i = 0; i < entityData.size(); i++)
+	{
+		m_entityData.push_back(entityData[i]);
+	}
 }
 
 bool EntityController::HasAI(int num)

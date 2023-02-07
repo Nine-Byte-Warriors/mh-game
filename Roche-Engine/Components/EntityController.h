@@ -52,6 +52,8 @@ public:
 	void SetJsonFile( const std::string& name );
 	int GetSize();
 
+	int GetEntityNumFromName(std::string name);
+
 	std::string GetName(int num);
 	std::string GetType(int num);
 	std::string GetTexture(int num);
@@ -80,6 +82,7 @@ public:
 	std::string GetSoundBankName(int num);
 
 	void SetEntityData(std::vector<EntityData> entityData);
+	void AddEntityData(std::vector<EntityData> entityData);
 
 	bool HasAI(int num);
 	bool HasProjectileSystem(int num);

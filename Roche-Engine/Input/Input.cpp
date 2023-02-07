@@ -49,11 +49,11 @@ void Input::UpdateMouse( const float dt )
 
 		if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp )
 		{
-			EventSystem::Instance()->AddEvent(EVENTID::IncrementSeedPacket);
+			EventSystem::Instance()->AddEvent(EVENTID::DecrementSeedPacket);
 		}
 		else if (me.GetType() == Mouse::MouseEvent::EventType::WheelDown)
 		{
-			EventSystem::Instance()->AddEvent(EVENTID::DecrementSeedPacket);
+			EventSystem::Instance()->AddEvent(EVENTID::IncrementSeedPacket);
 		}
     }
 }
@@ -83,6 +83,9 @@ void Input::UpdateKeyboard( const float dt )
 			EnableCursor();
 		else if (keycode == VK_END)
 			DisableCursor();
+
+		if (m_keyboard.KeyIsPressed('B'))
+			EventSystem::Instance()->AddEvent(EVENTID::BuySeedAttempt);
 
 #if _DEBUG
 		if ( keycode == VK_F1 )

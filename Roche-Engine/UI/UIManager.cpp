@@ -98,19 +98,110 @@ void UIManager::HandleEvent( Event* event )
 	{
 	case EVENTID::WindowSizeChangeEvent: { m_vWindowSize = *static_cast<XMFLOAT2*>( event->GetData() ); } break;
 	case EVENTID::RemoveUIItemEvent: { RemoveUI( *static_cast<std::string*>( event->GetData() ) ); } break;
+	case EVENTID::StartGame:
+	{
+		RemoveAllUI();
+		std::string* levelName = new std::string("Game");
+		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, levelName);
+		// TO DO: Load intiial hud day UI after loading, GameStartedEvent to listen to?
 	}
+	break;
+	case EVENTID::OpenCredits:
+	{
+		HideAllUI();
+		ShowUI("Credits_Widgets");
+	}
+	break;
+	case EVENTID::OpenSettings:
+	{
+		HideAllUI();
+		ShowUI("Settings_Widgets");
+	}
+	break;
+	case EVENTID::PauseGame:
+	{
+		HideAllUI();
+		ShowUI("Pause_Widgets");
+	}
+	break;
+	case EVENTID::ResumeGame:
+	{
+		HideAllUI();
+		if (m_currentGamePhase == Phase::DayPhase) {
+			ShowUI("HUD_Day");
+		}
+		else {
+			ShowUI("HUD_Night");
+		}
+	}
+	break;
+	case EVENTID::Back:
+	{
+		HideAllUI();
+		ShowUI("Pause_Widgets");
+		ShowUI("Menu_Widgets");
+	}
+	break;
+	case EVENTID::CurrentPhase: { m_currentGamePhase = *static_cast<Phase*>(event->GetData()); } break;
+	case EVENTID::BackToMainMenu:
+	{
+		RemoveAllUI();
+		std::string* levelName = new std::string( "Menu" );
+		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, levelName);
+	}
+	break;
+	case EVENTID::WinWindow:
+	{
+		HideAllUI();
+		ShowUI("Win_Widgets");
+	}
+	break;
+	case EVENTID::LossWindow:
+	{
+		HideAllUI();
+		ShowUI("Loss_Widgets");
+	}
+	break;
+	case EVENTID::GameRestartEvent:
+		HideAllUI();
+		ShowUI("HUD_Day");
+		std::string* levelName = new std::string( "Game" );
+		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, levelName);
+	break;
+	}
+
 }
 
 void UIManager::AddToEvent() noexcept
 {
 	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::RemoveUIItemEvent, this );
+	EventSystem::Instance()->AddClient(EVENTID::StartGame, this);
+	EventSystem::Instance()->AddClient(EVENTID::OpenCredits, this);
+	EventSystem::Instance()->AddClient(EVENTID::OpenSettings, this);
+	EventSystem::Instance()->AddClient(EVENTID::PauseGame, this);
+	EventSystem::Instance()->AddClient(EVENTID::ResumeGame, this);
+	EventSystem::Instance()->AddClient(EVENTID::Back, this);
+	EventSystem::Instance()->AddClient(EVENTID::CurrentPhase, this);
+	EventSystem::Instance()->AddClient(EVENTID::WinWindow, this);
+	EventSystem::Instance()->AddClient(EVENTID::LossWindow, this);
+	EventSystem::Instance()->AddClient(EVENTID::GameRestartEvent, this);
 }
 
 void UIManager::RemoveFromEvent() noexcept
 {
 	EventSystem::Instance()->RemoveClient( EVENTID::WindowSizeChangeEvent, this );
 	EventSystem::Instance()->RemoveClient( EVENTID::RemoveUIItemEvent, this );
+	EventSystem::Instance()->RemoveClient(EVENTID::StartGame, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::OpenCredits, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::OpenSettings, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::PauseGame, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ResumeGame, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::Back, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::CurrentPhase, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::WinWindow, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::LossWindow, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::GameRestartEvent, this);
 }
 
 void UIManager::HideAllUI()

@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "EntityEditor.h"
 #include "EntityController.h"
+#include "EntitySpawner.h"
 
 #include "Camera.h"
 #include "UIEditor.h"
@@ -27,12 +28,9 @@
 class Level : public LevelContainer
 {
 public:
-	Level( const std::string& name, int& levelId )
+	Level( const std::string& name )
 	{
 		m_sLevelName = name;
-		levelId++;
-		m_iCurrentLevel = levelId;
-		m_iNextLevel = levelId + 1;
 	}
 
 	void OnCreate() override;
@@ -57,6 +55,8 @@ public:
 	void CreateTileMap();
 	void CreateUI();
 
+	inline std::string GetLevelName() { return m_sLevelName; };
+
 private:
 	void RenderFrameEntity();
 	void UpdateUI( const float dt );
@@ -67,6 +67,7 @@ private:
 	// Tile Map
 	void CreateTileMapDraw();
 	void UpdateTileMap(const float dt);
+	void UpdateTileMapPlanting(const float dt);
 	void UpdateBothTileMaps(const float dt);
 	void UpdateTileMapTexture(const float dt);
 	void UpdateTileMapEmpty(const float dt);
@@ -90,6 +91,7 @@ private:
 	int m_iTileMapColumns;
 	EntityEditor m_entityEditor;
 	EntityController m_entityController;
+	EntitySpawner m_entitySpawner;
 	std::shared_ptr<ProjectileEditor> m_projectileEditor;
 
 	TextRenderer m_textRenderer;
@@ -106,7 +108,7 @@ private:
 	std::vector<int> m_entitiesDeleted;
 	Vector2f* m_vFakedPos;
 
-	bool m_bIsWindowHovered = false;
+	bool m_bIsWindowHovered = true;
 };
 
 #endif

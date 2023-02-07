@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "TileMapPaintOnMap.h"
 
+#if _DEBUG
+extern bool g_bDebug;
+#endif
+
 #define FOLDER_PATH "Resources\\TileMaps\\"
 
 TileMapPaintOnMap::TileMapPaintOnMap()
@@ -34,12 +38,34 @@ int TileMapPaintOnMap::GetTileMapPos()
 
 bool TileMapPaintOnMap::IsLeftMouseDown()
 {
-	bool isMouseInPlayerArea = m_iTileX >= 0 && m_iTileX < m_iCols && m_iTileY >= 0 && m_iTileY < m_iRows;
+	bool isMouseInPlayerArea = m_iTileX >= 0 && m_iTileX < m_iCols&& m_iTileY >= 0 && m_iTileY < m_iRows;
 	if (isMouseInPlayerArea)
 	{
 		return m_bLeftMouseDown;
 	}
 	return false;
+}
+
+bool TileMapPaintOnMap::IsNearTheMouse(Vector2f pos, Vector2f offSet, float radius)
+{
+	Vector2f mouseLocation = Vector2f(m_camera->GetPosition().x - m_camera->GetInitPosition().x + m_fMousePos.x,
+		m_camera->GetPosition().y - m_camera->GetInitPosition().y + m_fMousePos.y);
+	float distance = mouseLocation.Distance(pos + offSet);
+
+	if (distance <= radius)
+	{
+		return true;
+	}
+	return false;
+}
+
+Vector2f TileMapPaintOnMap::GetMapPos(Vector2f pos, Vector2f offSet)
+{
+	Vector2f mouseLocation = Vector2f(m_camera->GetPosition().x - m_camera->GetInitPosition().x + m_fMousePos.x,
+		m_camera->GetPosition().y - m_camera->GetInitPosition().y + m_fMousePos.y);
+	mouseLocation -= offSet;
+
+	return mouseLocation;
 }
 
 int TileMapPaintOnMap::GetPositionAtCoordinates(int x, int y)
@@ -64,14 +90,14 @@ int TileMapPaintOnMap::GetPositionAtCoordinates(int x, int y)
 
 void TileMapPaintOnMap::AddToEvent() noexcept
 {
-	EventSystem::Instance()->AddClient(EVENTID::ImGuiMousePosition, this);
+	EventSystem::Instance()->AddClient(EVENTID::MouseCameraPosition, this);
 	EventSystem::Instance()->AddClient(EVENTID::LeftMouseClick, this);
 	EventSystem::Instance()->AddClient(EVENTID::LeftMouseRelease, this);
 }
 
 void TileMapPaintOnMap::RemoveFromEvent() noexcept
 {
-	EventSystem::Instance()->RemoveClient(EVENTID::ImGuiMousePosition, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::MouseCameraPosition, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::LeftMouseClick, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::LeftMouseRelease, this);
 }
@@ -80,14 +106,12 @@ void TileMapPaintOnMap::HandleEvent(Event* event)
 {
 	switch (event->GetEventID())
 	{
-	case EVENTID::ImGuiMousePosition:
+	case EVENTID::MouseCameraPosition:
 	{
-		m_fCameraX = m_camera->GetPosition().x - m_camera->GetInitPosition().x + m_iStartingPosX;
-		m_fCameraY = m_camera->GetPosition().y - m_camera->GetInitPosition().y + m_iStartingPosY;
+		Vector2f mousePos2 = *static_cast<Vector2f*>(event->GetData());
 
-		Vector2f mousePos = *static_cast<Vector2f*>(event->GetData());
-		m_iTileX = (mousePos.x + m_fCameraX) / 32;
-		m_iTileY = (mousePos.y + m_fCameraY) / 32;
+		m_iTileX = (mousePos2.x + m_iStartingPosX) / 32;
+		m_iTileY = (mousePos2.y + m_iStartingPosY) / 32;
 		m_iPos = m_iTileX + m_iTileY * m_iCols;
 	}
 	break;

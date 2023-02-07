@@ -57,14 +57,14 @@ void UIScreen::Update( const float dt )
 #pragma region BUTTONS
 		if ( m_vWidgets[i]->GetType() == "Button" )
 		{
-			static std::vector<std::string> SeedStrings = { "Carrot", "Bean", "Onion", "Cauliflower", "Potato", "Tomato" };
+			static std::vector<std::string> SeedStrings = { "Bean", "Carrot", "Cauliflower", "Onion", "Potato", "Tomato" };
 			for ( unsigned int j = 0; j < SeedStrings.size(); j++ )
 			{
 				if ( m_vWidgets[i]->GetAction() == ( SeedStrings[j] + " Background" ) )
 				{
 					m_vWidgets[i]->GetButtonWidget()->SetTextOffset( XMFLOAT2( 40.0f, 30.0f ) );
 					if ( m_vWidgets[i]->GetButtonWidget()->Resolve(
-						std::to_string( m_inventory.GetActiveSeedPacketCount( SeedStrings[j] ) ),
+						std::to_string( m_inventory.GetSeedPacketCount( SeedStrings[j] ) ),
 						Colors::White, m_textures, m_mouseData, m_inventory.IsActiveSeedPacket( j ) ) )
 					{
 						m_inventory.SetActiveSeedPacket( j );
@@ -90,33 +90,53 @@ void UIScreen::Update( const float dt )
 			}
 			if ( m_vWidgets[i]->GetAction() == "Close" )
 			{
-				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Quit Game", Colors::White, m_textures, m_mouseData ) )
+				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Quit Game", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE) )
 					EventSystem::Instance()->AddEvent( EVENTID::QuitGameEvent );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Start" )
 			{
-				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Start Game", Colors::White, m_textures, m_mouseData ) )
+				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Start Game", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE) )
 					EventSystem::Instance()->AddEvent( EVENTID::StartGame );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Settings" )
 			{
-				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Settings", Colors::White, m_textures, m_mouseData ) )
+				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Settings", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE) )
 					EventSystem::Instance()->AddEvent( EVENTID::OpenSettings );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Credits" )
 			{
-				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Credits", Colors::White, m_textures, m_mouseData ) )
+				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Credits", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE) )
 					EventSystem::Instance()->AddEvent( EVENTID::OpenCredits );
+			}
+			if (m_vWidgets[i]->GetAction() == "Leaderboard")
+			{
+				if (m_vWidgets[i]->GetButtonWidget()->Resolve("Scoreboard", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE))
+					EventSystem::Instance()->AddEvent(EVENTID::OpenLeaderboard);
 			}
 			if ( m_vWidgets[i]->GetAction() == "Resume" )
 			{
-				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Resume", Colors::White, m_textures, m_mouseData ) )
+				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Resume", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE) )
 					EventSystem::Instance()->AddEvent( EVENTID::ResumeGame );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Back" )
 			{
-				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Back", Colors::White, m_textures, m_mouseData ) )
+				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Back", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE) )
 					EventSystem::Instance()->AddEvent( EVENTID::Back );
+			}
+			if (m_vWidgets[i]->GetAction() == "Restart")
+			{
+				if (m_vWidgets[i]->GetButtonWidget()->Resolve("Restart", Colors::White, m_textures, m_mouseData, false ,FontSize::LARGE))
+					EventSystem::Instance()->AddEvent(EVENTID::GameRestartEvent);
+			}
+			if (m_vWidgets[i]->GetAction() == "Confirm")
+			{
+				if (m_vWidgets[i]->GetButtonWidget()->Resolve("Yes", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE))
+					EventSystem::Instance()->AddEvent(EVENTID::SwapGameLevels);
+			}
+			if (m_vWidgets[i]->GetAction() == "Deny")
+			{
+				if (m_vWidgets[i]->GetButtonWidget()->Resolve("No", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE))
+					EventSystem::Instance()->AddEvent(EVENTID::CloseUIPopUp);
 			}
 
 			if ( m_vWidgets[i]->GetAction() == "General" )
@@ -127,7 +147,7 @@ void UIScreen::Update( const float dt )
 			if ( m_vWidgets[i]->GetAction() == "Graphics" )
 			{
 				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "", Colors::White, m_texturesGraphicsTabs, m_mouseData ) )
-					EventSystem::Instance()->AddEvent( EVENTID::GrahpicsTab );
+					EventSystem::Instance()->AddEvent( EVENTID::GraphicsTab );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Music" )
 			{
@@ -247,11 +267,11 @@ void UIScreen::Update( const float dt )
 		{
 			if ( m_vWidgets[i]->GetAction() == "Master volume label" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "Master Volumne", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "Master Volumne", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 			if ( m_vWidgets[i]->GetAction() == "Music volume label" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "Music Volumne", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "Music Volumne", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 
 			if ( m_vWidgets[i]->GetAction() == "Coins" )
@@ -264,17 +284,39 @@ void UIScreen::Update( const float dt )
 			}
 			if ( m_vWidgets[i]->GetAction() == "Score" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "0000000", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "0000000", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "Enemy Health Label")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("Enemy's Health", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+
+			if (m_vWidgets[i]->GetAction() == "Restart Pop Up Label")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("GAME OVER", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::HUGE);
+			}
+			if (m_vWidgets[i]->GetAction() == "Win Pop Up Label")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("GAME WON", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::HUGE);
+			}
+			if (m_vWidgets[i]->GetAction() == "Score Pop Up Label")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("0000000", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::HUGE);
+			}
+
+			if (m_vWidgets[i]->GetAction() == "Change Level Label")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("Change Level?", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 
 
 			if ( m_vWidgets[i]->GetAction() == "Language DD Label" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "Language", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "Language", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 			if ( m_vWidgets[i]->GetAction() == "Screen Shake Slider Label" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "Screen Shake Amount", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "Screen Shake Amount", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 
 			if ( m_vWidgets[i]->GetAction() == "Pause Title" )
@@ -283,28 +325,28 @@ void UIScreen::Update( const float dt )
 			}
 			if ( m_vWidgets[i]->GetAction() == "Up Control" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "Up Control ", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "Up Control ", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 			if ( m_vWidgets[i]->GetAction() == "Left Control" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "Left Control", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "Left Control", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 			if ( m_vWidgets[i]->GetAction() == "Down Control" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "Down Control", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "Down Control", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 			if ( m_vWidgets[i]->GetAction() == "Right Control" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "Right Control", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "Right Control", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 			if ( m_vWidgets[i]->GetAction() == "Shoot Control" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "Shoot Control", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "Shoot Control", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 
 			if ( m_vWidgets[i]->GetAction() == "CreditTitle" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "CREDITS", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "CREDITS", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::INSANE );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Credit1" )
 			{
@@ -312,7 +354,7 @@ void UIScreen::Update( const float dt )
 			}
 			if ( m_vWidgets[i]->GetAction() == "Credit2" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve( "Jukiusz Jaczmarek", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "Juliusz Kaczmarek", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Credit3" )
 			{
@@ -346,6 +388,57 @@ void UIScreen::Update( const float dt )
 			{
 				m_vWidgets[i]->GetImageWidget()->Resolve( "Eleftherios Karakyritsis", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png" );
 			}
+
+			if (m_vWidgets[i]->GetAction() == "LeaderboardTitle")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("SCOREBOARD", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::INSANE);
+			}
+			if (m_vWidgets[i]->GetAction() == "ScoreLabel0")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("Score 1 :", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "ScoreLabel1")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("Score 2 :", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "ScoreLabel2")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("Score 3 :", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "ScoreLabel3")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("Score 4 :", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "ScoreLabel4")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("Score 5 :", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "Score0")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("000000", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "Score1")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("000000", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "Score2")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("000000", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "Score3")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("000000", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "Score4")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("000000", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+			}
+
+			if (m_vWidgets[i]->GetAction() == "Loading Label")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("Loading ...", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::INSANE);
+			}
+
 
 			std::string currTexture = m_texturesHearts[0];
 			float currHealth = m_pPlayerHealth->GetCurrentHealth();
@@ -408,6 +501,10 @@ void UIScreen::Update( const float dt )
 			if ( m_vWidgets[i]->GetAction() == "Coin Icon" )
 			{
 				m_vWidgets[i]->GetImageWidget()->Resolve( "", Colors::AntiqueWhite, "Resources\\Textures\\UI\\Coin\\Coin.png" );
+			}
+			if (m_vWidgets[i]->GetAction() == "Title Card")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("", Colors::AntiqueWhite, "Resources\\Textures\\UI\\Title\\Title.png");
 			}
 			if ( m_vWidgets[i]->GetAction() == "" )
 			{
@@ -568,6 +665,7 @@ void UIScreen::RemoveFromEvent() noexcept
 	EventSystem::Instance()->RemoveClient( EVENTID::MiddleMouseClick, this );
 	EventSystem::Instance()->RemoveClient( EVENTID::MiddleMouseRelease, this );
 	EventSystem::Instance()->RemoveClient( EVENTID::WindowSizeChangeEvent, this );
+
 }
 
 void UIScreen::HandleEvent( Event* event )

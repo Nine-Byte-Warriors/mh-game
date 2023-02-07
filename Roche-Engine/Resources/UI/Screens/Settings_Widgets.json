@@ -304,12 +304,12 @@
         "hide": false,
         "name": "Language Drop Down",
         "position": [
-            893.0,
+            960.0,
             611.0
         ],
         "scale": [
-            148.0,
-            97.0
+            189.0,
+            132.0
         ],
         "type": "Drop Down",
         "zindex": 20
@@ -334,14 +334,29 @@
         "hide": false,
         "name": "Screen Shake Slider",
         "position": [
-            929.0,
+            962.0,
             379.0
         ],
         "scale": [
-            164.0,
+            322.0,
             88.0
         ],
         "type": "Data Slider",
         "zindex": 22
+    },
+    {
+        "action": "Back",
+        "hide": false,
+        "name": "Back Button",
+        "position": [
+            1472.0,
+            1.0
+        ],
+        "scale": [
+            151.0,
+            159.0
+        ],
+        "type": "Button",
+        "zindex": 23
     }
 ]

@@ -341,12 +341,14 @@ void Level::UpdateUI( const float dt )
         CreateUI();
         m_uiEditor.SetShouldUpdate( false );
     }
+#endif
     m_uiEditor.Update( dt );
     if ( m_uiEditor.GetCurrentScreenIndex() > -1 )
     {
         m_ui->HideAllUI();
         m_ui->ShowUI( m_uiEditor.GetCurrentScreenName() );
     }
+#if _DEBUG
     if ( m_uiEditor.ShouldShowAll() )
         m_ui->ShowAllUI();
     if ( m_uiEditor.ShouldHideAll() )
@@ -408,11 +410,7 @@ void Level::AddNewEntity()
         }
     }
 
-#if _DEBUG
-    m_iEntityAmount = m_entityEditor.GetEntityData().size();
-#else
     m_iEntityAmount = m_entityController.GetSize();
-#endif
     m_entityController.UpdateCopy();
 }
 
@@ -446,7 +444,6 @@ void Level::RemoveEntities()
     m_iEntityAmount = m_entityEditor.GetEntityData().size() -1;
     m_entityEditor.ClearEntitiesDeleted();
 #endif
-    
     m_entityController.m_dead.clear();
 }
 
@@ -488,6 +485,75 @@ void Level::UpdateTileMap(const float dt)
         m_bMapUpdate = false;
     }
 #endif
+
+    UpdateTileMapPlanting(dt);
+}
+
+void Level::UpdateTileMapPlanting(const float dt)
+{
+    int player = m_entityController.GetEntityNumFromName("Player");
+    int drawLayer = 1;
+    float radius = 200.0f;
+
+    bool isDrawOnMapAvalibleForPlayer = m_tileMapPaintOnMap.IsLeftMouseDown() && m_bIsWindowHovered;
+    if (isDrawOnMapAvalibleForPlayer)
+    {
+        int seedNum = m_entity[player].GetInventory()->GetActiveSeedPacket();
+        std::string seedString = m_entity[player].GetInventory()->GetName();
+        int entityNum = m_entityController.GetEntityNumFromName(seedString);
+
+        bool isPlayerNearTheMouse = m_tileMapPaintOnMap.IsNearTheMouse(m_entity[player].GetTransform()->GetPosition(),
+            m_entity[player].GetSprite()->GetWidthHeight() / 2, radius);
+
+        if (isPlayerNearTheMouse)
+        {
+            std::string texture = m_entity[player].GetInventory()->GetTexture();
+
+            int spawnPos = m_tileMapPaintOnMap.GetTileMapPos();
+
+                m_entity[player].GetInventory()->GetActiveSeedPacketCount();
+
+                bool isTilePlantable =
+                    m_tileMapLoader.GetTileTypeName(drawLayer, spawnPos) != "DIRT" &&
+                    !m_entitySpawner.IsEntityPosTaken(spawnPos) &&
+                    m_tileMapLoader.GetTileTypeName(drawLayer, spawnPos) != "EmptyPlot" &&
+                    m_entity[player].GetInventory()->GetActiveSeedPacketCount() > 0;
+
+            if (isTilePlantable)
+            {
+                m_tileMapLoader.UpdateTileType(drawLayer, spawnPos, m_entity[player].GetInventory()->GetName());
+                m_tileMapDrawLayers[drawLayer][spawnPos].GetSprite()->UpdateTex(m_gfx->GetDevice(), texture);
+
+                Vector2f spawnMapPos = m_tileMapPaintOnMap.GetMapPos(m_entity[player].GetTransform()->GetPosition(),
+                    m_entity[entityNum].GetSprite()->GetWidthHeight() / 2);
+                m_entitySpawner.AddEntityToSpawn(entityNum, spawnPos, spawnMapPos);
+
+                std::pair<std::string, int>* seedattempt = new std::pair<std::string, int>();
+                seedattempt->first = m_entity[player].GetInventory()->GetName();
+                seedattempt->second = 1;
+                EventSystem::Instance()->AddEvent(EVENTID::PlantSeedAttempt, seedattempt);
+            }
+        }
+    }
+
+    static float tempTime = 0;
+    tempTime += dt;
+    bool isNightTime = tempTime > 30.0f;
+    if (isNightTime)
+    {
+        for (int i = 0; i < m_entitySpawner.GetSpawnEntitiesSize(); i++)
+        {
+            std::string texture = "Resources\\Textures\\Tiles\\EmptyPlot.png";
+            int spawnPos = m_entitySpawner.GetSpawnEntitiesTileMapPos(i);
+            m_tileMapLoader.UpdateTileType(drawLayer, spawnPos, "EmptyPlot");
+            m_tileMapDrawLayers[1][spawnPos].GetSprite()->UpdateTex(m_gfx->GetDevice(), texture);
+        }
+
+        m_entitySpawner.SpawnEntities();
+        m_entityController.AddEntityData(m_entitySpawner.GetEntityData());
+
+        m_entitySpawner.EntitiesAdded();
+    }
 }
 
 void Level::UpdateBothTileMaps(const float dt)
