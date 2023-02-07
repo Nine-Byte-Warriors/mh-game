@@ -292,39 +292,18 @@ void Entity::UpdateSpeed()
 
 void Entity::UpdateBehaviour()
 {
-	if (m_entityController->HasAI(m_iEntityNum) && m_agent != nullptr)
-	{
-		m_sBehaviour = m_entityController->GetBehaviour(m_iEntityNum);
+	if (m_agent == nullptr)
+		return;
 
-		if (m_sBehaviour == "Idle")
-		{
-			m_agent->SetBehaviour(AILogic::AIStateTypes::Idle);
-		}
-		else if (m_sBehaviour == "Seek")
-		{
-			m_agent->SetBehaviour(AILogic::AIStateTypes::Seek);
-		}
-		else if (m_sBehaviour == "Flee")
-		{
-			m_agent->SetBehaviour(AILogic::AIStateTypes::Flee);
-		}
-		else if (m_sBehaviour == "Patrol")
-		{
-			m_agent->SetBehaviour(AILogic::AIStateTypes::Patrol);
-		}
-		else if (m_sBehaviour == "Follow")
-		{
-			m_agent->SetBehaviour(AILogic::AIStateTypes::Follow);
-		}
-		else if (m_sBehaviour == "Wander")
-		{
-			m_agent->SetBehaviour(AILogic::AIStateTypes::Wander);
-		}
-		else if ( m_sBehaviour == "Fire" )
-		{
-			m_agent->SetBehaviour( AILogic::AIStateTypes::Fire );
-		}
-	}
+	if (!m_entityController->HasAI(m_iEntityNum))
+		return;
+
+	if (m_agent->HasBehaviourFile())
+		return;
+
+	m_sBehaviour = m_entityController->GetBehaviour(m_iEntityNum);
+
+	m_agent->SetBehaviour(AILogic::StateType::GetType(m_sBehaviour));
 }
 
 void Entity::UpdateProjectilePattern()

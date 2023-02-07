@@ -7,6 +7,8 @@
 #include "Entity.h"
 #include "AIStateMachine.h"
 #include "AudioEngine.h"
+#include "AIStateData.h"
+
 #if _DEBUG
 #include <imgui/imgui.h>
 #endif
@@ -60,10 +62,11 @@ private:
 	void SetSpeed();
 
 	//AI
-	void AddBehaviour() {};
-	void DelBehaviour() {};
-	void ShowBehaviours() {};
-
+	void AddBehaviour();
+	void DelBehaviour(int iIndex);
+	void ShowBehaviours();
+	void SaveBehavioursButton();
+	void LoadBehavioursButton();
 	void SetBehaviour();
 
 	//ProjectileSystem
@@ -85,6 +88,7 @@ private:
 	void RemoveEntity();
 
 	std::string JsonFile = "Entity.json";
+	std::string m_sBehaviourFile = "Behaviour.json";
 
 	std::vector<EntityData> m_vEntityData;
 
@@ -122,7 +126,7 @@ private:
 
 	std::vector<int> m_entitiesDeleted;
 
-	std::vector<int> m_vecBehaviours;
+	std::vector<AIStateData::AIStateJson> m_vecBehaviours;
 };
 
 #endif

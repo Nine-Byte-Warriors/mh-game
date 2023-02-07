@@ -29,7 +29,9 @@ public:
 	inline Vector2f GetTargetPosition() const noexcept { return m_vTargetPos; }
 	inline std::shared_ptr<Physics> GetPhysics() const noexcept { return m_pPhysics; }
 
+	inline const bool HasBehaviourFile() { return !m_sBehaviourFile.empty(); }
 	void SetBehaviour(AILogic::AIStateTypes behaviour);
+	void LoadBehaviourFile(const std::string sFilePath);
 	void ResetBehaviour();
 	
 	void SetEmitter(std::shared_ptr<Emitter>& pEmitter) { m_pEmitter = pEmitter; }
@@ -48,6 +50,7 @@ private:
 	float m_fSpeed;
 	
 	std::shared_ptr<Emitter> m_pEmitter;
+	std::string m_sBehaviourFile;
 };
 
 #endif

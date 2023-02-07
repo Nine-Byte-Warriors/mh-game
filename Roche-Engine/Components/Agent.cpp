@@ -14,6 +14,8 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_pPhysics(physics)
 
 	m_pStateMachine = new AIStateMachine(this);
 
+	m_sBehaviourFile = "";
+
 	AIState* pSeekState = m_pStateMachine->NewState(AIStateTypes::Seek);
 	pSeekState->SetBounds(1.0f, 0.0f);
 	pSeekState->SetActivation(0.0f);
@@ -89,6 +91,11 @@ void Agent::SetBehaviour(AILogic::AIStateTypes behaviour)
 	ResetBehaviour();
 
 	m_mapStates.find(behaviour)->second->SetActivation(1.0f);
+}
+
+void Agent::LoadBehaviourFile(const std::string sFilePath)
+{
+	m_sBehaviourFile = !sFilePath.empty() ? sFilePath : "";
 }
 
 void Agent::ResetBehaviour()
