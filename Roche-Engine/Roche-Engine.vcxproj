@@ -584,6 +584,7 @@
     <ClInclude Include="..\External\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
+    <ClInclude Include="Utility\Helper\AIStateData.h" />
     <ClInclude Include="AI\AIWander.h" />
     <ClInclude Include="AI\AIFollow.h" />
     <ClInclude Include="AI\AIFlee.h" />
@@ -767,7 +768,7 @@
     <ClInclude Include="Utility\Helper\Vector2f.h" />
     <ClInclude Include="Utility\Rendering\Colour.h" />
     <ClInclude Include="Utility\Rendering\DDSTextureLoader.h" />
-    <ClInclude Include="Utility\Rendering\ProjectileData.h" />
+    <ClInclude Include="Utility\Helper\ProjectileData.h" />
     <ClInclude Include="Utility\Rendering\Shader_Data.h" />
     <ClInclude Include="Utility\Rendering\Texture.h" />
     <ClInclude Include="Utility\stdafx.h" />

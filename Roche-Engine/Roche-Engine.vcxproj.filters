@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\shaderPP_PS.hlsl">
@@ -273,17 +273,17 @@
     <ClCompile Include="Objects\ShopItem.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="AI\AIFire.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Components\EnemyController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LevelTrigger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Objects\ScoreBoard.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\EnemyController.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\AIFire.cpp">
+      <Filter>Source Files\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -593,7 +593,7 @@
     <ClInclude Include="Utility\Helper\FileHandler.h">
       <Filter>Header Files\Utility\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Rendering\ProjectileData.h">
+    <ClInclude Include="Utility\Helper\ProjectileData.h">
       <Filter>Header Files\Utility\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Collisions\LayerMask.h">
@@ -647,17 +647,20 @@
     <ClInclude Include="Components\BaseController.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="AI\AIFire.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\EnemyController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LevelTrigger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Objects\ScoreBoard.h">
       <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Helper\AIStateData.h">
+      <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\EnemyController.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIFire.h">
+      <Filter>Header Files\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
