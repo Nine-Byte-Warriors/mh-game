@@ -81,6 +81,11 @@ void Entity::SetComponents()
 	if (GetType() == "Enemy")
 	{
 		m_agent->SetEmitter(m_emitter);
+
+		if (m_entityController->GetName(m_iEntityNum) == "Carrot")
+		{
+			m_agent->LoadBehaviourFile("Resources\\Behaviours\\Behaviour.json");
+		}
 	}
 
 	if (GetType() == "Item")
