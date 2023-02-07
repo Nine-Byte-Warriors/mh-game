@@ -95,7 +95,33 @@ void Agent::SetBehaviour(AILogic::AIStateTypes behaviour)
 
 void Agent::LoadBehaviourFile(const std::string sFilePath)
 {
-	m_sBehaviourFile = !sFilePath.empty() ? sFilePath : "";
+	if (sFilePath.empty())
+		return;
+
+	m_sBehaviourFile = sFilePath;
+
+	std::vector<AIStateData::AIStateJson> vecJsonStates;
+
+	JsonLoading::LoadJson(vecJsonStates, m_sBehaviourFile);
+
+	if (vecJsonStates.empty()) { m_sBehaviourFile = ""; return; }
+
+	for (AIStateData::AIStateJson jState : vecJsonStates)
+	{
+		AIState* pState = m_pStateMachine->NewState(jState.iStateType);
+		pState->SetActivation(jState.fActivate);
+		pState->SetBounds(jState.fMax, jState.fMin);
+
+		switch (jState.iStateType)
+		{
+			case AIStateTypes::Patrol:	pState->SetParams((void*)&jState.oPatrolParams);	break;
+			case AIStateTypes::Follow:	pState->SetParams((void*)&jState.oFollowParams);	break;
+			case AIStateTypes::Wander:	pState->SetParams((void*)&jState.oWanderParams);	break;
+			case AIStateTypes::Fire:	pState->SetParams((void*)&jState.oFireParams);		break;
+		}
+
+		m_mapStates.emplace(jState.iStateType, pState);
+	}
 }
 
 void Agent::ResetBehaviour()

@@ -71,6 +71,11 @@ void Entity::SetComponents()
 
 		m_pController = std::make_shared<EnemyController>(m_physics, m_sprite, m_emitter);
 		m_agent->SetEmitter(m_emitter);
+
+		if (m_entityController->GetName(m_iEntityNum) == "Carrot")
+		{
+			m_agent->LoadBehaviourFile("Resources\\Behaviours\\Behaviour.json");
+		}
 	}
 
 	if (GetType() == "Item")
