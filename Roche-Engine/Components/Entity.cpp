@@ -112,6 +112,7 @@ void Entity::Update(const float dt)
 
 	if (m_playerController)
 		m_playerController->Update(dt);
+
 }
 
 std::string Entity::GetType()
@@ -376,26 +377,30 @@ void Entity::SetAnimation()
 
 void Entity::CheckAliveStatus()
 {
-	if (m_fEntityHealth <= 0.0f)
+	if (m_fEntityHealth == 0.0f)
 	{
+		OutputDebugStringA("death");
 		m_entityController->SetDead(m_iEntityNum); //populates a vector that deletes entities
+
 	}
 }
 
 void Entity::EntityCollisions(Collider& col)
 {
-	if (GetType() == "Player") // Runs after player has collided with an Enemy
+	if (GetType() == "Player")
 	{
 		//OutputDebugStringA("Hello enemy touch");
-		if (col.EntityType() == "Enemy")
+		if (col.EntityType() == "Enemy") // Runs after player has collided with an Enemy
 		{
 			m_health->TakeDamage(1.0f);
-			m_fEntityHealth = 0.0f;
+			m_fEntityHealth -= 100.0f;
 			//OutputDebugStringA("Hello Tomato Touch");
+			CheckAliveStatus();
+
 		}
 	}
 
-	else if (GetType() == "Projectile") // Runs after player has collided with a Projectile
+	else if (col.EntityType() == "Projectile") // Runs after player has collided with a Projectile
 	{
 		//if (GetType() == "Enemy")
 		//	m_fEntityHealth = 0.0f;
@@ -403,7 +408,6 @@ void Entity::EntityCollisions(Collider& col)
 		//if (GetType() == "Player")
 		//	m_health->TakeDamage(1.0f);
 	}
-
 
 	//else if (GetType() == "Coin") { } //TBD when coins are added, this is the collisions for the coin, to delete them simply set their entity health to 0 (see tomato code)
 }

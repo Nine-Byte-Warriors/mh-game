@@ -5,6 +5,7 @@
 #include "JsonLoading.h"
 #include "EntityAnimation.h"
 
+
 struct EntityData
 {
 	std::string name;

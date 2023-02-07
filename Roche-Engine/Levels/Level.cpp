@@ -365,7 +365,7 @@ void Level::UpdateEntity(const float dt)
     {
         AddNewEntity();
     }
-    else if (m_iEntityAmount != m_entityController.GetSize() || m_entityController.HasComponentUpdated())
+    else if (m_iEntityAmount != m_entityController.GetSize() || m_entityController.HasComponentUpdated() || m_entityController.m_dead.size() != 0)
     {
         RemoveEntities();
     }
@@ -421,7 +421,7 @@ void Level::RemoveEntities()
     m_entitiesDeleted = m_entityController.m_dead;
 
 #if _DEBUG
-    m_entitiesDeleted = m_entityEditor.GetEntitiesDeleted();
+    //m_entitiesDeleted = m_entityEditor.GetEntitiesDeleted();
 #endif
 
     for (int i = 0; i < m_entitiesDeleted.size(); i++)
@@ -443,10 +443,10 @@ void Level::RemoveEntities()
     }
 
 #if _DEBUG
-    m_iEntityAmount = m_entityEditor.GetEntityData().size();
+    m_iEntityAmount = m_entityEditor.GetEntityData().size() -1;
     m_entityEditor.ClearEntitiesDeleted();
 #endif
-
+    
     m_entityController.m_dead.clear();
 }
 
