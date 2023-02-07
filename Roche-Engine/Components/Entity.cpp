@@ -142,12 +142,11 @@ void Entity::Update(const float dt)
 	if (m_playerController)
 		m_playerController->Update(dt);
 
-	}
+
 
 	if (m_pController)
 		m_pController->Update(dt);
 }
-
 std::string Entity::GetType()
 {
 	return m_entityController->GetType(m_iEntityNum);
