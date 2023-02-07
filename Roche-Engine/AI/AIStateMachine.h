@@ -17,6 +17,20 @@ namespace AILogic
 		Fire = 6,
 	};
 
+	struct AIStateJson
+	{
+		AIStateTypes iStateType;
+		int iTypeID;
+		float fMin, fMax;
+		float fActivate;
+
+		PatrolParams oPatrolParams;
+		FollowParams oFollowParams;
+		WanderParams oWanderParams;
+		FireParams oFireParams;
+
+	};
+
 	class AIStateMachine : public AIState
 	{
 	public:

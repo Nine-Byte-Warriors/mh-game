@@ -144,7 +144,7 @@ void EntityEditor::AddNewEntity()
 		entityData->bColliderTrigger = false;
 		entityData->projectilePattern = "None";
 		entityData->projectileBullet = "None";
-		entityData->AI = true;
+		entityData->AI = true;	// <-- is this it?
 		entityData->projectileSystem = true;
 		entityData->collider = true;
 		entityData->bProjectilePattern = true;
@@ -276,6 +276,12 @@ void EntityEditor::AIWidget()
 		if (ImGui::TreeNode("##AI"))
 		{
 			ImGui::NewLine();
+			
+			// Target Area
+			AddBehaviour();
+			DelBehaviour();
+			ShowBehaviours();
+
 			SetBehaviour();
 
 			ImGui::TreePop();
