@@ -550,6 +550,7 @@ void UIScreen::Update( const float dt )
 			}
 
 
+
 			std::string currTexture = m_texturesHearts[0];
 			float currHealth = m_pPlayerHealth->GetCurrentHealth();
 			float maxHealth = m_pPlayerHealth->GetMaxHealth();
@@ -615,6 +616,10 @@ void UIScreen::Update( const float dt )
 			if (m_vWidgets[i]->GetAction() == "Title Card")
 			{
 				m_vWidgets[i]->GetImageWidget()->Resolve("", Colors::AntiqueWhite, "Resources\\Textures\\UI\\Title\\Title.png");
+			}
+			if (m_vWidgets[i]->GetAction() == "Backdrop")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("", Colors::AntiqueWhite, "Resources\\Textures\\UI\\Backdrop\\Main menu backdrop.png");
 			}
 			if ( m_vWidgets[i]->GetAction() == "" )
 			{
