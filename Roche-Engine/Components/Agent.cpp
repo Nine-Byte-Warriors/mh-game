@@ -56,9 +56,14 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_physics(physics)
 	pWanderState->SetParams(pWanderParams);
 	m_mapStates.emplace(AIStateTypes::Wander, pWanderState);
 
+	FireParams* pFireParams = new FireParams();
+	pFireParams->fRange = 200.0f;
+	pFireParams->fRate = 0.5f;
+
 	AIState* pFireState = m_pStateMachine->NewState(AIStateTypes::Fire);
 	pFireState->SetBounds(1.0f, 0.0f);
 	pFireState->SetActivation(0.0f);
+	pFireState->SetParams(pFireParams);
 	m_mapStates.emplace(AIStateTypes::Fire, pFireState);
 
 	AddToEvent();
@@ -72,155 +77,6 @@ void Agent::Update(const float dt)
 	m_pStateMachine->UpdateMachine(dt);
 }
 
-#if _DEBUG
-void Agent::SpawnControlWindow(Vector2f fGO, Vector2f fTarg) noexcept
-{
-	if (ImGui::Begin("Agent AI", FALSE, ImGuiWindowFlags_AlwaysAutoResize))
-	{
-		ImGui::Text("Behaviour");
-		static int activeBehaviour = 0;
-		static std::string previewValueBehaviour = "Idle";
-		static const char* behaviourList[]{ "Idle", "Seek", "Flee", "Patrol", "Follow", "Wander", "Fire" };
-		if (ImGui::BeginCombo("##Active Behaviour", previewValueBehaviour.c_str()))
-		{
-			for (uint32_t i = 0; i < IM_ARRAYSIZE(behaviourList); i++)
-			{
-				const bool isSelected = i == activeBehaviour;
-				if (ImGui::Selectable(behaviourList[i], isSelected))
-				{
-					activeBehaviour = i;
-					previewValueBehaviour = behaviourList[i];
-				}
-			}
-
-			switch (activeBehaviour)
-			{
-			case 0:
-				m_mapStates.find(AIStateTypes::Idle)->second->SetActivation(1.0f);
-				m_mapStates.find(AIStateTypes::Seek)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Flee)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Patrol)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Follow)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Wander)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Fire)->second->SetActivation(0.0f);
-				break;
-			case 1:
-				m_mapStates.find(AIStateTypes::Idle)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Seek)->second->SetActivation(1.0f);
-				m_mapStates.find(AIStateTypes::Flee)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Patrol)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Follow)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Wander)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Fire)->second->SetActivation(0.0f);
-				break;
-			case 2:
-				m_mapStates.find(AIStateTypes::Idle)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Seek)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Flee)->second->SetActivation(1.0f);
-				m_mapStates.find(AIStateTypes::Patrol)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Follow)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Wander)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Fire)->second->SetActivation(0.0f);
-				break;
-			case 3:
-				m_mapStates.find(AIStateTypes::Idle)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Seek)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Flee)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Patrol)->second->SetActivation(1.0f);
-				m_mapStates.find(AIStateTypes::Follow)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Wander)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Fire)->second->SetActivation(0.0f);
-				break;
-			case 4:
-				m_mapStates.find(AIStateTypes::Idle)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Seek)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Flee)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Patrol)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Follow)->second->SetActivation(1.0f);
-				m_mapStates.find(AIStateTypes::Wander)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Fire)->second->SetActivation(0.0f);
-				break;
-			case 5:
-				m_mapStates.find(AIStateTypes::Idle)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Seek)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Flee)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Patrol)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Follow)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Wander)->second->SetActivation(1.0f);
-				m_mapStates.find(AIStateTypes::Fire)->second->SetActivation(0.0f);
-				break;
-			case 6:
-				m_mapStates.find(AIStateTypes::Idle)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Seek)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Flee)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Patrol)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Follow)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Wander)->second->SetActivation(0.0f);
-				m_mapStates.find(AIStateTypes::Fire)->second->SetActivation(1.0f);
-				break;
-			}
-
-			ImGui::EndCombo();
-		}
-		ImGui::NewLine();
-		float floatTab[1] = { m_fSpeed };
-		float* speed = floatTab;
-		ImGui::Text("Speed");
-		ImGui::SliderFloat("##EnemySpeed", speed, 1.0f, 10.0f, "%.1f");
-		m_fSpeed = *speed;
-
-		ImGui::NewLine();
-		ImGui::Separator();
-		ImGui::NewLine();
-
-		ImGui::Text("Enemy");
-		ImGui::Text(std::string("X: ").append(std::to_string(fGO.x)).c_str());
-		ImGui::Text(std::string("Y: ").append(std::to_string(fGO.y)).c_str());
-
-		ImGui::NewLine();
-		float fDistance = fGO.Distance(fTarg);
-		ImGui::Text(std::string("Distance: ").append(std::to_string(fDistance)).c_str());
-
-		std::vector<Vector2f> vecWaypoints = m_mapStates.find(AIStateTypes::Patrol)->second->GetWaypoints();
-		int iCurrentWaypoint = m_mapStates.find(AIStateTypes::Patrol)->second->GetCurrentWaypointIndex();
-		if (vecWaypoints.size() > 0)
-		{
-			ImGui::NewLine();
-			ImGui::Separator();
-			ImGui::NewLine();
-
-			ImGui::Text("Waypoints");
-			ImGui::Text(std::string("Current Waypoint #").append(std::to_string(iCurrentWaypoint)).c_str());
-
-			for (int i = 0; i < vecWaypoints.size(); i++)
-			{
-				ImGui::Text(std::string("Waypoint #").append(std::to_string(i)).c_str());
-
-				ImGui::Text(std::string("X: ").append(std::to_string(vecWaypoints[i].x)).c_str());
-				ImGui::Text(std::string("Y: ").append(std::to_string(vecWaypoints[i].y)).c_str());
-
-				ImGui::NewLine();
-			}
-		}
-
-		ImGui::NewLine();
-		ImGui::Separator();
-		ImGui::NewLine();
-
-		ImGui::Text("Target");
-		ImGui::Text(std::string("X: ").append(std::to_string(fTarg.x)).c_str());
-		ImGui::Text(std::string("Y: ").append(std::to_string(fTarg.y)).c_str());
-		static int targetGroup = 0;
-		if (ImGui::RadioButton("Mouse", &targetGroup, 0))
-			m_bTargetMouse = true;
-		ImGui::SameLine();
-		if (ImGui::RadioButton("Player##Field", &targetGroup, 1))
-			m_bTargetMouse = false;
-	}
-	ImGui::End();
-}
-#endif
-
 void Agent::SetBehaviour(AILogic::AIStateTypes behaviour)
 {
 	m_bTargetMouse = false;
@@ -232,13 +88,8 @@ void Agent::SetBehaviour(AILogic::AIStateTypes behaviour)
 
 void Agent::ResetBehaviour()
 {
-	m_mapStates.find(AIStateTypes::Idle)->second->SetActivation(0.0f);
-	m_mapStates.find(AIStateTypes::Seek)->second->SetActivation(0.0f);
-	m_mapStates.find(AIStateTypes::Flee)->second->SetActivation(0.0f);
-	m_mapStates.find(AIStateTypes::Patrol)->second->SetActivation(0.0f);
-	m_mapStates.find(AIStateTypes::Follow)->second->SetActivation(0.0f);
-	m_mapStates.find(AIStateTypes::Wander)->second->SetActivation(0.0f);
-	m_mapStates.find(AIStateTypes::Fire)->second->SetActivation(0.0f);
+	for (std::pair<AIStateTypes, AILogic::AIState*> state : m_mapStates)
+		state.second->SetActivation(0.0f);
 }
 
 void Agent::AddToEvent() noexcept

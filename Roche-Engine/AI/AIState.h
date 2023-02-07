@@ -34,6 +34,12 @@ namespace AILogic
 		float fWanderDelay;
 	};
 
+	struct FireParams
+	{
+		float fRate;
+		float fRange;
+	};
+
 	class AIState
 	{
 	public:

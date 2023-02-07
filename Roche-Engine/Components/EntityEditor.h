@@ -57,6 +57,10 @@ private:
 	void SetSpeed();
 
 	//AI
+	void AddBehaviour() {};
+	void DelBehaviour() {};
+	void ShowBehaviours() {};
+
 	void SetBehaviour();
 
 	//ProjectileSystem
@@ -118,6 +122,8 @@ private:
 	std::vector<std::string> m_vSoundBankNamesList;
 
 	std::vector<int> m_entitiesDeleted;
+
+	std::vector<int> m_vecBehaviours;
 };
 
 #endif
