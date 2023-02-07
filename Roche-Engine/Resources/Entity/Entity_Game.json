@@ -255,6 +255,7 @@
         "animationPath": "None",
         "animationType": "Walk",
         "audio": false,
+<<<<<<< master-game:Roche-Engine/Resources/Entity/Entity_Game.json
         "bColliderEnabled": true,
         "bColliderInteractDecoration": false,
         "bColliderInteractEnemy": true,
@@ -262,6 +263,9 @@
         "bColliderInteractProjectile": false,
         "bColliderStatic": true,
         "bColliderTrigger": false,
+=======
+        "bColliderTrigger": true,
+>>>>>>> Stubbed out changes to the entity editor to allow the creation and amendment of AI states to an entity.:Roche-Engine/Resources/Entity/Entity.json
         "bProjectileBullet": true,
         "bProjectilePattern": true,
         "behaviour": "None",
