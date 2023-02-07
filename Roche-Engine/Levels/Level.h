@@ -28,12 +28,9 @@
 class Level : public LevelContainer
 {
 public:
-	Level( const std::string& name, int& levelId )
+	Level( const std::string& name )
 	{
 		m_sLevelName = name;
-		levelId++;
-		m_iCurrentLevel = levelId;
-		m_iNextLevel = levelId + 1;
 	}
 
 	void OnCreate() override;
@@ -57,6 +54,8 @@ public:
 	void CreateEntity();
 	void CreateTileMap();
 	void CreateUI();
+
+	inline std::string GetLevelName() { return m_sLevelName; };
 
 private:
 	void RenderFrameEntity();
@@ -109,7 +108,7 @@ private:
 	std::vector<int> m_entitiesDeleted;
 	Vector2f* m_vFakedPos;
 
-	bool m_bIsWindowHovered = false;
+	bool m_bIsWindowHovered = true;
 };
 
 #endif
