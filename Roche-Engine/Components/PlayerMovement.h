@@ -27,8 +27,8 @@ private:
 		Right
 	} m_eMoveDirection = Direction::Down;
 
-	std::shared_ptr<Physics> m_physics;
-	std::shared_ptr<Sprite> m_sprite;
+	std::shared_ptr<Physics> m_pPhysics;
+	std::shared_ptr<Sprite> m_pSprite;
 	float m_speed;
 	float m_currentSpeed;
 	float m_dashSpeed;

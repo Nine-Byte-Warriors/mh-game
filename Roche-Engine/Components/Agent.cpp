@@ -12,16 +12,16 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_pPhysics(physics)
 
 	m_sBehaviourFile = "";
 
-	AIState* pSeekState = m_pStateMachine->NewState(AIStateTypes::Seek);
+	AIState* pSeekState = m_pStateMachine->NewState(AILogic::AIStateTypes::Seek);
 	pSeekState->SetBounds(1.0f, 0.0f);
 	pSeekState->SetActivation(0.0f);
 	m_mapStates.emplace(AIStateTypes::Seek, pSeekState);
 
-	AIState* pIdleState = m_pStateMachine->NewState(AIStateTypes::Idle);
+	AIState* pIdleState = m_pStateMachine->NewState(AILogic::AIStateTypes::Idle);
 	pIdleState->SetActivation(1.0f);
 	m_mapStates.emplace(AIStateTypes::Idle, pIdleState);
 
-	AIState* pFleeState = m_pStateMachine->NewState(AIStateTypes::Flee);
+	AIState* pFleeState = m_pStateMachine->NewState(AILogic::AIStateTypes::Flee);
 	pFleeState->SetBounds(1.0f, 0.0f);
 	pFleeState->SetActivation(0.0f);
 	m_mapStates.emplace(AIStateTypes::Flee, pFleeState);
@@ -106,18 +106,7 @@ void Agent::LoadBehaviourFile(const std::string sFilePath)
 	
 	for (AIStateData::AIStateJson jState : vecJsonStates)
 	{
-		AIState* pState = m_pStateMachine->NewState(jState.iStateType);
-		pState->SetActivation(jState.fActivate);
-		pState->SetBounds(jState.fMax, jState.fMin);
-
-		switch (jState.iStateType)
-		{
-			case AIStateTypes::Flee:	pState->SetParams((void*)&jState.oFleeParams);		break;
-			case AIStateTypes::Patrol:	pState->SetParams((void*)&jState.oPatrolParams);	break;
-			case AIStateTypes::Follow:	pState->SetParams((void*)&jState.oFollowParams);	break;
-			case AIStateTypes::Wander:	pState->SetParams((void*)&jState.oWanderParams);	break;
-			case AIStateTypes::Fire:	pState->SetParams((void*)&jState.oFireParams);		break;
-		}
+		AIState* pState = m_pStateMachine->NewState(jState);
 
 		m_mapStates.emplace(jState.iStateType, pState);
 	}
@@ -164,17 +153,20 @@ void Agent::HandleEvent(Event* event)
 	{
 		if (m_bTargetMouse)
 		{
-			m_vTargetPos = *static_cast<Vector2f*>(event->GetData());
+			//m_vTargetPos = *static_cast<Vector2f*>(event->GetData());
 		}
 
 		break;
 	}
 	case EVENTID::PlayerPosition:
-		if (!m_bTargetMouse)
+		//if (!m_bTargetMouse)
 		{
 			std::pair < Sprite*, Vector2f*>* dPair = (std::pair<Sprite*, Vector2f*>*)(event->GetData());
 			Vector2f vSpriteHalfSize = Vector2f(dPair->first->GetWidthHeight() / 2);
-			m_vTargetPos = *dPair->second + vSpriteHalfSize;
+			//m_vTargetPos = *dPair->second + vSpriteHalfSize;
+			Vector2f vSpriteSize = dPair->first->GetWidthHeight();
+			//m_vTargetPos = *dPair->second + vSpriteSize;
+			m_vTargetPos = *dPair->second;
 		}
 		break;
 	default:

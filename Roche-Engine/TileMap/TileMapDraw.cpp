@@ -4,16 +4,16 @@
 
 TileMapDraw::TileMapDraw()
 {
-	m_sprite = std::make_shared<Sprite>();
-	m_transform = std::make_shared<Transform>( m_sprite );
+	m_pSprite = std::make_shared<Sprite>();
+	m_pTransform = std::make_shared<Transform>( m_pSprite );
 }
 
 void TileMapDraw::Initialize( const Graphics& gfx, ConstantBuffer<Matrices>& mat, const std::string& path )
 {
-	m_sprite->Initialize( gfx.GetDevice(), gfx.GetContext(), path, mat );
+	m_pSprite->Initialize( gfx.GetDevice(), gfx.GetContext(), path, mat );
 }
 
 void TileMapDraw::Update(const float dt)
 {
-	m_transform->Update();
+	m_pTransform->Update();
 }

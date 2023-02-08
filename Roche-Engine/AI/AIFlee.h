@@ -5,6 +5,7 @@
 #include "AIState.h"
 #include "Entity.h"
 #include "Agent.h"
+#include "AIStateData.h"
 
 namespace AILogic
 {
@@ -15,15 +16,13 @@ namespace AILogic
 		virtual ~AIFlee() = default;
 
 		virtual void Update(const float dt) override;
-        virtual void Enter() override {};
-        virtual void Exit() override {};
 
         virtual float CalculateActivation() override;
         inline virtual void SetTarget(Entity* pTarget) { m_pTarget = pTarget; }
         
+        void SetParams(AIStateData::FleeParams params);
+        
     private:
-        void GetFleeParams();
-
         Entity* m_pTarget;
         float m_fMinRange;
 		float m_fMaxRange;

@@ -6,7 +6,7 @@
     "iStateType": 2,
     "iTypeID": 0,
     "oFleeParams": {
-      "fMaxRange": 50.0,
+      "fMaxRange": 200.0,
       "fMinRange": 10.0
     },
     "oFireParams": {

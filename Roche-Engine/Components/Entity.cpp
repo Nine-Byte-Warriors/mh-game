@@ -30,15 +30,15 @@ Entity::~Entity()
 
 void Entity::SetComponents()
 {
-	m_sprite = std::make_shared<Sprite>();
-	m_transform = std::make_shared<Transform>( m_sprite );
-	m_physics = std::make_shared<Physics>(m_transform);
+	m_pSprite = std::make_shared<Sprite>();
+	m_pTransform = std::make_shared<Transform>( m_pSprite );
+	m_pPhysics = std::make_shared<Physics>(m_pTransform);
 	m_health = std::make_shared<Health>( GetType(), m_iEntityNum );
 	m_health->SetHealth( m_entityController->GetHealth( m_iEntityNum ) );
 
 	if (m_entityController->HasAI(m_iEntityNum))
 	{
-		m_agent = std::make_shared<Agent>(m_physics);
+		m_agent = std::make_shared<Agent>(m_pPhysics);
 	}
 
 	if (m_entityController->HasProjectileSystem(m_iEntityNum))
@@ -51,8 +51,8 @@ void Entity::SetComponents()
 	{
 		bool isTrigger = m_entityController->GetColliderTrigger(m_iEntityNum);
 
-		m_colliderCircle = std::make_shared<CircleCollider> (m_transform, m_sprite, isTrigger, m_iEntityNum, m_sEntityType, 32);
-		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, isTrigger, m_iEntityNum, m_sEntityType, 32, 32);
+		m_colliderCircle = std::make_shared<CircleCollider> (m_pTransform, m_pSprite, isTrigger, m_iEntityNum, m_sEntityType, 32);
+		m_colliderBox = std::make_shared<BoxCollider>(m_pTransform, m_pSprite, isTrigger, m_iEntityNum, m_sEntityType, 32, 32);
 	}
 	else
 	{
@@ -65,7 +65,7 @@ void Entity::SetComponents()
 		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
 			pManager->SetOwner(Projectile::ProjectileOwner::Player);
 		
-		m_pController = std::make_shared<PlayerController>(m_physics, m_sprite, m_emitter);
+		m_pController = std::make_shared<PlayerController>(m_pPhysics, m_pSprite, m_emitter);
 		m_inventory = std::make_shared<Inventory>();
 	}
 
@@ -74,12 +74,12 @@ void Entity::SetComponents()
 		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
 			pManager->SetOwner(Projectile::ProjectileOwner::Enemy);
 
-		//m_pController = std::make_shared<EnemyController>(m_physics, m_sprite, m_emitter);
+		m_pController = std::make_shared<EnemyController>(m_pPhysics, m_pSprite, m_emitter);
 		m_carrotEnemy = std::make_shared<CarrotEnemy>(this);
 
 		m_agent->SetEmitter(m_emitter);
 
-		if (m_entityController->GetName(m_iEntityNum) == "Carrot")
+		if (m_entityController->GetName(m_iEntityNum) == "Onion")
 		{
 			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\DefaultBehaviour.json");
 			m_agent->LoadBehaviourFile("Resources\\Behaviours\\FleeBehaviour.json");
@@ -107,7 +107,7 @@ void Entity::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat)
 
 	SetProjectileManagerInit(gfx, mat);
 
-	m_sprite->Initialize(gfx.GetDevice(), gfx.GetContext(), m_entityController->GetTexture(m_iEntityNum), mat);
+	m_pSprite->Initialize(gfx.GetDevice(), gfx.GetContext(), m_entityController->GetTexture(m_iEntityNum), mat);
 
 	SetPositionInit();
 	SetScaleInit();
@@ -131,9 +131,9 @@ void Entity::SetProjectileManagerInit(const Graphics& gfx, ConstantBuffer<Matric
 
 void Entity::Update(const float dt)
 {
-	m_sprite->Update(dt);
-	m_transform->Update();
-	m_physics->Update(dt);
+	m_pSprite->Update(dt);
+	m_pTransform->Update();
+	m_pPhysics->Update(dt);
 
 	if (m_entityController->HasAI(m_iEntityNum))
 		m_agent->Update(dt);
@@ -175,15 +175,15 @@ void Entity::SetPositionInit()
 {
 	m_vPosition->x = m_entityController->GetPosition(m_iEntityNum)[0];
 	m_vPosition->y = m_entityController->GetPosition(m_iEntityNum)[1];
-	m_transform->SetPositionInit(m_vPosition->x, m_vPosition->y);
-	m_transform->SetPosition(m_vPosition->x, m_vPosition->y);
+	m_pTransform->SetPositionInit(m_vPosition->x, m_vPosition->y);
+	m_pTransform->SetPosition(m_vPosition->x, m_vPosition->y);
 }
 
 void Entity::SetScaleInit()
 {
 	m_fScaleX = m_entityController->GetScale(m_iEntityNum)[0];
 	m_fScaleY = m_entityController->GetScale(m_iEntityNum)[1];
-	m_sprite->SetWidthHeight( m_fScaleX, m_fScaleY );
+	m_pSprite->SetWidthHeight( m_fScaleX, m_fScaleY );
 
 	if (m_entityController->HasProjectileBullet(m_iEntityNum))
 	{
@@ -200,22 +200,22 @@ void Entity::UpdateRowsColumns()
 {
 	m_iRows = m_entityController->GetRows(m_iEntityNum);
 	m_iColumns = m_entityController->GetColumns(m_iEntityNum);
-	m_sprite->SetRows(m_iRows);
-	m_sprite->SetColumns(m_iColumns);
+	m_pSprite->SetRows(m_iRows);
+	m_pSprite->SetColumns(m_iColumns);
 }
 
 void Entity::UpdatePosition()
 {
 	m_vPosition->x = m_entityController->GetPosition(m_iEntityNum)[0];
 	m_vPosition->y = m_entityController->GetPosition(m_iEntityNum)[1];
-	m_transform->SetPosition(m_vPosition->x, m_vPosition->y);
+	m_pTransform->SetPosition(m_vPosition->x, m_vPosition->y);
 }
 
 void Entity::UpdateScale()
 {
 	m_fScaleX = m_entityController->GetScale(m_iEntityNum)[0];
 	m_fScaleY = m_entityController->GetScale(m_iEntityNum)[1];
-	m_sprite->SetWidthHeight( m_fScaleX, m_fScaleY );
+	m_pSprite->SetWidthHeight( m_fScaleX, m_fScaleY );
 
 	if (m_entityController->HasProjectileBullet(m_iEntityNum))
 	{
@@ -237,14 +237,14 @@ void Entity::UpdateAnimation()
 			{
 				m_iMaxFrameX = m_animation.GetFrameCount()[i];
 				m_iCurFrameY = i;
-				m_sprite->UpdateFrameTime(m_animation.GetFrameTiming(i));
+				m_pSprite->UpdateFrameTime(m_animation.GetFrameTiming(i));
 			}
 		}
 
-		m_sprite->SetMaxFrame(m_iMaxFrameX, m_iMaxFrameY);
+		m_pSprite->SetMaxFrame(m_iMaxFrameX, m_iMaxFrameY);
 		if (GetType() != "Player")
 		{
-			m_sprite->SetCurFrameY(m_iCurFrameY);
+			m_pSprite->SetCurFrameY(m_iCurFrameY);
 		}
 
 		if (m_entityController->HasProjectileBullet(m_iEntityNum))
@@ -263,13 +263,13 @@ void Entity::UpdateAnimation()
 void Entity::UpdateRotation()
 {
 	m_fRotation = m_entityController->GetRotation(m_iEntityNum) * PI / 4;
-	m_transform->SetRotation(m_fRotation);
+	m_pTransform->SetRotation(m_fRotation);
 }
 
 void Entity::UpdateTexture()
 {
 	m_sTex = m_entityController->GetTexture(m_iEntityNum);
-	m_sprite->UpdateTex(m_device, m_sTex);
+	m_pSprite->UpdateTex(m_device, m_sTex);
 
 	if (m_entityController->HasProjectileBullet(m_iEntityNum))
 	{
@@ -296,7 +296,7 @@ void Entity::UpdateMass()
 	if (m_agent != nullptr)
 	{
 		m_fMass = m_entityController->GetMass(m_iEntityNum);
-		m_physics->SetMass(m_fMass);
+		m_pPhysics->SetMass(m_fMass);
 
 		if (m_entityController->HasProjectileBullet(m_iEntityNum))
 		{
@@ -375,8 +375,8 @@ void Entity::UpdateCollider()
 	}
 	else if (m_colliderCircle == nullptr || m_colliderBox == nullptr)
 	{
-		m_colliderCircle = std::make_shared<CircleCollider>(m_transform, m_sprite, true, m_iEntityNum, GetType(), 32);
-		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, true, m_iEntityNum, GetType(), 32, 32);
+		m_colliderCircle = std::make_shared<CircleCollider>(m_pTransform, m_pSprite, true, m_iEntityNum, GetType(), 32);
+		m_colliderBox = std::make_shared<BoxCollider>(m_pTransform, m_pSprite, true, m_iEntityNum, GetType(), 32, 32);
 	}
 }
 

@@ -434,7 +434,8 @@
     <ClInclude Include="..\External\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
-    <ClInclude Include="Utility\Helper\AIStateData.h" />
+    <ClInclude Include="AI\AIStateData.h" />
+    <ClInclude Include="AI\AIStateType.h" />
     <ClInclude Include="AI\AIWander.h" />
     <ClInclude Include="AI\AIFollow.h" />
     <ClInclude Include="AI\AIFlee.h" />

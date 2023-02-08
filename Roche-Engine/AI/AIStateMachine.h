@@ -3,46 +3,10 @@
 #define AISTATEMACHINE_H
 
 #include "AIState.h"
+#include "AIStateData.h"
 
 namespace AILogic
 {
-		enum class AIStateTypes
-		{
-			Idle = 0,
-			Seek = 1,
-			Flee = 2,
-			Patrol = 3,
-			Follow = 4,
-			Wander = 5,
-			Fire = 6,
-		};
-
-		static const std::map <AIStateTypes, std::string> m_mapStateType =
-		{
-			{ AIStateTypes::Idle, "Idle" },
-			{ AIStateTypes::Seek, "Seek" },
-			{ AIStateTypes::Flee, "Flee" },
-			{ AIStateTypes::Patrol, "Patrol" },
-			{ AIStateTypes::Follow, "Follow" },
-			{ AIStateTypes::Wander, "Wander" },
-			{ AIStateTypes::Fire, "Fire" }
-		};
-
-		class StateType
-		{
-		public:
-			static const std::string GetString(const AIStateTypes eStateType) {
-				auto itStateType = m_mapStateType.find(eStateType);
-				return m_mapStateType.contains(eStateType) ? itStateType->second : "";
-			}
-			static const AIStateTypes GetType(const std::string sStateType) {
-				for (auto stateType : m_mapStateType)
-					if (stateType.second == sStateType)
-						return stateType.first;
-				return AIStateTypes::Idle;
-			}
-		};
-		
 	class AIStateMachine : public AIState
 	{
 	public:
@@ -60,7 +24,9 @@ namespace AILogic
 		virtual void Reset() { for (int i = 0; i < m_vecStates.size(); i++)	m_vecStates[i]->Exit();	}
 
 		void Clear() { if(m_vecStates.size() > 0) m_vecStates.clear(); } // temporary. should be done differently
-		AIState* NewState(AIStateTypes fType); // tmeporary. should be done differently and elsewhere
+
+		AIState* NewState(AILogic::AIStateTypes eType);
+		AIState* NewState(AIStateData::AIStateJson jState);
 
 	protected:
 		std::vector<AIState*> m_vecStates;

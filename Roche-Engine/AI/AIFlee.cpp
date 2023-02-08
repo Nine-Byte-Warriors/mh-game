@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "AIFlee.h"
-#include "AIStateData.h"
 
 using namespace AILogic;
 
@@ -21,7 +20,7 @@ void AIFlee::Update(const float dt)
 	m_pAgent->GetPhysics()->AddForce(vDirection * m_pAgent->GetSpeed() );
 	
 	// Update the physics model
-	//m_pAgent->GetPhysics()->Update( dt );
+	m_pAgent->GetPhysics()->Update( dt );
 }
 
 float AIFlee::CalculateActivation() 
@@ -49,11 +48,8 @@ float AIFlee::CalculateActivation()
 
 	return fActivation;
 }
-
-void AIFlee::GetFleeParams()
+void AIFlee::SetParams(AIStateData::FleeParams params)
 {
-	AIStateData::FleeParams* pParams = (AIStateData::FleeParams*)m_params;
-	m_fMinRange = pParams->fMinRange;
-	m_fMaxRange = pParams->fMaxRange;
-
+	m_fMinRange = params.fMinRange;
+	m_fMaxRange = params.fMaxRange;
 }

@@ -34,9 +34,9 @@ public:
 	inline std::shared_ptr<Inventory> GetInventory() const noexcept{ return m_inventory; }
 	inline std::shared_ptr<Agent> GetAI() const noexcept { return m_agent; }
 	inline std::shared_ptr<Health> GetHealth() const noexcept { return m_health; }
-	inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_sprite; }
-	inline std::shared_ptr<Physics> GetPhysics() const noexcept { return m_physics; }
-	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_transform; }
+	inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_pSprite; }
+	inline std::shared_ptr<Physics> GetPhysics() const noexcept { return m_pPhysics; }
+	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_pTransform; }
 	inline std::vector<std::shared_ptr<ProjectileManager>> GetProjectileManagers() const noexcept { return m_vecProjectileManagers; }
 	inline std::shared_ptr<Collider> GetCollider() const noexcept {
 		if (m_entityController->GetColliderShape(m_iEntityNum) == "Circle")
@@ -128,9 +128,9 @@ private:
 
 	std::shared_ptr<Agent> m_agent;
 	std::shared_ptr<Health> m_health;
-	std::shared_ptr<Sprite> m_sprite;
-	std::shared_ptr<Physics> m_physics;
-	std::shared_ptr<Transform> m_transform;
+	std::shared_ptr<Sprite> m_pSprite;
+	std::shared_ptr<Physics> m_pPhysics;
+	std::shared_ptr<Transform> m_pTransform;
 	std::shared_ptr<BoxCollider> m_colliderBox;
 	std::shared_ptr<CircleCollider> m_colliderCircle;
 	std::vector<std::shared_ptr<ProjectileManager>> m_vecProjectileManagers;

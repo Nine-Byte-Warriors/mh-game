@@ -41,8 +41,8 @@ protected:
     LayerMask m_collisionMask = LayerMask(true, true, true, true);
     LayerNo m_layer = LayerNo::Enemy;
     //std::shared_ptr<Entity> m_entity;
-    std::shared_ptr<Transform> m_transform;
-    std::shared_ptr<Sprite> m_sprite;
+    std::shared_ptr<Transform> m_pTransform;
+    std::shared_ptr<Sprite> m_pSprite;
     int m_entityNum;
     std::string m_entityType;
 
@@ -82,8 +82,8 @@ public:
     inline void SetCollisionMask(LayerMask collisionMask) noexcept { m_collisionMask = collisionMask; }
     inline LayerMask GetCollisionMask() noexcept { return m_collisionMask; };
 
-    inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_transform; }
-    inline void SetTransform(std::shared_ptr<Transform> tf) noexcept { m_transform = tf; }
+    inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_pTransform; }
+    inline void SetTransform(std::shared_ptr<Transform> tf) noexcept { m_pTransform = tf; }
 
 
     inline int GetEntityNum() { return m_entityNum; };

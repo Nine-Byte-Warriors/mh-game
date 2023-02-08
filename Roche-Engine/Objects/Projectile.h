@@ -29,10 +29,10 @@ public:
 	void Update(const float dt);
 	void Draw(ID3D11DeviceContext* context, XMMATRIX orthoMatrix);
 
-	inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_sprite; }
-	inline std::shared_ptr<Physics> GetPhysics() const noexcept { return m_physics; }
-	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_transform; }
-	inline std::shared_ptr<Collider> GetCollider() const noexcept { return m_collider; }
+	inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_pSprite; }
+	inline std::shared_ptr<Physics> GetPhysics() const noexcept { return m_pPhysics; }
+	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_pTransform; }
+	inline std::shared_ptr<Collider> GetCollider() const noexcept { return m_pCollider; }
 	inline float GetMaxLifeTime() const noexcept { return m_fMaxLifeTime; }
 	inline float GetDelay() const noexcept { return m_fDelay; }
 	
@@ -54,10 +54,10 @@ public:
 private:
 	void CalcDirection();
 
-	std::shared_ptr<Sprite> m_sprite;
-	std::shared_ptr<Physics> m_physics;
-	std::shared_ptr<Transform> m_transform;
-	std::shared_ptr<Collider> m_collider;
+	std::shared_ptr<Sprite> m_pSprite;
+	std::shared_ptr<Physics> m_pPhysics;
+	std::shared_ptr<Transform> m_pTransform;
+	std::shared_ptr<Collider> m_pCollider;
 	
 	float m_fSpeed;
 	float m_fDelay;
