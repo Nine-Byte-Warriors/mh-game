@@ -393,6 +393,11 @@ void Entity::EntityCollisions(Collider& col)
 		{
 			m_health->TakeDamage(1.0f); // Change value for amount of damae dealt by touching enemy
 		}
+
+		if (col.EntityType() == "Projectile") // Runs after player has collided with a projectile, tested and works against the static projectile in scene
+		{
+			m_health->TakeDamage(1.0f);
+		}
 	}
 
 	//if (GetType() == "Enemy")
