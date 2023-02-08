@@ -3,8 +3,16 @@
 #define UI_MANAGER_H
 
 #include "UIScreen.h"
-#include "EventSystem.h"
 #include "GameManager.h"
+#include "AudioEngine.h"
+
+enum Levels
+{
+	LOADING = 0,
+	MENU,
+	GAME,
+	SHOP
+};
 
 /// <summary>
 /// Manager class for each of the UI components.
@@ -39,7 +47,10 @@ private:
 	std::vector<std::string> m_vUiToDraw;
 	XMFLOAT2 m_vWindowSize;
 
+	std::vector<std::string*> m_vLevelNames;
+
 	Phase m_currentGamePhase;
+	std::string m_sCurrentLevel;
 };
 
 #endif

@@ -6,10 +6,6 @@ AudioEngine* AudioEngine::m_pAudioEngineInstance{ nullptr };
 std::mutex AudioEngine::m_mutex;
 
 AudioEngine::AudioEngine() : m_pXAudio2(nullptr), m_pMasterVoice(nullptr) {
-	// REMOVE WHEN WE WILL ACTUALLY HANDLE IT FROM THE LEVEL EDITOR SIDE
-	m_vSoundBankNamesList.push_back("SoundBankTest1");
-	m_vSoundBankNamesList.push_back("SoundBankTest2");
-	m_vSoundBankNamesList.push_back("SoundBankTest3");
 }
 
 AudioEngine::~AudioEngine()
@@ -164,6 +160,11 @@ HRESULT AudioEngine::LoadAudio(std::string soundBankName, std::wstring filePath,
 	buffer->AudioBytes = dwChunkSize;  // size of the audio buffer in bytes
 	buffer->pAudioData = pDataBuffer;  // buffer containing audio data
 	buffer->Flags = XAUDIO2_END_OF_STREAM; // tell the source voice not to expect any data after this buffer
+	if (audioType == MUSIC) {
+		buffer->LoopBegin = 0;
+		buffer->LoopLength = 0;
+		buffer->LoopCount = XAUDIO2_LOOP_INFINITE;
+	}
 
 	CheckSoundBankExistence(soundBankName, audioType);
 

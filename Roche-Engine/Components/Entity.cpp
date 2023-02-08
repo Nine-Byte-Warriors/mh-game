@@ -22,7 +22,6 @@ Entity::Entity(EntityController& entityController, int EntityNum)
 	m_entityController = &entityController;
 	m_iEntityNum = EntityNum;
 
-	SetComponents();
 }
 
 Entity::~Entity()
@@ -44,15 +43,21 @@ void Entity::SetComponents()
 
 	if (m_entityController->HasProjectileSystem(m_iEntityNum))
 	{
-		m_vecProjectileManagers = ProjectileManager::GenerateManagers(m_entityController->GetProjectilePattern(m_iEntityNum));
+		m_vecProjectileManagers = ProjectileManager::GenerateManagers(m_entityController->GetProjectilePattern(m_iEntityNum), m_collisionHandler);
 		m_emitter = std::make_shared<Emitter>(m_vecProjectileManagers, 0.01f);
 	}
 
 	if (m_entityController->HasCollider(m_iEntityNum))
 	{
-		bool trigger = m_entityController->GetColliderTrigger(m_iEntityNum);
-		m_colliderCircle = std::make_shared<CircleCollider> (m_transform, m_sprite, trigger, m_iEntityNum, m_sEntityType, 32);
-		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, trigger, m_iEntityNum, m_sEntityType, 32, 32);
+		bool isTrigger = m_entityController->GetColliderTrigger(m_iEntityNum);
+
+		m_colliderCircle = std::make_shared<CircleCollider> (m_transform, m_sprite, isTrigger, m_iEntityNum, m_sEntityType, 32);
+		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, isTrigger, m_iEntityNum, m_sEntityType, 32, 32);
+	}
+	else
+	{
+		m_colliderCircle = nullptr;
+		m_colliderBox = nullptr;
 	}
 
 	if (GetType() == "Player")
@@ -69,7 +74,9 @@ void Entity::SetComponents()
 		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
 			pManager->SetOwner(Projectile::ProjectileOwner::Enemy);
 
-		m_pController = std::make_shared<EnemyController>(m_physics, m_sprite, m_emitter);
+		//m_pController = std::make_shared<EnemyController>(m_physics, m_sprite, m_emitter);
+		m_carrotEnemy = std::make_shared<CarrotEnemy>(this);
+
 		m_agent->SetEmitter(m_emitter);
 
 		if (m_entityController->GetName(m_iEntityNum) == "Carrot")
@@ -91,7 +98,12 @@ void Entity::SetComponents()
 
 void Entity::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat)
 {
+	SetComponents();
+
+
 	m_device = gfx.GetDevice();
+	m_context = gfx.GetContext();
+	m_mat = &mat;
 
 	SetProjectileManagerInit(gfx, mat);
 
@@ -101,7 +113,7 @@ void Entity::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat)
 	SetScaleInit();
 	UpdateRotation();
 	UpdateBehaviour();
-	UpdateColliderRadius();
+	UpdateCollider();
 	SetAnimation();
 	UpdateRowsColumns();
 }
@@ -153,8 +165,7 @@ void Entity::UpdateFromEntityData(const float dt, bool positionLocked)
 	UpdateSpeed();
 	UpdateProjectilePattern();
 	UpdateTexture();
-	UpdateColliderRadius();
-	UpdateColliderTrigger();
+	UpdateCollider();
 	UpdateAnimation();
 	UpdateRowsColumns();
 	UpdateAudio();
@@ -231,7 +242,10 @@ void Entity::UpdateAnimation()
 		}
 
 		m_sprite->SetMaxFrame(m_iMaxFrameX, m_iMaxFrameY);
-		//m_sprite->SetCurFrameY(m_iCurFrameY);
+		if (GetType() != "Player")
+		{
+			m_sprite->SetCurFrameY(m_iCurFrameY);
+		}
 
 		if (m_entityController->HasProjectileBullet(m_iEntityNum))
 		{
@@ -263,7 +277,16 @@ void Entity::UpdateTexture()
 		for (std::shared_ptr<ProjectileManager> pManager : m_vecProjectileManagers)
 		{
 			for (std::shared_ptr<Projectile> pProjectile : pManager->GetProjector())
-				pProjectile->GetSprite()->UpdateTex(m_device, m_sBulletTex);
+			{
+				if (pProjectile->GetSprite()->HasTexture())
+				{
+					pProjectile->GetSprite()->UpdateTex(m_device, m_sBulletTex);
+				}
+				else
+				{
+					pProjectile->GetSprite()->Initialize(m_device, m_context, m_entityController->GetTexture(m_iEntityNum), *m_mat);
+				}
+			}
 		}
 	}
 }
@@ -339,6 +362,24 @@ void Entity::UpdateProjectilePattern()
 	//}
 }
 
+void Entity::UpdateCollider()
+{
+	if (m_entityController->HasCollider(m_iEntityNum))
+	{
+		UpdateColliderRadius();
+		UpdateColliderLayer();
+		UpdateColliderEnabled();
+		UpdateColliderStatic();
+		UpdateColliderTrigger();
+		UpdateColliderMask();
+	}
+	else if (m_colliderCircle == nullptr || m_colliderBox == nullptr)
+	{
+		m_colliderCircle = std::make_shared<CircleCollider>(m_transform, m_sprite, true, m_iEntityNum, GetType(), 32);
+		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, true, m_iEntityNum, GetType(), 32, 32);
+	}
+}
+
 void Entity::UpdateColliderRadius()
 {
 	if (m_entityController->HasCollider(m_iEntityNum) && m_colliderCircle != nullptr)
@@ -368,6 +409,54 @@ void Entity::UpdateColliderTrigger()
 		m_colliderBox->SetIsTrigger(m_entityController->GetColliderTrigger(m_iEntityNum));
 		m_colliderCircle->SetIsTrigger(m_entityController->GetColliderTrigger(m_iEntityNum));
 	}
+}
+
+void Entity::UpdateColliderLayer()
+{
+	std::string colliderLayer = m_entityController->GetColliderLayer(m_iEntityNum);
+
+	if (colliderLayer == "Decoration")
+	{
+		m_colliderCircle->SetLayer(LayerNo::Decoration);
+		m_colliderBox->SetLayer(LayerNo::Decoration);
+	}
+	else if (colliderLayer == "Player")
+	{
+		m_colliderCircle->SetLayer(LayerNo::Player);
+		m_colliderBox->SetLayer(LayerNo::Player);
+	}
+	else if (colliderLayer == "Enemy")
+	{
+		m_colliderCircle->SetLayer(LayerNo::Enemy);
+		m_colliderBox->SetLayer(LayerNo::Enemy);
+	}
+	else if (colliderLayer == "Projectile")
+	{
+		m_colliderCircle->SetLayer(LayerNo::Projectile);
+		m_colliderBox->SetLayer(LayerNo::Projectile);
+	}
+}
+
+void Entity::UpdateColliderMask()
+{
+	std::vector<bool> colliderMaskData = m_entityController->GetColliderMask(m_iEntityNum);
+	LayerMask colliderMask = LayerMask(colliderMaskData[0], colliderMaskData[1], colliderMaskData[2], colliderMaskData[3]);
+	m_colliderCircle->SetCollisionMask(colliderMask);
+	m_colliderBox->SetCollisionMask(colliderMask);
+}
+
+void Entity::UpdateColliderStatic()
+{
+	bool isStatic = m_entityController->GetColliderStatic(m_iEntityNum);
+	m_colliderCircle->SetIsStatic(isStatic);
+	m_colliderBox->SetIsStatic(isStatic);
+}
+
+void Entity::UpdateColliderEnabled()
+{
+	bool isEnabled = m_entityController->GetColliderEnabled(m_iEntityNum);
+	m_colliderCircle->SetIsEnabled(isEnabled);
+	m_colliderBox->SetIsEnabled(isEnabled);
 }
 
 void Entity::UpdateAudio()

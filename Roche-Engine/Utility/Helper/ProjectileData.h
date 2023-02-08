@@ -19,7 +19,7 @@ namespace ProjectileData
 		//onDeathEvent or endOfLifeTimeEvent
 	};
 	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ProjectileJSON, m_fSpeed, m_fLifeTime, m_fDelay, m_fX, m_fY, m_fAngle, m_fAmplitude, m_fFrequency);
-	
+
 	struct ManagerJSON
 	{
 		std::string m_sID;

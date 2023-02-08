@@ -5,7 +5,6 @@
 class Graphics;
 #include "Agent.h"
 #include "Physics.h"
-#include "EventSystem.h"
 #include "EntityController.h"
 #include "ProjectileManager.h"
 #include "PlayerController.h"
@@ -15,6 +14,8 @@ class Graphics;
 #include "Health.h"
 #include "Emitter.h"
 #include "ShopItem.h"
+#include "CollisionHandler.h"
+#include "CarrotEnemy.h"
 
 class Entity
 {
@@ -26,6 +27,9 @@ public:
 	void SetProjectileManagerInit(const Graphics& gfx, ConstantBuffer<Matrices>& mat);
 	void Update(const float dt);
 	void UpdateFromEntityData(const float dt, bool positionLocked);
+
+	inline void SetCollisionHandler(CollisionHandler* handler) { 
+		m_collisionHandler = handler; }
 
 	inline std::shared_ptr<Inventory> GetInventory() const noexcept{ return m_inventory; }
 	inline std::shared_ptr<Agent> GetAI() const noexcept { return m_agent; }
@@ -71,9 +75,13 @@ private:
 	void UpdateBehaviour();
 
 	void UpdateProjectilePattern();
-
+	void UpdateCollider();
 	void UpdateColliderRadius();
 	void UpdateColliderTrigger();
+	void UpdateColliderLayer();
+	void UpdateColliderMask();
+	void UpdateColliderStatic();
+	void UpdateColliderEnabled();
 
 	void UpdateAudio();
 
@@ -83,6 +91,8 @@ private:
 	float m_fEntityHealth = 100.0;
 
 	ID3D11Device* m_device;
+	ID3D11DeviceContext* m_context;
+	ConstantBuffer<Matrices>* m_mat;
 
 	Vector2f* m_vPosition;
 	float m_fScaleX;
@@ -128,8 +138,11 @@ private:
 	std::shared_ptr<ShopItem> m_shopItem;
 	std::shared_ptr<Inventory>m_inventory;
 	std::shared_ptr<Emitter> m_emitter;
+	std::shared_ptr<CarrotEnemy> m_carrotEnemy;
 
 	EntityController* m_entityController;
+
+	CollisionHandler* m_collisionHandler;
 
 	EntityAnimation m_animation;
 

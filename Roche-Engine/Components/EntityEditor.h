@@ -9,10 +9,6 @@
 #include "AudioEngine.h"
 #include "AIStateData.h"
 
-#if _DEBUG
-#include <imgui/imgui.h>
-#endif
-
 class EntityEditor
 {
 public:
@@ -77,6 +73,10 @@ private:
 	void SetColliderShape();
 	void SetColliderSize();
 	void SetColliderTrigger();
+	void SetColliderLayer();
+	void SetColliderStatic();
+	void SetColliderEnabled();
+	void SetColliderMask();
 
 	//Audio
 	void SetSoundBank();

@@ -14,6 +14,7 @@
 #include "TileMapEditor.h"
 #include "TileMapLoader.h"
 #include "TileMapPaintOnMap.h"
+
 #if _DEBUG
 #include "AudioEditor.h"
 #endif
@@ -21,16 +22,22 @@
 #include "LevelStateMachine.h"
 #include "CollisionHandler.h"
 
+
 /// <summary>
 /// The first level of the game.
 /// Inherits from Level to render/update objects used in each level.
 /// </summary>
-class Level : public LevelContainer
+class Level : public LevelContainer, public Listener
 {
 public:
 	Level( const std::string& name )
 	{
 		m_sLevelName = name;
+		AddToEvent();
+	}
+	~Level()
+	{
+		RemoveFromEvent();
 	}
 
 	void OnCreate() override;
@@ -63,6 +70,12 @@ private:
 	void UpdateEntity(const float dt);
 	void AddNewEntity();
 	void RemoveEntities();
+	void DisplayEntityMaxHealth(int num);
+	void DisplayEntityCurrentHealth(int num);
+
+	void AddToEvent() noexcept;
+	void RemoveFromEvent() noexcept;
+	void HandleEvent(Event* event) override;
 
 	// Tile Map
 	void CreateTileMapDraw();
@@ -109,6 +122,11 @@ private:
 	Vector2f* m_vFakedPos;
 
 	bool m_bIsWindowHovered = true;
+
+	bool m_bIsGamePaused = false;
+
+	float m_fMaxHealth = 0;
+	float* m_fCurrentHealth = new float;
 };
 
 #endif

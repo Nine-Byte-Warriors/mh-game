@@ -1,0 +1,14 @@
+[
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\MusicShop.json",
+        "name": "MusicShop"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\ShopSounds.json",
+        "name": "ShopSounds"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\UI.json",
+        "name": "UI"
+    }
+]

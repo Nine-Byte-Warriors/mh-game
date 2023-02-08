@@ -88,8 +88,18 @@ void Collider::LogCollision(std::shared_ptr<Collider>& col)
     if (m_collisionCount < m_maxCollisions)
     {
          m_curCollisions.push_back(col);
-         m_collisionCount++;
+         //m_collisionCount++;
     }
+}
+
+void Collider::CheckDisabled()
+{
+    if (m_isEnabled == false && m_isEnabledCopy == true)
+    {
+        m_collisions.clear();
+        m_curCollisions.clear();
+    }
+    m_isEnabledCopy = m_isEnabled;
 }
 
 bool Collider::ResolveCheck(std::shared_ptr<Collider> collider)
@@ -214,6 +224,7 @@ void Collider::ProcessCollisions()
 
 void Collider::Update()
 {
+    CheckDisabled();
     if (m_curCollisions.size() == 0 && m_collisions.size() == 0)
         return;
 
