@@ -15,6 +15,13 @@ namespace AIStateData
 		float fMinRange;
 	};
 	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(FleeParams, fMaxRange, fMinRange);
+
+	struct SeekParams
+	{
+		float fMaxRange;
+		float fMinRange;
+	};
+	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SeekParams, fMaxRange, fMinRange);
 	
 	struct PatrolParams
 	{
@@ -55,12 +62,13 @@ namespace AIStateData
 		float fActivate;
 
 		FleeParams oFleeParams;
+		SeekParams oSeekParams;
 		PatrolParams oPatrolParams;
 		FollowParams oFollowParams;
 		WanderParams oWanderParams;
 		FireParams oFireParams;
 	};
-	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(AIStateJson, iStateType, iTypeID, fMin, fMax, fActivate, oFleeParams, oPatrolParams, oFollowParams, oWanderParams, oFireParams);
+	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(AIStateJson, iStateType, iTypeID, fMin, fMax, fActivate, oFleeParams, oSeekParams, oPatrolParams, oFollowParams, oWanderParams, oFireParams);
 }
 
 #endif // !AISTATEDATA_H

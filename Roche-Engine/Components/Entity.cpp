@@ -82,7 +82,8 @@ void Entity::SetComponents()
 		if (m_entityController->GetName(m_iEntityNum) == "Onion")
 		{
 			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\DefaultBehaviour.json");
-			m_agent->LoadBehaviourFile("Resources\\Behaviours\\FleeBehaviour.json");
+			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\FleeBehaviour.json"); 
+			m_agent->LoadBehaviourFile("Resources\\Behaviours\\SeekBehaviour.json");
 			m_agent->FillStateMachine();
 		}
 	}
