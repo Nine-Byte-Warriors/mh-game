@@ -1,7 +1,7 @@
 [
   {
     "m_bLoop": false,
-    "m_bUseTarget": true,
+    "m_bUseTarget": false,
     "m_fDelay": 0.0,
 	"m_fHeight": 0.0,
     "m_fWidth": 0.0,
