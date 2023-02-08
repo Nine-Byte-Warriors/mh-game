@@ -22,3 +22,24 @@ void AIFlee::Update(const float dt)
 	// Update the physics model
 	m_pAgent->GetPhysics()->Update( dt );
 }
+
+float AIFlee::CalculateActivation() 
+{
+	// Get agent position from agent's GameObject
+	Vector2f vAgentPos = m_pAgent->GetPhysics()->GetTransform()->GetPosition();
+
+	// Get target position
+	Vector2f vTargetPosition = m_pAgent->GetTargetPosition();
+
+	// Get the distance from the target
+	float fDistance = vTargetPosition.Distance(vAgentPos);
+
+	// Calculate the activation
+	float fActivation = 1.0f - (fDistance / 100.0f);
+
+	// Clamp the activation
+	fActivation = fActivation < GetLower() ? GetLower() : fActivation;
+	fActivation = fActivation > GetUpper() ? GetUpper() : fActivation;
+
+	return fActivation;
+}

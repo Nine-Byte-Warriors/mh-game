@@ -22,7 +22,7 @@ void AIStateMachine::UpdateMachine(float fDelta)
 
 	for (AIState* pState : m_vecStates)
 	{
-        if (pState->CalculateActivation() == 0)
+        if (pState->CalculateActivation() >= pState->m_fActivationLevel)
             pState->Exit();
         else
 			m_vecActiveStates.push_back(pState);
