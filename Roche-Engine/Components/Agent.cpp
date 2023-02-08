@@ -116,6 +116,7 @@ void Agent::LoadBehaviourFile(const std::string sFilePath)
 
 		switch (jState.iStateType)
 		{
+			case AIStateTypes::Flee:	pState->SetParams((void*)&jState.oFleeParams);		break;
 			case AIStateTypes::Patrol:	pState->SetParams((void*)&jState.oPatrolParams);	break;
 			case AIStateTypes::Follow:	pState->SetParams((void*)&jState.oFollowParams);	break;
 			case AIStateTypes::Wander:	pState->SetParams((void*)&jState.oWanderParams);	break;
@@ -176,7 +177,8 @@ void Agent::HandleEvent(Event* event)
 		if (!m_bTargetMouse)
 		{
 			std::pair < Sprite*, Vector2f*>* dPair = (std::pair<Sprite*, Vector2f*>*)(event->GetData());
-			m_vTargetPos = *dPair->second + Vector2f(dPair->first->GetWidthHeight() / 2);
+			Vector2f vSpriteHalfSize = Vector2f(dPair->first->GetWidthHeight() / 2);
+			m_vTargetPos = *dPair->second + vSpriteHalfSize;
 		}
 		break;
 	default:

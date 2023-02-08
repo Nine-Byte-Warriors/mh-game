@@ -1,0 +1,92 @@
+[
+    {
+        "fActivate": 0.0,
+        "fMax": 0.0,
+        "fMin": 0.0,
+        "iStateType": 0,
+        "iTypeID": 1,
+        "oFireParams": {
+            "fRange": 0.0,
+            "fRate": 0.0
+        },
+        "oFleeParams": {
+            "fMaxRange": 0.0,
+            "fMinRange": 0.0
+        },
+        "oFollowParams": {
+            "bKeepRange": false,
+            "fFollowRange": 0.0,
+            "fRepulseRange": 0.0
+        },
+        "oPatrolParams": {
+            "ePatrolType": 0,
+            "fDistanceToWaypoint": 0.0,
+            "fSensingRange": 0.0,
+            "iWaypointCount": 0
+        },
+        "oWanderParams": {
+            "fWanderAngle": 0.0,
+            "fWanderDelay": 0.0
+        }
+    },
+    {
+        "fActivate": 0.0,
+        "fMax": 0.0,
+        "fMin": 0.0,
+        "iStateType": 0,
+        "iTypeID": 2,
+        "oFireParams": {
+            "fRange": 0.0,
+            "fRate": 0.0
+        },
+        "oFleeParams": {
+            "fMaxRange": 0.0,
+            "fMinRange": 0.0
+        },
+        "oFollowParams": {
+            "bKeepRange": false,
+            "fFollowRange": 0.0,
+            "fRepulseRange": 0.0
+        },
+        "oPatrolParams": {
+            "ePatrolType": 0,
+            "fDistanceToWaypoint": 0.0,
+            "fSensingRange": 0.0,
+            "iWaypointCount": 0
+        },
+        "oWanderParams": {
+            "fWanderAngle": 0.0,
+            "fWanderDelay": 0.0
+        }
+    },
+    {
+        "fActivate": 0.0,
+        "fMax": 0.0,
+        "fMin": 0.0,
+        "iStateType": 0,
+        "iTypeID": 3,
+        "oFireParams": {
+            "fRange": 0.0,
+            "fRate": 0.0
+        },
+        "oFleeParams": {
+            "fMaxRange": 0.0,
+            "fMinRange": 0.0
+        },
+        "oFollowParams": {
+            "bKeepRange": false,
+            "fFollowRange": 0.0,
+            "fRepulseRange": 0.0
+        },
+        "oPatrolParams": {
+            "ePatrolType": 0,
+            "fDistanceToWaypoint": 0.0,
+            "fSensingRange": 0.0,
+            "iWaypointCount": 0
+        },
+        "oWanderParams": {
+            "fWanderAngle": 0.0,
+            "fWanderDelay": 0.0
+        }
+    }
+]

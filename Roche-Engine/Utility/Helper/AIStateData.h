@@ -9,6 +9,13 @@ using namespace AILogic;
 
 namespace AIStateData
 {
+	struct FleeParams
+	{
+		float fMaxRange;
+		float fMinRange;
+	};
+	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(FleeParams, fMaxRange, fMinRange);
+	
 	struct PatrolParams
 	{
 		float fSensingRange;
@@ -47,12 +54,13 @@ namespace AIStateData
 		float fMin, fMax;
 		float fActivate;
 
+		FleeParams oFleeParams;
 		PatrolParams oPatrolParams;
 		FollowParams oFollowParams;
 		WanderParams oWanderParams;
 		FireParams oFireParams;
 	};
-	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(AIStateJson, iStateType, iTypeID, fMin, fMax, fActivate, oPatrolParams, oFollowParams, oWanderParams, oFireParams);
+	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(AIStateJson, iStateType, iTypeID, fMin, fMax, fActivate, oFleeParams, oPatrolParams, oFollowParams, oWanderParams, oFireParams);
 }
 
 #endif // !AISTATEDATA_H

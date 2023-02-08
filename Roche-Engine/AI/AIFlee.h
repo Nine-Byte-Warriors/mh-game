@@ -22,7 +22,11 @@ namespace AILogic
         inline virtual void SetTarget(Entity* pTarget) { m_pTarget = pTarget; }
         
     private:
+        void GetFleeParams();
+
         Entity* m_pTarget;
+        float m_fMinRange;
+		float m_fMaxRange;
     };
 }
 

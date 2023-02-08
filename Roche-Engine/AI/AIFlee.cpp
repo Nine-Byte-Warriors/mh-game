@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AIFlee.h"
+#include "AIStateData.h"
 
 using namespace AILogic;
 
@@ -20,7 +21,7 @@ void AIFlee::Update(const float dt)
 	m_pAgent->GetPhysics()->AddForce(vDirection * m_pAgent->GetSpeed() );
 	
 	// Update the physics model
-	m_pAgent->GetPhysics()->Update( dt );
+	//m_pAgent->GetPhysics()->Update( dt );
 }
 
 float AIFlee::CalculateActivation() 
@@ -35,11 +36,24 @@ float AIFlee::CalculateActivation()
 	float fDistance = vTargetPosition.Distance(vAgentPos);
 
 	// Calculate the activation
-	float fActivation = 1.0f - (fDistance / 100.0f);
+	if (fDistance <= m_fMinRange || fDistance >= m_fMaxRange)
+		return 0.0f;
+
+	float fRange = m_fMaxRange - m_fMinRange;
+
+	float fActivation = 1.0f - (fRange / fDistance - m_fMinRange);
 
 	// Clamp the activation
 	fActivation = fActivation < GetLower() ? GetLower() : fActivation;
 	fActivation = fActivation > GetUpper() ? GetUpper() : fActivation;
 
 	return fActivation;
+}
+
+void AIFlee::GetFleeParams()
+{
+	AIStateData::FleeParams* pParams = (AIStateData::FleeParams*)m_params;
+	m_fMinRange = pParams->fMinRange;
+	m_fMaxRange = pParams->fMaxRange;
+
 }
