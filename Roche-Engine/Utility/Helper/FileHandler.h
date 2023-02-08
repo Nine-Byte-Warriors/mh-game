@@ -3,6 +3,7 @@
 #define FILE_HANDLER_H
 
 #include <ShObjIdl.h>
+#include <filesystem>
 
 class FileHandler : public std::enable_shared_from_this<FileHandler>
 {
@@ -48,6 +49,16 @@ public:
 
 			if (m_sExt.empty()) m_sExt = "json";
 			return m_sPath + "\\" + m_sFile + "." + m_sExt;
+		}
+
+		std::string GetPathFrom(std::string sFolderPath)
+		{
+			if (!m_sPath.contains(sFolderPath))
+				return GetFullPath();
+
+			size_t iFolderIndex = m_sPath.find(sFolderPath);
+			std::string sRelativePath = m_sPath.substr(iFolderIndex);
+			return sRelativePath + "\\" + m_sFile + "." + m_sExt;
 		}
 	};
 

@@ -41,11 +41,8 @@ void Entity::SetComponents()
 
 	if (m_entityController->HasProjectileSystem(m_iEntityNum))
 	{
-		std::string projectiletype = "";
-		if (GetType() == "Player")
-			projectiletype = "PlayerProjectile";
-		else if (GetType() == "Enemy")
-			projectiletype == "EnemyProjectile";
+		std::string projectiletype = GetType();
+		projectiletype.append("Projectile");
 
 		m_vecProjectileManagers = ProjectileManager::GenerateManagers(m_entityController->GetProjectilePattern(m_iEntityNum), m_collisionHandler, projectiletype);
 		m_emitter = std::make_shared<Emitter>(m_vecProjectileManagers, 0.01f);
