@@ -32,7 +32,7 @@ namespace AILogic
 		inline const float GetLower() const noexcept { return m_fLower; }
 		inline const float GetUpper() const noexcept { return m_fUpper; }
 
-		virtual void SetParams(void* params) { m_params = params; }
+		void SetParams(void* params) { m_params = params; }
 
 		// DEBUG
 		virtual std::vector<Vector2f> GetWaypoints() const { return std::vector<Vector2f>(); }

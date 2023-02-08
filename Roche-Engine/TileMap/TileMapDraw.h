@@ -12,11 +12,11 @@ public:
 	void Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat, const std::string& path);
 	void Update(const float dt);
 
-	inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_sprite; }
-	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_transform; }
+	inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_pSprite; }
+	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_pTransform; }
 private:
-	std::shared_ptr<Sprite> m_sprite;
-	std::shared_ptr<Transform> m_transform;
+	std::shared_ptr<Sprite> m_pSprite;
+	std::shared_ptr<Transform> m_pTransform;
 };
 
 #endif

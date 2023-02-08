@@ -43,7 +43,7 @@ public:
 
 	void Update();
 private:
-	std::shared_ptr<Sprite> m_sprite;
+	std::shared_ptr<Sprite> m_pSprite;
 	XMMATRIX worldMatrix = XMMatrixIdentity();
 	Vector2f m_vPosition, m_vPositionInit;
 	float m_fRotation, m_fRotationInit;

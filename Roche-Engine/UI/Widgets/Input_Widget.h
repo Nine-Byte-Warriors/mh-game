@@ -25,8 +25,8 @@ public:
     std::string GetCurrentText() const noexcept { return m_sCurrText.empty() ? m_sPlaceholder : m_sCurrText; }
     inline void SetTextOffset( XMFLOAT2 pos ) noexcept { m_vTextOffset = pos; }
 
-    inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_sprite; }
-    inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_transform; }
+    inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_pSprite; }
+    inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_pTransform; }
 
 private:
     FontSize m_eFontSize = FontSize::MEDIUM;
@@ -41,8 +41,8 @@ private:
     XMVECTORF32 m_textColour;
     std::string m_buttonTexture;
 
-    std::shared_ptr<Sprite> m_sprite;
-    std::shared_ptr<Transform> m_transform;
+    std::shared_ptr<Sprite> m_pSprite;
+    std::shared_ptr<Transform> m_pTransform;
 };
 
 #endif

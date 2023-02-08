@@ -6,8 +6,8 @@ CircleCollider::CircleCollider(
     const std::shared_ptr<Sprite>& sprite,
     bool trigger, int entityNum, std::string entityType, float radius )
 {
-    m_transform = transform;
-    m_sprite = sprite;
+    m_pTransform = transform;
+    m_pSprite = sprite;
     m_isTrigger = trigger;
 
     m_entityNum = entityNum;

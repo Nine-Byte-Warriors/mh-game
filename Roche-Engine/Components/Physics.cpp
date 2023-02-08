@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Physics.h"
 
-Physics::Physics(const std::shared_ptr<Transform>& transform) : m_transform(transform)
+Physics::Physics(const std::shared_ptr<Transform>& transform) : m_pTransform(transform)
 {
 	m_fMass = 40.0f;
 	m_vFriction = { 0.0f, 0.0f };
@@ -54,11 +54,11 @@ void Physics::Drag()
 
 void Physics::ComputePosition()
 {
-	Vector2f position = m_transform->GetPosition();
+	Vector2f position = m_pTransform->GetPosition();
 	position.x += m_vVelocity.x + 0.5f * m_vAcceleration.x;
 	position.y += m_vVelocity.y + 0.5f * m_vAcceleration.y;
 	m_vVelocity += m_vAcceleration;
-	m_transform->SetPosition(position);
+	m_pTransform->SetPosition(position);
 }
 
 void Physics::ResetForces()

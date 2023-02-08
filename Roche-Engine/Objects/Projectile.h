@@ -33,6 +33,7 @@ public:
 	inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_pSprite; }
 	inline std::shared_ptr<Physics> GetPhysics() const noexcept { return m_pPhysics; }
 	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_pTransform; }
+	inline std::shared_ptr<Collider> GetCollider() const noexcept { return m_pCollider; }
 	inline float GetMaxLifeTime() const noexcept { return m_fMaxLifeTime; }
 	inline float GetDelay() const noexcept { return m_fDelay; }
 	
@@ -57,7 +58,7 @@ private:
 	std::shared_ptr<Sprite> m_pSprite;
 	std::shared_ptr<Physics> m_pPhysics;
 	std::shared_ptr<Transform> m_pTransform;
-	std::shared_ptr<CircleCollider> m_pColliderCircle;
+	std::shared_ptr<Collider> m_pCollider;
 	
 	float m_fSpeed;
 	float m_fDelay;

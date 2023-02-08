@@ -6,14 +6,14 @@ BoxCollider::BoxCollider(
     const std::shared_ptr<Sprite>& sprite,
     bool trigger, int entityNum, std::string entityType, float width, float height) : m_width(width), m_height(height)
 {
-    m_transform = transform;
-    m_sprite = sprite;
+    m_pTransform = transform;
+    m_pSprite = sprite;
     m_isTrigger = trigger;
 
     m_entityNum = entityNum;
     m_entityType = entityType;
-    m_width = m_sprite->GetWidth();
-    m_height = m_sprite->GetHeight();
+    m_width = m_pSprite->GetWidth();
+    m_height = m_pSprite->GetHeight();
     m_type = ColliderType::Box;
 }
 

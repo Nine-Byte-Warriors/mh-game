@@ -33,7 +33,7 @@ public:
 	virtual void ResetForces();
 
 	inline void AddForce( Vector2f force ) noexcept { m_vNetForce += force; }
-	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_transform; }
+	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_pTransform; }
 protected:
 	// update forces
 	void Friction( const float dt );
@@ -47,7 +47,7 @@ protected:
 	Vector2f m_vNetForce;
 	Vector2f m_vVelocity;
 	Vector2f m_vAcceleration;
-	std::shared_ptr<Transform> m_transform;
+	std::shared_ptr<Transform> m_pTransform;
 
 	// local variables
 	static constexpr float m_fDragFactor = 2.0f;

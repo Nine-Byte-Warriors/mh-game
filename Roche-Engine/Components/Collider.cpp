@@ -6,8 +6,8 @@ Collider::Collider(
     const std::shared_ptr<Sprite>& sprite,
     bool trigger, int entityNum, std::string entityType)
 {
-    m_transform = transform;
-    m_sprite = sprite;
+    m_pTransform = transform;
+    m_pSprite = sprite;
     m_isTrigger = trigger;
 
     m_entityNum = entityNum;
@@ -22,8 +22,8 @@ Collider::Collider(Collider& col)
     m_isTrigger = col.m_isTrigger;
     m_lastValidPosition = col.m_lastValidPosition;
     m_layer = col.m_layer;
-    m_transform = col.m_transform;
-    m_sprite = col.m_sprite;
+    m_pTransform = col.m_pTransform;
+    m_pSprite = col.m_pSprite;
     m_entityNum = col.m_entityNum;
     m_entityType = col.m_entityType;
 
@@ -69,18 +69,18 @@ void Collider::RemoveDuplicateElements(std::vector<T>& vec)
 
 Vector2f Collider::Offset()
 {
-    return m_sprite->GetWidthHeight() / 2.0f;
+    return m_pSprite->GetWidthHeight() / 2.0f;
 }
 
 Vector2f Collider::GetCenterPosition()
 {
-    Vector2f center = m_transform->GetPosition() + Offset();
+    Vector2f center = m_pTransform->GetPosition() + Offset();
     return center;
 };
 
 void Collider::SetTransformPosition(Vector2f position)
 {
-    m_transform->SetPosition(position - Offset());
+    m_pTransform->SetPosition(position - Offset());
 }
 
 void Collider::LogCollision(std::shared_ptr<Collider>& col)

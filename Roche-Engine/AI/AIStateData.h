@@ -2,7 +2,7 @@
 #ifndef AISTATEDATA_H
 #define AISTATEDATA_H
 
-#include "AIStateMachine.h"
+#include "AIStateType.h"
 #include "JsonLoading.h"
 
 using namespace AILogic;

@@ -3,8 +3,8 @@
 
 PlayerMovement::PlayerMovement(const std::shared_ptr<Physics>& physics, const std::shared_ptr<Sprite>& sprite, float speed)
 {
-	m_physics = physics;
-	m_sprite = sprite;
+	m_pPhysics = physics;
+	m_pSprite = sprite;
 	m_speed = speed;
 	m_currentSpeed = m_speed;
 	m_bDash = false;
@@ -30,9 +30,9 @@ PlayerMovement::~PlayerMovement()
 
 void PlayerMovement::Update(const float dt)
 {
-	Vector2f* pos = new Vector2f(m_physics->GetTransform()->GetPosition());
+	Vector2f* pos = new Vector2f(m_pPhysics->GetTransform()->GetPosition());
 	std::pair<Sprite*, Vector2f*>* charSpriteandPos = new std::pair<Sprite*, Vector2f*>();
-	charSpriteandPos->first = m_sprite.get();
+	charSpriteandPos->first = m_pSprite.get();
 	charSpriteandPos->second = pos;
 	EventSystem::Instance()->AddEvent(EVENTID::PlayerPosition, charSpriteandPos);
 
@@ -43,7 +43,7 @@ void PlayerMovement::Update(const float dt)
 	case Direction::Left:
 	case Direction::Down:
 	case Direction::Right:
-		m_sprite->SetShouldUpdate( false );
+		m_pSprite->SetShouldUpdate( false );
 		break;
 	}
 }
@@ -64,31 +64,31 @@ void PlayerMovement::HandleEvent(Event* event)
 	{
 	case EVENTID::MoveUp:
 		if(m_bshouldMove)
-			m_physics->AddForce({ 0, -10 });
+			m_pPhysics->AddForce({ 0, -10 });
 		m_eMoveDirection = Direction::Up;
-		m_sprite->SetShouldUpdate( true );
-		m_sprite->SetCurFrameY(3);
+		m_pSprite->SetShouldUpdate( true );
+		m_pSprite->SetCurFrameY(3);
 		break;
 	case EVENTID::MoveLeft:
 		if (m_bshouldMove)
-			m_physics->AddForce({ -10,0 });
+			m_pPhysics->AddForce({ -10,0 });
 		m_eMoveDirection = Direction::Left;
-		m_sprite->SetShouldUpdate( true );
-		m_sprite->SetCurFrameY(1);
+		m_pSprite->SetShouldUpdate( true );
+		m_pSprite->SetCurFrameY(1);
 		break;
 	case EVENTID::MoveDown:
 		if (m_bshouldMove)
-			m_physics->AddForce({ 0, 10 });
+			m_pPhysics->AddForce({ 0, 10 });
 		m_eMoveDirection = Direction::Down;
-		m_sprite->SetShouldUpdate( true );
-		m_sprite->SetCurFrameY(0);
+		m_pSprite->SetShouldUpdate( true );
+		m_pSprite->SetCurFrameY(0);
 		break;
 	case EVENTID::MoveRight:
 		if (m_bshouldMove)
-			m_physics->AddForce({ 10,0 });
+			m_pPhysics->AddForce({ 10,0 });
 		m_eMoveDirection = Direction::Right;
-		m_sprite->SetShouldUpdate( true );
-		m_sprite->SetCurFrameY(2);
+		m_pSprite->SetShouldUpdate( true );
+		m_pSprite->SetCurFrameY(2);
 		break;
 	case EVENTID::PlayerDash:
 		Dash();

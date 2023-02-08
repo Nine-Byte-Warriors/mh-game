@@ -16,8 +16,8 @@ public:
     void Draw( ID3D11Device* device, ID3D11DeviceContext* context, XMMATRIX worldOrtho, TextRenderer* textRenderer);
     void Resolve(const std::string& text, XMVECTORF32 textColour,const std::string& texture, FontSize size = FontSize::LARGE );
 
-    inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_sprite; }
-    inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_transform; }
+    inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_pSprite; }
+    inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_pTransform; }
 
 private:
 	std::string m_sText;
@@ -25,8 +25,8 @@ private:
     FontSize m_eFontSize = FontSize::LARGE;
 
     std::string m_sTextFile;
-    std::shared_ptr<Sprite> m_sprite;
-    std::shared_ptr<Transform> m_transform;
+    std::shared_ptr<Sprite> m_pSprite;
+    std::shared_ptr<Transform> m_pTransform;
 };
 
 #endif
