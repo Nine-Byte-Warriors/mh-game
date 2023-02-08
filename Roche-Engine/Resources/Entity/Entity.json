@@ -39,7 +39,7 @@
         "projectileSystem": true,
         "rotation": 0.0,
         "rows": 4,
-        "sColliderLayer": "Enemy",
+        "sColliderLayer": "Player",
         "scale": [
             100.0,
             100.0
@@ -122,7 +122,7 @@
         ],
         "colliderShape": "Box",
         "columns": 2,
-        "health": 100.0,
+        "health": 2.0,
         "identifier": 2,
         "mass": 1.0,
         "maxFrame": [
@@ -131,7 +131,7 @@
         ],
         "name": "Onion",
         "position": [
-            744.0,
+            958.0,
             500.0
         ],
         "projectileBullet": "Projectile1",
@@ -147,6 +147,56 @@
         "soundBankName": "",
         "speed": 10.0,
         "texture": "Resources\\Textures\\Entity\\Onion\\Onion.png",
+        "type": "Enemy"
+    },
+    {
+        "AI": true,
+        "animation": true,
+        "animationPath": "None",
+        "animationType": "Walk",
+        "audio": false,
+        "bColliderEnabled": true,
+        "bColliderInteractDecoration": true,
+        "bColliderInteractEnemy": true,
+        "bColliderInteractPlayer": true,
+        "bColliderInteractProjectile": true,
+        "bColliderStatic": false,
+        "bColliderTrigger": false,
+        "bProjectileBullet": true,
+        "bProjectilePattern": true,
+        "behaviour": "None",
+        "collider": true,
+        "colliderRadius": [
+            64.0,
+            64.0
+        ],
+        "colliderShape": "Box",
+        "columns": 2,
+        "health": 2.0,
+        "identifier": 3,
+        "mass": 1.0,
+        "maxFrame": [
+            1,
+            1
+        ],
+        "name": "Carrot",
+        "position": [
+            500.0,
+            500.0
+        ],
+        "projectileBullet": "None",
+        "projectilePattern": "None",
+        "projectileSystem": true,
+        "rotation": 0.0,
+        "rows": 3,
+        "sColliderLayer": "Enemy",
+        "scale": [
+            64.0,
+            64.0
+        ],
+        "soundBankName": "",
+        "speed": 10.0,
+        "texture": "Resources\\Textures\\Entity\\Carrot\\Carrot.png",
         "type": "Enemy"
     }
 ]
