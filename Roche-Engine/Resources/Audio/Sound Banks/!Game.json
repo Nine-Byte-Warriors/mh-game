@@ -1,7 +1,15 @@
 [
     {
+        "filePath": "Resources\\Audio\\Sound Banks\\Bean.json",
+        "name": "Bean"
+    },
+    {
         "filePath": "Resources\\Audio\\Sound Banks\\CarrotEnemy.json",
         "name": "CarrotEnemy"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\Cauliflower.json",
+        "name": "Cauliflower"
     },
     {
         "filePath": "Resources\\Audio\\Sound Banks\\Music.json",
@@ -16,6 +24,10 @@
         "name": "Player"
     },
     {
+        "filePath": "Resources\\Audio\\Sound Banks\\Potato.json",
+        "name": "Potato"
+    },
+    {
         "filePath": "Resources\\Audio\\Sound Banks\\ShopSounds.json",
         "name": "ShopSounds"
     },
@@ -26,9 +38,5 @@
     {
         "filePath": "Resources\\Audio\\Sound Banks\\UI.json",
         "name": "UI"
-    },
-    {
-        "filePath": "Resources\\Audio\\Sound Banks\\Potato.json",
-        "name": "Potato"
     }
 ]

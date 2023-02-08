@@ -6,17 +6,7 @@
         "pitchMax": 1.0,
         "pitchMin": 1.0,
         "randomPitch": false,
-        "tagName": "Battle1",
-        "volume": 1.0
-    },
-    {
-        "audioType": 1,
-        "filePath": "Resources\\Audio\\music2.wav",
-        "name": "music2",
-        "pitchMax": 1.0,
-        "pitchMin": 1.0,
-        "randomPitch": false,
-        "tagName": "Ambient1",
+        "tagName": "NightPhaseMusic",
         "volume": 1.0
     },
     {
@@ -36,7 +26,7 @@
         "pitchMax": 1.0,
         "pitchMin": 1.0,
         "randomPitch": false,
-        "tagName": "Ambient2",
+        "tagName": "DayPhaseMusic",
         "volume": 1.0
     },
     {
@@ -46,7 +36,17 @@
         "pitchMax": 1.0,
         "pitchMin": 1.0,
         "randomPitch": false,
-        "tagName": "Win",
+        "tagName": "GameWinMusic",
+        "volume": 1.0
+    },
+    {
+        "audioType": 1,
+        "filePath": "Resources\\Audio\\pcm-32bit-44khz-mono.wav",
+        "name": "pcm-32bit-44khz-mono",
+        "pitchMax": 1.0,
+        "pitchMin": 1.0,
+        "randomPitch": false,
+        "tagName": "GameOverMusic",
         "volume": 1.0
     }
 ]
