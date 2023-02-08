@@ -592,6 +592,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="Resources\Behaviours\DefaultBehaviour.json" />
     <None Include="Resources\Cursors\cur116.cur" />
     <None Include="Resources\Cursors\cur117.cur" />
     <None Include="Resources\Cursors\cur118.cur" />

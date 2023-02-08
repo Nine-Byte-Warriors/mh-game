@@ -74,7 +74,8 @@ void Entity::SetComponents()
 
 		if (m_entityController->GetName(m_iEntityNum) == "Carrot")
 		{
-			m_agent->LoadBehaviourFile("Resources\\Behaviours\\Behaviour.json");
+			m_agent->LoadBehaviourFile("Resources\\Behaviours\\DefaultBehaviour.json");
+			m_agent->FillStateMachine();
 		}
 	}
 
