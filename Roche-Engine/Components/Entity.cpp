@@ -389,27 +389,21 @@ void Entity::EntityCollisions(Collider& col)
 {
 	if (GetType() == "Player")
 	{
-		//OutputDebugStringA("Hello enemy touch");
-		if (col.EntityType() == "Enemy") // Runs after player has collided with an Enemy
+		if (col.EntityType() == "Enemy") // Runs after player has collided with an enemy
 		{
-			m_health->TakeDamage(1.0f);
-			
-			//m_fEntityHealth = 100.0f; 
-			//OutputDebugStringA("Hello Tomato Touch");
-			//CheckAliveStatus();
-
+			m_health->TakeDamage(1.0f); // Change value for amount of damae dealt by touching enemy
 		}
 	}
 
-	if (GetType() == "Enemy")
-	{
-		if (col.EntityType() == "Player")
-		{
+	//if (GetType() == "Enemy")
+	//{
+	//	if (col.EntityType() == "Player")
+	//	{
 
-			//m_fEntityHealth -= 100.0f;
-			//CheckAliveStatus();
-		}
-	}
+	//		//m_fEntityHealth -= 100.0f;
+	//		//CheckAliveStatus();
+	//	}
+	//}
 
 	//else if (col.EntityType() == "Projectile") // Runs after player has collided with a Projectile
 	//{
