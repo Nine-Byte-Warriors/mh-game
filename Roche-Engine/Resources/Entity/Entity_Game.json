@@ -599,8 +599,13 @@
             125.0
         ],
         "soundBankName": "",
+<<<<<<< master-game:Roche-Engine/Resources/Entity/Entity_Game.json
         "speed": 10.0,
         "texture": "Resources\\Textures\\Entity\\Runner Bean\\Runner Bean.png",
+=======
+        "speed": 1.0,
+        "texture": "Resources\\Textures\\Entity\\Carrot\\Carrot.png",
+>>>>>>> updated the flee state's CalculateActivation method to use values from the flee patameters struct passed in on state creation so that the CalculateActivation method could use the range variables to both enable and disable when within te specified range.:Roche-Engine/Resources/Entity/Entity.json
         "type": "Enemy"
     },
     {
