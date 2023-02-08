@@ -31,6 +31,9 @@ namespace AILogic
 		virtual void CheckLowerBound() { if (m_fActivationLevel < m_fLower) m_fActivationLevel = m_fLower; }
 		virtual void CheckUpperBound() { if (m_fActivationLevel > m_fUpper) m_fActivationLevel = m_fUpper; }
 
+		inline const float GetLower() const noexcept { return m_fLower; }
+		inline const float GetUpper() const noexcept { return m_fUpper; }
+
 		virtual void SetParams(void* params) { m_params = params; }
 
 		// DEBUG

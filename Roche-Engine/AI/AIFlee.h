@@ -18,7 +18,7 @@ namespace AILogic
         virtual void Enter() override {};
         virtual void Exit() override {};
 
-        //virtual float CalculateActivation() override {};
+        virtual float CalculateActivation() override;
         inline virtual void SetTarget(Entity* pTarget) { m_pTarget = pTarget; }
         
     private:
