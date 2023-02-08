@@ -25,11 +25,11 @@ namespace AILogic
 		void GetPatrolParams();
 
 		inline bool IsWaypointInRange(Vector2f vAgentPos) noexcept 
-			{ return m_fSensingRange >= vAgentPos.Distance(m_vecWaypoints[m_iCurrentWaypoint]); }
+			{ return m_fRange >= vAgentPos.Distance(m_vecWaypoints[m_iCurrentWaypoint]); }
 		inline int GetRandomWaypoint() const noexcept { return RND::Get(m_iWaypointCount); }
 		int GetNextWaypoint() noexcept;
 
-		float m_fSensingRange;
+		float m_fRange;
 		float m_fWaypointDistance;
 		
 		int m_iCurrentWaypoint, m_iWaypointCount;

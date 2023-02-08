@@ -5,6 +5,7 @@
 #include "AIState.h"
 #include "Agent.h"
 #include "Emitter.h"
+#include "AIStateData.h"
 
 namespace AILogic
 {
@@ -14,22 +15,23 @@ namespace AILogic
 		AIFire(Agent* pAgent) :
 			AIState(pAgent), 
 			m_pEmitter(nullptr),
-			m_fSensingRange(100.0f),
-			m_fFireRate(1.0f),
-			m_fFireTimer(0.0f)
+			m_fRange(100.0f),
+			m_fRate(1.0f),
+			m_fTimer(0.0f)
 		{};
 		virtual ~AIFire() = default;
 
 		virtual void Update(const float dt) override;
 		virtual void Enter() override;
-		//virtual void Exit() override {};
+
+		virtual float CalculateActivation() override;
+
+		void SetParams(AIStateData::FireParams params);
 
 	private:
-		void GetFireParams();
-
-		float m_fSensingRange;
-		float m_fFireRate;
-		float m_fFireTimer;
+		float m_fRange;
+		float m_fRate;
+		float m_fTimer;
 		
 		std::shared_ptr<Emitter> m_pEmitter;
 	};

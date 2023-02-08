@@ -72,7 +72,7 @@ void AIPatrol::GetPatrolParams()
 {
 	AIStateData::PatrolParams* pParams = (AIStateData::PatrolParams*)m_params;
 	m_ePatrolType = pParams->ePatrolType;
-	m_fSensingRange = pParams->fSensingRange;
+	m_fRange = pParams->fSensingRange;
 	m_fWaypointDistance = pParams->fDistanceToWaypoint;
 	m_iWaypointCount = pParams->iWaypointCount;
 }

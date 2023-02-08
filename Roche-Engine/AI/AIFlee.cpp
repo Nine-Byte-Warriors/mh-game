@@ -48,6 +48,7 @@ float AIFlee::CalculateActivation()
 
 	return fActivation;
 }
+
 void AIFlee::SetParams(AIStateData::FleeParams params)
 {
 	m_fMinRange = params.fMinRange;

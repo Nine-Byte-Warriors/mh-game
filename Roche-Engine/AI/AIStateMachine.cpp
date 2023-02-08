@@ -120,12 +120,12 @@ AIState* AIStateMachine::NewState(AIStateData::AIStateJson jState)
 		//pState->SetParams(jState.oWanderParams);
 		return pState;
 	}
-	case AIStateTypes::Fire: return new AIFire(m_pAgent);
+	case AIStateTypes::Fire: 
 	{
 		AIFire* pState = new AIFire(m_pAgent);
 		pState->SetActivation(jState.fActivate);
 		pState->SetBounds(jState.fMax, jState.fMin);
-		//pState->SetParams(jState.oFireParams);
+		pState->SetParams(jState.oFireParams);
 		return pState;
 	}
 	default: return nullptr;

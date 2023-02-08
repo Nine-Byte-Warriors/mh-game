@@ -83,7 +83,8 @@ void Entity::SetComponents()
 		{
 			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\DefaultBehaviour.json");
 			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\FleeBehaviour.json"); 
-			m_agent->LoadBehaviourFile("Resources\\Behaviours\\SeekBehaviour.json");
+			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\SeekBehaviour.json");
+			m_agent->LoadBehaviourFile("Resources\\Behaviours\\FireBehaviour.json");
 			m_agent->FillStateMachine();
 		}
 	}
