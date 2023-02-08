@@ -8,7 +8,7 @@
     "m_iCount": 1,
     "m_sID": "ID",
     "m_sImagePath": "Resources\\Textures\\Base_Projectile.png",
-    "m_sName": "Default Pattern",
+    "m_sName": "SlowWiggle Pattern",
     "m_vecProjectiles": [
       {
         "m_fAmplitude": 100.0,

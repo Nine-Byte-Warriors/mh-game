@@ -69,12 +69,14 @@ void ProjectileEditor::LoadPattern()
 	// Check if the file object has a file path/name.
 	if (foLoad->HasPath())
 	{
+		//find path PATTERN_FOLDER_PATH
 		JsonLoading::LoadJson(m_vecManagers, foLoad->GetFullPath());
 		if (m_vecManagers.size() == 0)
 		{
 			m_sSelectedFile = "Open File Failed";
 			return;
 		}
+		m_sFilePath = foLoad->GetPathFrom(PATTERN_FOLDER_PATH);
 	}
 	else
 		m_sSelectedFile = "Open File Failed";
@@ -106,8 +108,12 @@ void ProjectileEditor::SavePattern()
 
 	// Check if the file object has a file path/name.
 	if (foSave->HasPath())
+	{
+		m_sFilePath = foSave->GetPathFrom(PATTERN_FOLDER_PATH);
+
 		// Save the file.
-		JsonLoading::SaveJson(m_vecManagers, foSave->GetJsonPath());
+		JsonLoading::SaveJson(m_vecManagers, m_sFilePath);
+	}
 
 	// Smile. :D
 }
@@ -319,23 +325,11 @@ void ProjectileEditor::TestButtons(const Graphics& gfx, ConstantBuffer<Matrices>
 	if (!bFire)
 		return;
 
-	//m_vecProjectileManagers.clear();
+	m_vecProjectileManagers = ProjectileManager::GenerateManagers(m_sFilePath, nullptr, "Demo");
+	for (auto pManager : m_vecProjectileManagers)
+		pManager->Initialize(gfx, mat);
 
-	//for (ProjectileData::ManagerJSON jMan : m_vecManagers)
-	//{
-	//	std::shared_ptr <ProjectileManager> pManager = std::make_shared<ProjectileManager>();
-	//
-	//	pManager->SetDelay(jMan.m_fDelay);
-	//	pManager->SetProjectilePool(ProjectileManager::CreateProjectilePool(jMan.m_vecProjectiles, jMan.m_fGlobalSpeed, jMan.m_bUseGlobalSpeed));
-	//	pManager->InitialiseFromFile(gfx, mat, jMan.m_sImagePath, Vector2f(jMan.m_fWidth, jMan.m_fHeight));
-	//
-	//	if (bLoop || jMan.m_bLoop)
-	//		pManager->EnableRepeat();
-
-	//	m_vecProjectileManagers.push_back(std::move(pManager));
-	//}
-
-	//SpawnPattern();
+	SpawnPattern();
 }
 
 void ProjectileEditor::SaveProjectile()
