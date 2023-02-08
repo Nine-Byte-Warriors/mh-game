@@ -5,6 +5,7 @@
 #include "AIState.h"
 #include "Entity.h"
 #include "Agent.h"
+#include "AIStateData.h"
 
 namespace AILogic
 {
@@ -18,11 +19,15 @@ namespace AILogic
 		virtual void Enter() override {};
 		virtual void Exit() override {};
 
-		//virtual float CalculateActivation() override {};
+		virtual float CalculateActivation() override;
 		inline void SetTarget(Entity* pTarget) { m_pTarget = pTarget; }
+
+		void SetParams(AIStateData::SeekParams params);
 
 	private:
 		Entity* m_pTarget;
+		float m_fMinRange;
+		float m_fMaxRange;
 	};
 }
 

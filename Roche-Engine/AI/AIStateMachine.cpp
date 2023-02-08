@@ -85,6 +85,7 @@ AIState* AIStateMachine::NewState(AIStateData::AIStateJson jState)
 		AISeek* pState = new AISeek(m_pAgent);
 		pState->SetActivation(jState.fActivate);
 		pState->SetBounds(jState.fMax, jState.fMin);
+		pState->SetParams(jState.oSeekParams);
 		return pState;
 	}
 	case AIStateTypes::Flee:
