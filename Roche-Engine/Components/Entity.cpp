@@ -393,21 +393,32 @@ void Entity::EntityCollisions(Collider& col)
 		if (col.EntityType() == "Enemy") // Runs after player has collided with an Enemy
 		{
 			m_health->TakeDamage(1.0f);
-			m_fEntityHealth -= 100.0f;
+			
+			//m_fEntityHealth = 100.0f; 
 			//OutputDebugStringA("Hello Tomato Touch");
-			CheckAliveStatus();
+			//CheckAliveStatus();
 
 		}
 	}
 
-	else if (col.EntityType() == "Projectile") // Runs after player has collided with a Projectile
+	if (GetType() == "Enemy")
 	{
+		if (col.EntityType() == "Player")
+		{
+
+			//m_fEntityHealth -= 100.0f;
+			//CheckAliveStatus();
+		}
+	}
+
+	//else if (col.EntityType() == "Projectile") // Runs after player has collided with a Projectile
+	//{
 		//if (GetType() == "Enemy")
 		//	m_fEntityHealth = 0.0f;
 
 		//if (GetType() == "Player")
 		//	m_health->TakeDamage(1.0f);
-	}
+	//}
 
 	//else if (GetType() == "Coin") { } //TBD when coins are added, this is the collisions for the coin, to delete them simply set their entity health to 0 (see tomato code)
 }
