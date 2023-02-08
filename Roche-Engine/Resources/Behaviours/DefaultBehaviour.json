@@ -1,0 +1,80 @@
+[
+    {
+        "fActivate": 0.8,
+        "fMax": 1.0,
+        "fMin": 0.0,
+        "iStateType": 1,
+        "iTypeID": 0,
+        "oFireParams": {
+            "fRange": 0.0,
+            "fRate": 0.0
+        },
+        "oFollowParams": {
+            "bKeepRange": false,
+            "fFollowRange": 0.0,
+            "fRepulseRange": 0.0
+        },
+        "oPatrolParams": {
+            "ePatrolType": 0,
+            "fDistanceToWaypoint": 0.0,
+            "fSensingRange": 0.0,
+            "iWaypointCount": 0
+        },
+        "oWanderParams": {
+            "fWanderAngle": 0.0,
+            "fWanderDelay": 0.0
+        }
+    },
+  {
+    "fActivate": 0.2,
+    "fMax": 1.0,
+    "fMin": 0.0,
+    "iStateType": 2,
+    "iTypeID": 0,
+    "oFireParams": {
+      "fRange": 0.0,
+      "fRate": 0.0
+    },
+    "oFollowParams": {
+      "bKeepRange": false,
+      "fFollowRange": 0.0,
+      "fRepulseRange": 0.0
+    },
+    "oPatrolParams": {
+      "ePatrolType": 0,
+      "fDistanceToWaypoint": 0.0,
+      "fSensingRange": 0.0,
+      "iWaypointCount": 0
+    },
+    "oWanderParams": {
+      "fWanderAngle": 0.0,
+      "fWanderDelay": 0.0
+    }
+  },
+  {
+    "fActivate": 0.5,
+    "fMax": 1.0,
+    "fMin": 0.0,
+    "iStateType": 6,
+    "iTypeID": 0,
+    "oFireParams": {
+      "fRange": 100.0,
+      "fRate": 0.4
+    },
+    "oFollowParams": {
+      "bKeepRange": false,
+      "fFollowRange": 0.0,
+      "fRepulseRange": 0.0
+    },
+    "oPatrolParams": {
+      "ePatrolType": 0,
+      "fDistanceToWaypoint": 0.0,
+      "fSensingRange": 0.0,
+      "iWaypointCount": 0
+    },
+    "oWanderParams": {
+      "fWanderAngle": 0.0,
+      "fWanderDelay": 0.0
+    }
+  }
+]

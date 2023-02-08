@@ -74,9 +74,9 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_pPhysics(physics)
 
 void Agent::Update(const float dt)
 {
-	m_pStateMachine->Clear();
-	for (auto const& [key, value] : m_mapStates)
-		m_pStateMachine->AddState(value);
+	if (!HasBehaviourFile())
+		FillStateMachine();
+		
 	m_pStateMachine->UpdateMachine(dt);
 }
 
@@ -134,6 +134,13 @@ void Agent::ResetBehaviour()
 {
 	for (std::pair<AIStateTypes, AILogic::AIState*> state : m_mapStates)
 		if(state.second != nullptr) state.second->SetActivation(0.0f);
+}
+
+void Agent::FillStateMachine()
+{
+	m_pStateMachine->Clear();
+	for (auto const& [key, value] : m_mapStates)
+		m_pStateMachine->AddState(value);
 }
 
 void Agent::AddToEvent() noexcept

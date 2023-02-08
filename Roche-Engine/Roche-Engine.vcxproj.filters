@@ -781,6 +781,7 @@
     <None Include="Resources\Patterns\DefaultProjectile.ptn">
       <Filter>Resource Files\Patterns</Filter>
     </None>
+    <None Include="Resources\Behaviours\DefaultBehaviour.json" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

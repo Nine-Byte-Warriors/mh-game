@@ -33,7 +33,8 @@ public:
 	void LoadBehaviourFile(const std::string sFilePath);
 	void ClearStates();
 	void ResetBehaviour();
-
+	void FillStateMachine();
+	
 	void SetEmitter(std::shared_ptr<Emitter>& pEmitter) { m_pEmitter = pEmitter; }
 	std::shared_ptr<Emitter> GetEmitter() const { return m_pEmitter; }
 
