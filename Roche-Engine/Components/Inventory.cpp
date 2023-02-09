@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Inventory.h"
+#include "AudioEngine.h"
 
+#define SHOPSOUNDS "ShopSounds"
+#define PLAYER "Player"
 Inventory::Inventory()
 {
 	AddToEvent();
@@ -78,12 +81,15 @@ void Inventory::PlantSeedFromPacket( std::string& seedName, int amountPlanted )
 	if ( it->second <= 0 )
 		return;
 
+	AudioEngine::GetInstance()->PlayAudio(PLAYER, "Planting", SFX);
+
 	ChangeSeedPacketValue( seedName, -amountPlanted );
 	EventSystem::Instance()->AddEvent( EVENTID::PlantSeed, &seedName );
 }
 
 void Inventory::BuySeedPacket( const std::string& seedName, int amountBought )
 {
+	AudioEngine::GetInstance()->PlayAudio(SHOPSOUNDS, "ShopPurchase", SFX);
 	ChangeSeedPacketValue(seedName, amountBought);
 }
 
@@ -111,6 +117,7 @@ void Inventory::AddToEvent() noexcept
 	EventSystem::Instance()->AddClient( EVENTID::PlantSeedAttempt, this );
 	EventSystem::Instance()->AddClient( EVENTID::UpdateSeed, this );
 	EventSystem::Instance()->AddClient(EVENTID::GainCoins, this);
+	EventSystem::Instance()->AddClient(EVENTID::BuyPotion, this);
 }
 
 void Inventory::RemoveFromEvent() noexcept
@@ -120,6 +127,7 @@ void Inventory::RemoveFromEvent() noexcept
 	EventSystem::Instance()->RemoveClient( EVENTID::PlantSeedAttempt, this );
 	EventSystem::Instance()->RemoveClient( EVENTID::UpdateSeed, this );
 	EventSystem::Instance()->RemoveClient(EVENTID::GainCoins, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::BuyPotion, this);
 }
 
 void Inventory::HandleEvent( Event* event )
@@ -173,6 +181,15 @@ void Inventory::HandleEvent( Event* event )
 		{
 			UpdateCoins(-1);
 			BuySeedPacket("Tomato", seedsBought->second);
+		}
+	}
+	break;
+	case EVENTID::BuyPotion:
+	{
+		if (m_iCoinAmount >= 1)
+		{
+			UpdateCoins(-1);
+			EventSystem::Instance()->AddEvent(EVENTID::PlayerHeal);
 		}
 	}
 	break;

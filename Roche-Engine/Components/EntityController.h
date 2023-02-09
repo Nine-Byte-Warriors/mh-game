@@ -4,6 +4,7 @@
 
 #include "JsonLoading.h"
 #include "EntityAnimation.h"
+#include "EventSystem.h"
 
 struct EntityData
 {
@@ -22,6 +23,13 @@ struct EntityData
 	std::string colliderShape;
 	std::vector<float> colliderRadius;
 	bool bColliderTrigger;
+	bool bColliderEnabled;
+	bool bColliderStatic;
+	std::string sColliderLayer;
+	bool bColliderInteractDecoration;
+	bool bColliderInteractPlayer;
+	bool bColliderInteractEnemy;
+	bool bColliderInteractProjectile;
 	std::string projectilePattern;
 	std::string projectileBullet;
 	bool AI;
@@ -37,12 +45,45 @@ struct EntityData
 	bool audio;
 	std::string soundBankName;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(EntityData, name, texture, type, position, scale, rotation, health, identifier,
-	maxFrame, mass, speed, behaviour, colliderShape, colliderRadius, bColliderTrigger, projectilePattern, projectileBullet,
-	AI, projectileSystem, collider, bProjectilePattern, bProjectileBullet, animationPath, animationType,
-	animation, rows, columns, audio, soundBankName)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(EntityData,
+	name,
+	texture,
+	type,
+	position,
+	scale,
+	rotation,
+	health,
+	identifier,
+	maxFrame,
+	mass,
+	speed,
+	behaviour,
+	colliderShape,
+	colliderRadius,
+	bColliderTrigger,
+	bColliderEnabled,
+	bColliderStatic,
+	sColliderLayer,
+	bColliderInteractDecoration,
+	bColliderInteractPlayer,
+	bColliderInteractEnemy,
+	bColliderInteractProjectile,
+	projectilePattern,
+	projectileBullet,
+	AI,
+	projectileSystem,
+	collider,
+	bProjectilePattern,
+	bProjectileBullet,
+	animationPath,
+	animationType,
+	animation,
+	rows,
+	columns,
+	audio,
+	soundBankName)
 
-class EntityController
+class EntityController : public Listener
 {
 public:
 	EntityController();
@@ -52,6 +93,7 @@ public:
 	int GetSize();
 
 	int GetEntityNumFromName(std::string name);
+	int GetEntityEnemyNumFromName(std::string name);
 
 	std::string GetName(int num);
 	std::string GetType(int num);
@@ -64,6 +106,8 @@ public:
 	std::string GetAnimationFile(int num);
 	std::string GetAnimationType(int num);
 
+	Vector2f GetEnemyWidthHeight(int num);
+
 	int GetRows(int num);
 	int GetColumns(int num);
 
@@ -75,6 +119,10 @@ public:
 	std::string GetColliderShape(int num);
 	std::vector<float> GetColliderRadius(int num);
 	bool GetColliderTrigger(int num);
+	bool GetColliderEnabled(int num);
+	std::string GetColliderLayer(int num);
+	bool GetColliderStatic(int num);
+	std::vector<bool> GetColliderMask(int num);
 
 	EntityData* GetProjectileBullet(int num);
 
@@ -94,7 +142,6 @@ public:
 	inline const std::string GetProjectilePattern(const int iEntityNum) { return m_entityData[iEntityNum].projectilePattern; }
 	inline void SetProjectilePattern(const int iEntityNum, const std::string sPatternFile) { m_entityData[iEntityNum].projectilePattern = sPatternFile; }
 
-
 	bool HasAudio(int num);
 
 	bool HasComponentUpdated();
@@ -102,16 +149,24 @@ public:
 	void UpdateCopy();
 
 	void SetDead(int num);
-	std::vector<int> m_dead;
+	void ClearDead();
+	std::vector<int> GetDead();
 
 private:
+	void RemoveEnemiesFromEntityData();
+	void RemoveNonEnemiesFromEntityEnemyData();
+	
+	// Inherited via Listener
+	void HandleEvent(Event* event) override;
+	void AddToEvent() noexcept;
+
 	std::string JsonFile = "Entity.json";
 
+	std::vector<EntityData> m_entityEnemyData;
 	std::vector<EntityData> m_entityData;
 	std::vector<EntityData> m_entityDataCopy;
-
 	bool m_bComponentUpdated = false;
-
+	std::vector<int> m_dead;
 };
 
 #endif

@@ -93,6 +93,12 @@ void UIScreen::Update( const float dt )
 					m_bOpen = false;
 				}
 			}
+			if (m_vWidgets[i]->GetAction() == "End Phase")
+			{
+				if (!m_vWidgets[i]->GetIsHidden())
+					if (m_vWidgets[i]->GetButtonWidget()->Resolve("End Phase", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE))
+						EventSystem::Instance()->AddEvent(EVENTID::ChangePhase);
+			}
 			if ( m_vWidgets[i]->GetAction() == "Close" )
 			{
 				if ( !m_vWidgets[i]->GetIsHidden() )
@@ -101,13 +107,13 @@ void UIScreen::Update( const float dt )
 			}
 			if ( m_vWidgets[i]->GetAction() == "Back To Menu" )
 			{
-				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Back To Menu", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE) )
+				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Back To Menu", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE, false) )
 					EventSystem::Instance()->AddEvent( EVENTID::BackToMainMenu );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Start" )
 			{
 				if ( !m_vWidgets[i]->GetIsHidden() )
-					if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Start Game", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE) )
+					if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Start Game", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE, false) )
 						EventSystem::Instance()->AddEvent( EVENTID::StartGame );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Settings" )
@@ -210,8 +216,8 @@ void UIScreen::Update( const float dt )
 				{
 					m_vWidgets[i]->GetDataSliderWidget()->Resolve(
 						"Resources\\Textures\\UI\\Slider\\Slider Background.png",
-						"Resources\\Textures\\UI\\Slider\\Control Point.png", m_mouseData, i );
-					float sliderData = (float)m_vWidgets[i]->GetDataSliderWidget()->GetData();
+						"Resources\\Textures\\UI\\Slider\\Control Point.png", m_mouseData, i, AudioEngine::GetInstance()->GetMasterVolume() * 100);
+					float sliderData = (float)m_vWidgets[i]->GetDataSliderWidget()->GetData() / 100.0f;
 					AudioEngine::GetInstance()->SetMasterVolume( sliderData );
 				}
 			}
@@ -222,9 +228,21 @@ void UIScreen::Update( const float dt )
 				{
 					m_vWidgets[i]->GetDataSliderWidget()->Resolve(
 						"Resources\\Textures\\UI\\Slider\\Slider Background.png",
-						"Resources\\Textures\\UI\\Slider\\Control Point.png", m_mouseData, i );
-					float sliderData = (float)m_vWidgets[i]->GetDataSliderWidget()->GetData();
+						"Resources\\Textures\\UI\\Slider\\Control Point.png", m_mouseData, i, AudioEngine::GetInstance()->GetMusicVolume() * 100);
+					float sliderData = (float)m_vWidgets[i]->GetDataSliderWidget()->GetData() / 100.0f;
 					AudioEngine::GetInstance()->SetMusicVolume( sliderData );
+				}
+			}
+			if ( m_vWidgets[i]->GetAction() == "SFX Volume" )
+			{
+				m_vWidgets[i]->SetIsHidden( m_eTabsState == Tabs::Audio ? false : true );
+				if ( !m_vWidgets[i]->GetIsHidden() )
+				{
+					m_vWidgets[i]->GetDataSliderWidget()->Resolve(
+						"Resources\\Textures\\UI\\Slider\\Slider Background.png",
+						"Resources\\Textures\\UI\\Slider\\Control Point.png", m_mouseData, i, AudioEngine::GetInstance()->GetSFXVolume() * 100);
+					float sliderData = (float)m_vWidgets[i]->GetDataSliderWidget()->GetData() / 100.0f;
+					AudioEngine::GetInstance()->SetSFXVolume( sliderData );
 				}
 			}
 			if ( m_vWidgets[i]->GetAction() == "Screen Shake" )
@@ -337,10 +355,22 @@ void UIScreen::Update( const float dt )
 			}
 			if ( m_vWidgets[i]->GetAction() == "" )
 			{
-				static float health = 100.0f;
+				static float maxHealth = 1;
+				static float currentHealth = 1;
+				if ((*m_fCurrentHealth / *m_fMaxHealth) < 1 && (*m_fCurrentHealth / *m_fMaxHealth) > 0)
+				{
+					maxHealth = *m_fMaxHealth;
+					currentHealth = *m_fCurrentHealth;
+				}
+
+				float percentageHelth = 100 * currentHealth / maxHealth;
+				if (percentageHelth > 100)
+				{
+					percentageHelth = 100;
+				}
 				std::string temp = m_textures[2];
 				m_textures[2] = "";
-				m_vWidgets[i]->GetEnergyBarWidget()->Resolve( m_textures, health );
+				m_vWidgets[i]->GetEnergyBarWidget()->Resolve( m_textures, percentageHelth);
 				m_textures[2] = temp;
 			}
 			m_vWidgets[i]->GetEnergyBarWidget()->Update( dt );
@@ -359,6 +389,11 @@ void UIScreen::Update( const float dt )
 			{
 				m_vWidgets[i]->SetIsHidden( m_eTabsState == Tabs::Audio ? false : true );
 				m_vWidgets[i]->GetImageWidget()->Resolve( "Music Volumne", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE );
+			}
+			if ( m_vWidgets[i]->GetAction() == "SFX volume label" )
+			{
+				m_vWidgets[i]->SetIsHidden( m_eTabsState == Tabs::Audio ? false : true );
+				m_vWidgets[i]->GetImageWidget()->Resolve( "SFX Volumne", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE );
 			}
 
 			if ( m_vWidgets[i]->GetAction() == "Coins" )
@@ -388,12 +423,12 @@ void UIScreen::Update( const float dt )
 			}
 			if (m_vWidgets[i]->GetAction() == "Score Pop Up Label")
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve("0000000", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::HUGE);
+				m_vWidgets[i]->GetImageWidget()->Resolve(m_scoreBoard.GetScoreStr(), Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::HUGE);
 			}
 
 			if (m_vWidgets[i]->GetAction() == "Change Level Label")
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve("Change Level?", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
+				m_vWidgets[i]->GetImageWidget()->Resolve("Change \nLevel?", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE);
 			}
 
 
@@ -857,6 +892,9 @@ void UIScreen::AddToEvent() noexcept
 	EventSystem::Instance()->AddClient( EVENTID::MiddleMouseClick, this );
 	EventSystem::Instance()->AddClient( EVENTID::MiddleMouseRelease, this );
 	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
+	EventSystem::Instance()->AddClient(EVENTID::ChangePhase, this);
+	EventSystem::Instance()->AddClient( EVENTID::EnemyMaxHealth, this );
+	EventSystem::Instance()->AddClient( EVENTID::EnemyCurrentHealth, this );
 }
 
 void UIScreen::RemoveFromEvent() noexcept
@@ -873,7 +911,11 @@ void UIScreen::RemoveFromEvent() noexcept
 	EventSystem::Instance()->RemoveClient( EVENTID::MiddleMouseClick, this );
 	EventSystem::Instance()->RemoveClient( EVENTID::MiddleMouseRelease, this );
 	EventSystem::Instance()->RemoveClient( EVENTID::WindowSizeChangeEvent, this );
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangePhase, this);
+	EventSystem::Instance()->RemoveClient( EVENTID::EnemyMaxHealth, this );
+	EventSystem::Instance()->RemoveClient( EVENTID::EnemyCurrentHealth, this );
 }
+
 
 void UIScreen::HandleEvent( Event* event )
 {
@@ -886,6 +928,12 @@ void UIScreen::HandleEvent( Event* event )
 	case EVENTID::RightMouseRelease: { m_mouseData.RPress = false; } break;
 	case EVENTID::MiddleMouseClick: { m_mouseData.MPress = true; } break;
 	case EVENTID::MiddleMouseRelease: { m_mouseData.MPress = false; } break;
+	case EVENTID::EnemyMaxHealth: { 
+		m_fMaxHealth = static_cast<float*>(event->GetData());
+	} break;
+	case EVENTID::EnemyCurrentHealth: { 
+		m_fCurrentHealth = static_cast<float*>(event->GetData());
+	} break;
 #if _DEBUG
 	case EVENTID::ImGuiMousePosition:
 	{

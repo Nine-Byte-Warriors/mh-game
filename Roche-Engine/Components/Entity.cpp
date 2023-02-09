@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Entity.h"
 #include "Graphics.h"
-#include <EnemyController.h>
+#include "EnemyController.h"
 
 #define PI 3.1415
 
@@ -22,6 +22,7 @@ Entity::Entity(EntityController& entityController, int EntityNum)
 	m_entityController = &entityController;
 	m_iEntityNum = EntityNum;
 
+
 }
 
 Entity::~Entity()
@@ -33,8 +34,6 @@ void Entity::SetComponents()
 	m_sprite = std::make_shared<Sprite>();
 	m_transform = std::make_shared<Transform>( m_sprite );
 	m_physics = std::make_shared<Physics>(m_transform);
-	m_health = std::make_shared<Health>( GetType(), m_iEntityNum );
-	m_health->SetHealth( m_entityController->GetHealth( m_iEntityNum ) );
 
 	if (m_entityController->HasAI(m_iEntityNum))
 	{
@@ -43,43 +42,57 @@ void Entity::SetComponents()
 
 	if (m_entityController->HasProjectileSystem(m_iEntityNum))
 	{
-		m_vecProjectileManagers = ProjectileManager::GenerateManagers(m_entityController->GetProjectilePattern(m_iEntityNum), m_collisionHandler);
+		std::string projectiletype = "";
+		if (GetType() == "Player")
+			projectiletype = "PlayerProjectile";
+		else if (GetType() == "Enemy")
+			projectiletype == "EnemyProjectile";
+
+		m_vecProjectileManagers = ProjectileManager::GenerateManagers(m_entityController->GetProjectilePattern(m_iEntityNum), m_collisionHandler, projectiletype);
 		m_emitter = std::make_shared<Emitter>(m_vecProjectileManagers, 0.01f);
 	}
 
 	if (m_entityController->HasCollider(m_iEntityNum))
 	{
 		bool trigger = m_entityController->GetColliderTrigger(m_iEntityNum);
-		m_colliderCircle = std::make_shared<CircleCollider> (m_transform, m_sprite, trigger, m_iEntityNum, m_sEntityType, 32);
-		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, trigger, m_iEntityNum, m_sEntityType, 32, 32);
+		m_colliderCircle = std::make_shared<CircleCollider> (m_transform, m_sprite, trigger, m_iEntityNum, GetType(), 32);
+		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, trigger, m_iEntityNum, GetType(), 32, 32);
 	}
+	else
+	{
+		m_colliderCircle = nullptr;
+		m_colliderBox = nullptr;
+	}
+
+	if (m_colliderBox)
+		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderBox);
+	else if (m_colliderCircle)
+		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderCircle);
+
+	if(m_health)
+		m_health->SetHealth( m_entityController->GetHealth(m_iEntityNum) );
 
 	if (GetType() == "Player")
 	{
-		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
-			pManager->SetOwner(Projectile::ProjectileOwner::Player);
-		
 		m_pController = std::make_shared<PlayerController>(m_physics, m_sprite, m_emitter);
 		m_inventory = std::make_shared<Inventory>();
 	}
 
 	if (GetType() == "Enemy")
 	{
-		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
-			pManager->SetOwner(Projectile::ProjectileOwner::Enemy);
-
-		//m_pController = std::make_shared<EnemyController>(m_physics, m_sprite, m_emitter);
-		m_carrotEnemy = std::make_shared<CarrotEnemy>(this);
-
 		m_agent->SetEmitter(m_emitter);
 	}
 
 	if (GetType() == "Item")
 	{
-		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
-			pManager->SetOwner(Projectile::ProjectileOwner::Item);
-		
 		m_shopItem = std::make_shared<ShopItem>(GetCollider(), m_entityController->GetName(m_iEntityNum));
+	}
+
+	if (GetType() == "LevelTrigger")
+	{
+		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
+			pManager->SetOwner(Projectile::ProjectileOwner::LevelTrigger);
+		m_levelTrigger = std::make_shared<LevelTrigger>(GetCollider());
 	}
 }
 
@@ -100,7 +113,7 @@ void Entity::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat)
 	SetScaleInit();
 	UpdateRotation();
 	UpdateBehaviour();
-	UpdateColliderRadius();
+	UpdateCollider();
 	SetAnimation();
 	UpdateRowsColumns();
 }
@@ -152,8 +165,7 @@ void Entity::UpdateFromEntityData(const float dt, bool positionLocked)
 	UpdateSpeed();
 	UpdateProjectilePattern();
 	UpdateTexture();
-	UpdateColliderRadius();
-	UpdateColliderTrigger();
+	UpdateCollider();
 	UpdateAnimation();
 	UpdateRowsColumns();
 	UpdateAudio();
@@ -347,7 +359,6 @@ void Entity::UpdateBehaviour()
 
 void Entity::UpdateProjectilePattern()
 {
-	
 	//TODO
 	//if (m_entityType != EntityType::Projectile)
 	//{
@@ -371,6 +382,25 @@ void Entity::UpdateProjectilePattern()
 	//}
 }
 
+void Entity::UpdateCollider()
+{
+	if (m_entityController->HasCollider(m_iEntityNum))
+	{
+		UpdateColliderRadius();
+		UpdateColliderLayer();
+		UpdateColliderEnabled();
+		UpdateColliderStatic();
+		UpdateColliderTrigger();
+		UpdateColliderMask();
+		UpdateColliderShape();
+	}
+	else if (m_colliderCircle == nullptr || m_colliderBox == nullptr)
+	{
+		m_colliderCircle = std::make_shared<CircleCollider>(m_transform, m_sprite, true, m_iEntityNum, GetType(), 32);
+		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, true, m_iEntityNum, GetType(), 32, 32);
+	}
+}
+
 void Entity::UpdateColliderRadius()
 {
 	if (m_entityController->HasCollider(m_iEntityNum) && m_colliderCircle != nullptr)
@@ -391,6 +421,11 @@ void Entity::UpdateColliderRadius()
 			m_colliderCircle->SetRadius(0);
 		}
 	}
+	else if (m_colliderCircle == nullptr)
+	{
+		m_colliderCircle = std::make_shared<CircleCollider>(m_transform, m_sprite, true, m_iEntityNum, GetType(), 32);
+		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, true, m_iEntityNum, GetType(), 32, 32);
+	}
 }
 
 void Entity::UpdateColliderTrigger()
@@ -402,6 +437,61 @@ void Entity::UpdateColliderTrigger()
 	}
 }
 
+void Entity::UpdateColliderLayer()
+{
+	std::string colliderLayer = m_entityController->GetColliderLayer(m_iEntityNum);
+
+	if (!m_entityController->HasCollider(m_iEntityNum)) return;
+
+	if (colliderLayer == "Decoration")
+	{
+		m_colliderCircle->SetLayer(LayerNo::Decoration);
+		m_colliderBox->SetLayer(LayerNo::Decoration);
+	}
+	else if (colliderLayer == "Player")
+	{
+		m_colliderCircle->SetLayer(LayerNo::Player);
+		m_colliderBox->SetLayer(LayerNo::Player);
+	}
+	else if (colliderLayer == "Enemy")
+	{
+		m_colliderCircle->SetLayer(LayerNo::Enemy);
+		m_colliderBox->SetLayer(LayerNo::Enemy);
+	}
+	else if (colliderLayer == "Projectile")
+	{
+		m_colliderCircle->SetLayer(LayerNo::Projectile);
+		m_colliderBox->SetLayer(LayerNo::Projectile);
+	}
+}
+
+void Entity::UpdateColliderMask()
+{
+	std::vector<bool> colliderMaskData = m_entityController->GetColliderMask(m_iEntityNum);
+	LayerMask colliderMask = LayerMask(colliderMaskData[0], colliderMaskData[1], colliderMaskData[2], colliderMaskData[3]);
+	m_colliderCircle->SetCollisionMask(colliderMask);
+	m_colliderBox->SetCollisionMask(colliderMask);
+}
+
+void Entity::UpdateColliderStatic()
+{
+	bool isStatic = m_entityController->GetColliderStatic(m_iEntityNum);
+	m_colliderCircle->SetIsStatic(isStatic);
+	m_colliderBox->SetIsStatic(isStatic);
+}
+
+void Entity::UpdateColliderEnabled()
+{
+	bool isEnabled = m_entityController->GetColliderEnabled(m_iEntityNum);
+	m_colliderCircle->SetIsEnabled(isEnabled);
+	m_colliderBox->SetIsEnabled(isEnabled);
+}
+
+void Entity::UpdateColliderShape()
+{
+	m_sColliderShape = m_entityController->GetColliderShape(m_iEntityNum);
+}
+
 void Entity::UpdateAudio()
 {
 	if(m_entityController->HasAudio(m_iEntityNum))
@@ -411,6 +501,10 @@ void Entity::UpdateAudio()
 void Entity::UpdateEntityNum(int num)
 {
 	m_iEntityNum = num;
+	if (m_health)
+	{
+		m_health->SetEntityNum(num);
+	}
 }
 
 void Entity::SetAnimation()
@@ -420,13 +514,5 @@ void Entity::SetAnimation()
 		m_animation.LoadEntityAnimation(m_entityController->GetAnimationFile(m_iEntityNum));
 		m_iMaxFrameY = m_animation.GetFrameCount().size();
 		UpdateAnimation();
-	}
-}
-
-void Entity::CheckAliveStatus()
-{
-	if ( m_fEntityHealth <= 0.0 )
-	{
-		m_entityController->SetDead( m_iEntityNum );
 	}
 }

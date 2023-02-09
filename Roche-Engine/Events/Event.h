@@ -44,8 +44,12 @@ enum class EVENTID
 	NextDay,
 	CurrentState,
 	CurrentPhase,
+	GetPhase,
 	CurrentDay,
 	GameRestartEvent,
+	PlayDayMusic,
+	PlayShopMusic,
+	PlayMainMenuMusic,
 
 	// Camera Actions
 	MoveUp,
@@ -70,6 +74,7 @@ enum class EVENTID
 	BuySeed,
 	UpdateSeed,
 	GainCoins,
+	BuyPotion,
 
 	//UI
 	LevelOnCreateUI,
@@ -98,6 +103,7 @@ enum class EVENTID
 	RedOverlayColour,
 	GreenOverlayColour,
 	BlueOverlayColour,
+	HUDSwap,
 	// GameRestartEvent, // Added in game events, affects UI as well
 
 	// DEBUG
@@ -115,7 +121,9 @@ enum class EVENTID
 	PlayerDamage,
 	PlayerHeal,
 	PlayerDeath,
-	EnemyDeath
+	EnemyDeath,
+	EnemyMaxHealth,
+	EnemyCurrentHealth
 };
 
 /// <summary>

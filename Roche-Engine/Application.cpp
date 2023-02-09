@@ -30,6 +30,8 @@ bool Application::Initialize( HINSTANCE hInstance, int width, int height )
         m_imgui.Initialize( m_renderWindow.GetHWND(), m_graphics.GetDevice(), m_graphics.GetContext() );
 #endif
 
+        m_gameManager.Initialize();
+
         // Load level data
         JsonLoading::LoadJson( m_vLevelData, FOLDER_PATH + m_sJsonFile );
 
@@ -61,7 +63,6 @@ bool Application::Initialize( HINSTANCE hInstance, int width, int height )
 #else
             level->Initialize( &m_graphics, &m_uiManager );
 #endif
-            AudioEngine::GetInstance()->LoadSoundBanksList(m_vLevelData[i].audio); // temporary solution?
             level->SetEntityJson( m_vLevelData[i].entity );
             level->CreateTileMap();
             level->SetTileMapJson( m_vLevelData[i].tmBack, m_vLevelData[i].tmFront );
@@ -71,11 +72,19 @@ bool Application::Initialize( HINSTANCE hInstance, int width, int height )
             m_sLevelNames.push_back( m_stateMachine.Add(m_pLevels[i]));
         }
 
+        RemoveLevel("Game");
+        RemoveLevel("Shop");
+
+        for (int i = 0; i < m_vLevelData.size(); i++) {
+            if (m_vLevelData[i].name == STARTING_LEVEL_NAME) {
+                AudioEngine::GetInstance()->LoadSoundBanksList(m_vLevelData[i].audio);
+                AudioEngine::GetInstance()->PlayAudio("MusicMenu", "MainMenuMusic", MUSIC);
+            }
+        }
+
         m_stateMachine.SwitchTo( STARTING_LEVEL_NAME );
         m_sCurrentLevelName = STARTING_LEVEL_NAME;
 
-        RemoveLevel("Game");
-        RemoveLevel("Shop");
     }
     catch ( COMException& exception )
 	{
