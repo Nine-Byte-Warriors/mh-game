@@ -185,6 +185,11 @@ std::vector<bool> EntityController::GetColliderMask(int num)
 	return colliderMask;
 }
 
+std::string EntityController::GetAIStatePath(int num)
+{
+	return m_entityData[num].AIStatePath;
+}
+
 EntityData* EntityController::GetProjectileBullet(int num)
 {
 	for (int i = 0; i < m_entityData.size(); i++)

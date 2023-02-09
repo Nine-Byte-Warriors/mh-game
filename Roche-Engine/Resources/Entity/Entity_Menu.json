@@ -1,6 +1,7 @@
 [
     {
         "AI": false,
+        "AIStatePath": "None",
         "animation": true,
         "animationPath": "Resources\\Textures\\Entity\\Carrot\\Carrot.json",
         "animationType": "Walk",
@@ -54,8 +55,14 @@
         "type": "Player"
     },
     {
+<<<<<<< master-game:Roche-Engine/Resources/Entity/Entity_Menu.json
         "AI": true,
         "animation": true,
+=======
+        "AI": false,
+        "AIStatePath": "None",
+        "animation": false,
+>>>>>>> AI states json are configured in the entity editor/json:Roche-Engine/Resources/Entity/Entity.json
         "animationPath": "Resources\\Textures\\Base_Projectile.json",
         "animationType": "Walk",
         "audio": false,
@@ -107,6 +114,7 @@
     },
     {
         "AI": true,
+        "AIStatePath": "Resources\\Behaviours\\FleeBehaviour.json",
         "animation": true,
         "animationPath": "None",
         "animationType": "Walk",
@@ -154,6 +162,60 @@
         "speed": 1.0,
         "texture": "Resources\\Textures\\Entity\\Onion\\Onion.png",
         "type": "Enemy"
+<<<<<<< master-game:Roche-Engine/Resources/Entity/Entity_Menu.json
 >>>>>>> updated aistates and aiflee to work and actually move away from player as per the loaded json:Roche-Engine/Resources/Entity/Entity.json
+=======
+    },
+    {
+        "AI": true,
+        "AIStatePath": "Resources\\Behaviours\\FleeBehaviour.json",
+        "animation": true,
+        "animationPath": "None",
+        "animationType": "Walk",
+        "audio": false,
+        "bColliderEnabled": true,
+        "bColliderInteractDecoration": true,
+        "bColliderInteractEnemy": true,
+        "bColliderInteractPlayer": true,
+        "bColliderInteractProjectile": true,
+        "bColliderStatic": false,
+        "bColliderTrigger": false,
+        "bProjectileBullet": true,
+        "bProjectilePattern": true,
+        "behaviour": "None",
+        "collider": true,
+        "colliderRadius": [
+            64.0,
+            64.0
+        ],
+        "colliderShape": "Box",
+        "columns": 2,
+        "health": 2.0,
+        "identifier": 3,
+        "mass": 1.0,
+        "maxFrame": [
+            1,
+            1
+        ],
+        "name": "Carrot",
+        "position": [
+            500.0,
+            500.0
+        ],
+        "projectileBullet": "None",
+        "projectilePattern": "None",
+        "projectileSystem": true,
+        "rotation": 0.0,
+        "rows": 3,
+        "sColliderLayer": "Enemy",
+        "scale": [
+            64.0,
+            64.0
+        ],
+        "soundBankName": "",
+        "speed": 10.0,
+        "texture": "Resources\\Textures\\Entity\\Carrot\\Carrot.png",
+        "type": "Enemy"
+>>>>>>> AI states json are configured in the entity editor/json:Roche-Engine/Resources/Entity/Entity.json
     }
 ]

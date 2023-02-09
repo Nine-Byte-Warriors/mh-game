@@ -21,8 +21,6 @@ Entity::Entity(EntityController& entityController, int EntityNum)
 
 	m_entityController = &entityController;
 	m_iEntityNum = EntityNum;
-
-
 }
 
 Entity::~Entity()
@@ -90,19 +88,6 @@ void Entity::SetComponents()
 		m_carrotEnemy = std::make_shared<CarrotEnemy>(this);
 
 		m_agent->SetEmitter(m_emitter);
-
-		// DEBUG
-		if (m_entityController->GetName(m_iEntityNum) == "Onion")
-		{
-			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\DefaultBehaviour.json");
-			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\FleeBehaviour.json"); 
-			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\SeekBehaviour.json");
-			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\FireBehaviour.json");
-			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\WanderBehaviour.json");
-			m_agent->LoadBehaviourFile("Resources\\Behaviours\\PatrolBehaviour.json");
-			m_agent->FillStateMachine();
-		}
-		// !DEBUG
 	}
 
 	if (GetType() == "Item")
@@ -121,7 +106,6 @@ void Entity::SetComponents()
 void Entity::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat)
 {
 	SetComponents();
-
 
 	m_device = gfx.GetDevice();
 	m_context = gfx.GetContext();
@@ -353,9 +337,8 @@ void Entity::UpdateBehaviour()
 	if (m_agent->HasBehaviourFile())
 		return;
 
-	m_sBehaviour = m_entityController->GetBehaviour(m_iEntityNum);
-
-	m_agent->SetBehaviour(AILogic::StateType::GetType(m_sBehaviour));
+	m_agent->LoadBehaviourFile(m_entityController->GetAIStatePath(m_iEntityNum));
+	m_agent->FillStateMachine();
 }
 
 void Entity::UpdateProjectilePattern()

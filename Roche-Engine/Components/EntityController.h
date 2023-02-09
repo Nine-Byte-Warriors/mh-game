@@ -34,6 +34,7 @@ struct EntityData
 	std::string projectilePattern;
 	std::string projectileBullet;
 	bool AI;
+	std::string AIStatePath;
 	bool projectileSystem;
 	bool collider;
 	bool bProjectilePattern;
@@ -73,6 +74,7 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(EntityData,
 	projectilePattern,
 	projectileBullet,
 	AI,
+	AIStatePath,
 	projectileSystem,
 	collider,
 	bProjectilePattern,
@@ -125,6 +127,8 @@ public:
 	std::string GetColliderLayer(int num);
 	bool GetColliderStatic(int num);
 	std::vector<bool> GetColliderMask(int num);
+
+	std::string GetAIStatePath(int num);
 
 	EntityData* GetProjectileBullet(int num);
 
