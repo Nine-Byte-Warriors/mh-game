@@ -57,7 +57,7 @@
         "animationType": "Walk",
         "audio": false,
         "bColliderEnabled": true,
-        "bColliderInteractDecoration": true,
+        "bColliderInteractDecoration": false,
         "bColliderInteractEnemy": true,
         "bColliderInteractEnemyProjectile": true,
         "bColliderInteractPlayer": true,
@@ -467,9 +467,9 @@
         "bColliderEnabled": true,
         "bColliderInteractDecoration": false,
         "bColliderInteractEnemy": false,
-        "bColliderInteractEnemyProjectile": true,
+        "bColliderInteractEnemyProjectile": false,
         "bColliderInteractPlayer": true,
-        "bColliderInteractPlayerProjectile": true,
+        "bColliderInteractPlayerProjectile": false,
         "bColliderStatic": true,
         "bColliderTrigger": true,
         "bProjectileBullet": true,
@@ -491,8 +491,8 @@
         ],
         "name": "Change Level Trigger",
         "position": [
-            1007.0,
-            -516.0
+            1308.0,
+            385.0
         ],
         "projectileBullet": "None",
         "projectilePattern": "None",
@@ -506,7 +506,7 @@
         ],
         "soundBankName": "",
         "speed": 10.0,
-        "texture": "Resources\\Textures\\Tiles\\transparent.png",
+        "texture": "Resources\\Textures\\Tiles\\MissingTexture.png",
         "type": "LevelTrigger"
     },
     {
