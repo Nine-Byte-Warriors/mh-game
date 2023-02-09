@@ -101,7 +101,7 @@ AIState* AIStateMachine::NewState(AIStateData::AIStateJson jState)
 		AIPatrol* pState = new AIPatrol(m_pAgent);
 		pState->SetActivation(jState.fActivate);
 		pState->SetBounds(jState.fMax, jState.fMin);
-		//pState->SetParams(jState.oPatrolParams);
+		pState->SetParams(jState.oPatrolParams);
 		return pState;
 	}
 	case AIStateTypes::Follow: return new AIFollow(m_pAgent);
@@ -112,12 +112,12 @@ AIState* AIStateMachine::NewState(AIStateData::AIStateJson jState)
 		//pState->SetParams(jState.oFollowParams);
 		return pState;
 	}
-	case AIStateTypes::Wander: return new AIWander(m_pAgent);
+	case AIStateTypes::Wander:
 	{
 		AIWander* pState = new AIWander(m_pAgent);
 		pState->SetActivation(jState.fActivate);
 		pState->SetBounds(jState.fMax, jState.fMin);
-		//pState->SetParams(jState.oWanderParams);
+		pState->SetParams(jState.oWanderParams);
 		return pState;
 	}
 	case AIStateTypes::Fire: 

@@ -21,9 +21,9 @@ namespace AILogic
 		virtual std::vector<Vector2f> GetWaypoints() const override { return m_vecWaypoints; }
 		virtual int GetCurrentWaypointIndex() const noexcept { return m_iCurrentWaypoint; }
 
+		void SetParams(AIStateData::PatrolParams params);
+		
 	private:
-		void GetPatrolParams();
-
 		inline bool IsWaypointInRange(Vector2f vAgentPos) noexcept 
 			{ return m_fRange >= vAgentPos.Distance(m_vecWaypoints[m_iCurrentWaypoint]); }
 		inline int GetRandomWaypoint() const noexcept { return RND::Get(m_iWaypointCount); }

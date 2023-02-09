@@ -1,0 +1,37 @@
+[
+ {
+    "fActivate": 0.8,
+    "fMax": 1.0,
+    "fMin": 0.0,
+    "iStateType": 3,
+    "iTypeID": 0,
+    "oFleeParams": {
+      "fMaxRange": 0.0,
+      "fMinRange": 0.0
+    },
+    "oFireParams": {
+      "fRange": 0.0,
+      "fRate": 0.0
+    },
+    "oFollowParams": {
+      "bKeepRange": false,
+      "fFollowRange": 0.0,
+      "fRepulseRange": 0.0
+    },
+    "oPatrolParams": {
+      "ePatrolType": 0,
+      "fDistanceToWaypoint": 100.0,
+      "fSensingRange": 200.0,
+      "iWaypointCount": 4
+    },
+	"oSeekParams": {
+      "fMaxRange": 0.0,
+      "fMinRange": 0.0
+    },
+    "oWanderParams": {
+		"fRange": 0.0,
+      "fWanderAngle": 0.0,
+      "fWanderDelay": 0.0
+    }
+  }
+]
