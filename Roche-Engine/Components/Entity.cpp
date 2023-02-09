@@ -138,7 +138,7 @@ void Entity::Update(const float dt)
 	m_pTransform->Update();
 	m_pPhysics->Update(dt);
 
-	if (m_entityController->HasAI(m_iEntityNum))
+	if (m_entityController->HasAI(m_iEntityNum) && m_agent && !m_agent->IsStateMachineNULL())
 		m_agent->Update(dt);
 
 	if (m_entityController->HasProjectileSystem(m_iEntityNum))
