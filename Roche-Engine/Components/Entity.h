@@ -5,7 +5,6 @@
 class Graphics;
 #include "Agent.h"
 #include "Physics.h"
-#include "EventSystem.h"
 #include "EntityController.h"
 #include "ProjectileManager.h"
 #include "PlayerController.h"
@@ -13,6 +12,10 @@ class Graphics;
 #include "CircleCollider.h"
 #include "Inventory.h"
 #include "Health.h"
+#include "Emitter.h"
+#include "ShopItem.h"
+#include "LevelTrigger.h"
+#include "CollisionHandler.h"
 
 class Entity
 {
@@ -25,12 +28,16 @@ public:
 	void Update(const float dt);
 	void UpdateFromEntityData(const float dt, bool positionLocked);
 
+	inline void SetCollisionHandler(CollisionHandler* handler) { 
+		m_collisionHandler = handler; }
+
+	inline std::shared_ptr<Inventory> GetInventory() const noexcept{ return m_inventory; }
 	inline std::shared_ptr<Agent> GetAI() const noexcept { return m_agent; }
 	inline std::shared_ptr<Health> GetHealth() const noexcept { return m_health; }
 	inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_sprite; }
 	inline std::shared_ptr<Physics> GetPhysics() const noexcept { return m_physics; }
 	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_transform; }
-	inline std::shared_ptr<ProjectileManager> GetProjectileManager() const noexcept { return m_projectileManager; }
+	inline std::vector<std::shared_ptr<ProjectileManager>> GetProjectileManagers() const noexcept { return m_vecProjectileManagers; }
 	inline std::shared_ptr<Collider> GetCollider() const noexcept {
 		if (m_entityController->GetColliderShape(m_iEntityNum) == "Circle")
 			return m_colliderCircle;
@@ -38,6 +45,7 @@ public:
 			return m_colliderBox;
 	};
 	inline std::string GetSoundBankName() const noexcept { return m_sSoundBankName; };
+	inline std::shared_ptr<Emitter> GetEmitter() const noexcept { return m_emitter; }
 
 	Vector2f GetPos() { return *m_vPosition; }
 
@@ -62,17 +70,23 @@ private:
 	void UpdateSpeed();
 
 	void UpdateBehaviour();
-
 	void UpdateProjectilePattern();
 
+	void UpdateCollider();
 	void UpdateColliderRadius();
+	void UpdateColliderTrigger();
+	void UpdateColliderLayer();
+	void UpdateColliderMask();
+	void UpdateColliderStatic();
+	void UpdateColliderEnabled();
+	void UpdateColliderShape();
 
 	void UpdateAudio();
 
-
 	int m_iEntityNum;
-
 	ID3D11Device* m_device;
+	ID3D11DeviceContext* m_context;
+	ConstantBuffer<Matrices>* m_mat;
 
 	Vector2f* m_vPosition;
 	float m_fScaleX;
@@ -100,7 +114,6 @@ private:
 	float m_fSpeed;
 
 	std::string m_sBehaviour;
-	std::string m_sEntityType;
 
 	std::string m_sColliderShape;
 	float m_fColliderRadiusX;
@@ -113,11 +126,16 @@ private:
 	std::shared_ptr<Transform> m_transform;
 	std::shared_ptr<BoxCollider> m_colliderBox;
 	std::shared_ptr<CircleCollider> m_colliderCircle;
-	std::shared_ptr<ProjectileManager> m_projectileManager;
-	std::shared_ptr<PlayerController> m_playerController;
+	std::vector<std::shared_ptr<ProjectileManager>> m_vecProjectileManagers;
+	std::shared_ptr<BaseController> m_pController;
+	std::shared_ptr<ShopItem> m_shopItem;
+	std::shared_ptr<LevelTrigger> m_levelTrigger;
 	std::shared_ptr<Inventory>m_inventory;
+	std::shared_ptr<Emitter> m_emitter;
 
 	EntityController* m_entityController;
+
+	CollisionHandler* m_collisionHandler;
 
 	EntityAnimation m_animation;
 

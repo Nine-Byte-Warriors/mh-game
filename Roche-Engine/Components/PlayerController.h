@@ -2,19 +2,27 @@
 #ifndef PLAYERCONTROLLER_H
 #define PLAYERCONTROLLER_H
 
-class Entity;
+#include "BaseController.h"
 #include "PlayerMovement.h"
+#include "PlayerShooting.h"
 
-class PlayerController
+class PlayerController : public BaseController
 {
 public:
-	PlayerController(Entity* entity);
-	
-	void Update(const float dt);
+	PlayerController(
+		const std::shared_ptr <Physics>& pPhysics,
+		const std::shared_ptr <Sprite>& pSprite,
+		const std::shared_ptr <Emitter>& pEmitter
+	);
+
+	//virtual void Initialise() override;
+	virtual void Update( const float dt ) override;
 
 private:
-	Entity* m_Entity;
-	std::shared_ptr<PlayerMovement> m_playerMovement;
+	std::shared_ptr<PlayerMovement>			m_playerMovement;
+	std::shared_ptr<PlayerShooting>			m_playerShooting;
+
+	Vector2f								m_vSpawnOffset;
 };
 
-#endif 
+#endif // PLAYERCONTROLLER_H

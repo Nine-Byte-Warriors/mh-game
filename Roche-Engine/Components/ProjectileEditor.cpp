@@ -1,12 +1,7 @@
 #include "stdafx.h"
 #include "ProjectileEditor.h"
 #include "FileHandler.h"
-
 #include "Graphics.h"	// required for gfx initialisation
-
-#if _DEBUG
-#include <imgui/imgui.h>
-#endif // _DEBUG
 
 ProjectileEditor::ProjectileEditor() :
 	m_sSelectedFile("ProjectilePattern.json"),
@@ -20,19 +15,19 @@ ProjectileEditor::ProjectileEditor() :
 
 void ProjectileEditor::Initialise(const Graphics& gfx, ConstantBuffer<Matrices>& mat)
 {
-	for(std::shared_ptr<ProjectileManager> pProMan : m_vecProjectileManager)
+	for(std::shared_ptr<ProjectileManager> pProMan : m_vecProjectileManagers)
 		pProMan->Initialize(gfx, mat);
 }
 
 void ProjectileEditor::Update(const float dt)
 {
-	for (std::shared_ptr <ProjectileManager> pProMan : m_vecProjectileManager)
+	for (std::shared_ptr <ProjectileManager> pProMan : m_vecProjectileManagers)
 		pProMan->Update(dt);
 }
 
 void ProjectileEditor::Draw(ID3D11DeviceContext* context, XMMATRIX matrix)
 {
-	for (std::shared_ptr <ProjectileManager> pProMan : m_vecProjectileManager)
+	for (std::shared_ptr <ProjectileManager> pProMan : m_vecProjectileManagers)
 		pProMan->Draw(context, matrix);
 }
 
@@ -58,13 +53,13 @@ void ProjectileEditor::SpawnEditorWindow(const Graphics& gfx, ConstantBuffer<Mat
 void ProjectileEditor::LoadPattern()
 {
 	bool bLoadButton = ImGui::Button("Load Pattern");
-	
+
 	static char loadFileName[128] = "";
 	ImGui::InputTextWithHint("##PatternLoadFile", "Load File Name", loadFileName, IM_ARRAYSIZE(loadFileName));
 
 	if (!bLoadButton)
 		return;
-	
+
 	// Call the FileDialog Builder and store the result in a file object.
 	std::shared_ptr<FileHandler::FileObject>foLoad = FileHandler::FileDialog(foLoad)
 		->UseOpenDialog()	// Choose the dialog to use.
@@ -90,30 +85,30 @@ void ProjectileEditor::LoadPattern()
 void ProjectileEditor::SavePattern()
 {
 	m_bSaveButton = ImGui::Button("Save Pattern");
-	
+
 	static char saveFileName[128] = "";
 	ImGui::InputTextWithHint("##PatternSaveFile", "New Save File Name", saveFileName, IM_ARRAYSIZE(saveFileName));
 
 	if (!m_bSaveButton)
 		return;
-	
+
 	if (m_vecManagers.size() < 1)
 		return;
-	
+
 	// Create a file object with a file name. Optional.
 	std::shared_ptr<FileHandler::FileObject> foSave = FileHandler::CreateFileObject(saveFileName);
-	
+
 	// pass file object to the FileDialog Buidler.
 	foSave = FileHandler::FileDialog(foSave)
 		->UseSaveDialog()	// Choose the dialog to use.
 		->ShowDialog()		// Show the dialog.
 		->StoreDialogResult();	// Store the result.
-	
+
 	// Check if the file object has a file path/name.
 	if (foSave->HasPath())
 		// Save the file.
 		JsonLoading::SaveJson(m_vecManagers, foSave->GetJsonPath());
-	
+
 	// Smile. :D
 }
 
@@ -133,10 +128,10 @@ void ProjectileEditor::SpawnPosition(Vector2f vWinMax)
 void ProjectileEditor::ShowPattern()
 {
 	std::string msg;
-	
+
 	if (m_vecManagers.size() < 1)
 		m_vecManagers.push_back(CreateDefaultManager());
-	
+
 	if(ImGui::Button("Add Manager"))
 		m_vecManagers.push_back(CreateDefaultManager());
 
@@ -181,7 +176,7 @@ void ProjectileEditor::ShowPattern()
 					.c_str(),
 				&m_vecManagers[iManIndex].m_bLoop
 			);
-			
+
 			ImGui::Checkbox(
 				std::string("Use Global Speed##Man")
 					.append(std::to_string(iManIndex))
@@ -197,9 +192,9 @@ void ProjectileEditor::ShowPattern()
 						.c_str(),
 					&m_vecManagers[iManIndex].m_fGlobalSpeed, -100.0f, 100.0f);
 			}
-			
+
 			ImGui::Text(std::string("Count: ").append(std::to_string(m_vecManagers[iManIndex].m_vecProjectiles.size())).c_str());
-			
+
 			ImGui::Text(std::string("Delay: ").append(std::to_string(m_vecManagers[iManIndex].m_fDelay)).c_str());
 			ImGui::SliderFloat(
 				std::string("Delay##").append(std::to_string(iManIndex)).c_str(),
@@ -237,7 +232,7 @@ void ProjectileEditor::ShowPattern()
 					ImGui::Separator();
 
 					msg = "Delay: " + std::to_string(m_vecManagers[iManIndex].m_vecProjectiles[iProIndex].m_fDelay);
-					ImGui::Text(msg.c_str()); 
+					ImGui::Text(msg.c_str());
 					ImGui::SliderFloat(
 						std::string("Delay##Man")
 							.append(std::to_string(iManIndex))
@@ -265,7 +260,7 @@ void ProjectileEditor::ShowPattern()
 							.append(std::to_string(iManIndex))
 							.append("Pro")
 							.append(std::to_string(iProIndex))
-							.c_str(), 
+							.c_str(),
 						&m_vecManagers[iManIndex].m_vecProjectiles[iProIndex].m_fSpeed,
 						0.0f, 100.0f, "%0.2f");
 
@@ -278,7 +273,7 @@ void ProjectileEditor::ShowPattern()
 							.append(std::to_string(iProIndex))
 							.c_str(),
 						&m_vecManagers[iManIndex].m_vecProjectiles[iProIndex].m_fAngle,-360.0f,360.0f,"%.2f deg");
-					
+
 					msg = "Amplitude: " + std::to_string(m_vecManagers[iManIndex].m_vecProjectiles[iProIndex].m_fAmplitude);
 					ImGui::Text(msg.c_str());
 					ImGui::DragFloat(
@@ -303,7 +298,7 @@ void ProjectileEditor::ShowPattern()
 
 					ImGui::TreePop();
 				}
-			
+
 				msg = "Del Projectile #" + std::to_string(iProIndex) + " ##Man" + std::to_string(iManIndex) + "Pro" + std::to_string(iProIndex);
 				if (ImGui::Button(msg.c_str()))
 					m_vecManagers[iManIndex].m_vecProjectiles.erase(m_vecManagers[iManIndex].m_vecProjectiles.begin() + iProIndex);
@@ -324,46 +319,23 @@ void ProjectileEditor::TestButtons(const Graphics& gfx, ConstantBuffer<Matrices>
 	if (!bFire)
 		return;
 
-	m_vecProjectileManager.clear();
+	//m_vecProjectileManagers.clear();
 
-	for (ProjectileData::ManagerJSON jMan : m_vecManagers)
-	{
-		std::shared_ptr <ProjectileManager> pManager = std::make_shared<ProjectileManager>();
-		
-		pManager->SetDelay(jMan.m_fDelay);
-		pManager->SetProjectilePool(CreateProjectilePool(jMan.m_vecProjectiles, jMan.m_fGlobalSpeed, jMan.m_bUseGlobalSpeed));
-		pManager->InitialiseFromFile(gfx, mat, jMan.m_sImagePath, Vector2f(jMan.m_fWidth, jMan.m_fHeight));
-		
-		if (bLoop || jMan.m_bLoop)
-			pManager->EnableRepeat();
+	//for (ProjectileData::ManagerJSON jMan : m_vecManagers)
+	//{
+	//	std::shared_ptr <ProjectileManager> pManager = std::make_shared<ProjectileManager>();
+	//
+	//	pManager->SetDelay(jMan.m_fDelay);
+	//	pManager->SetProjectilePool(ProjectileManager::CreateProjectilePool(jMan.m_vecProjectiles, jMan.m_fGlobalSpeed, jMan.m_bUseGlobalSpeed));
+	//	pManager->InitialiseFromFile(gfx, mat, jMan.m_sImagePath, Vector2f(jMan.m_fWidth, jMan.m_fHeight));
+	//
+	//	if (bLoop || jMan.m_bLoop)
+	//		pManager->EnableRepeat();
 
-		m_vecProjectileManager.push_back(std::move(pManager));
-	}
+	//	m_vecProjectileManagers.push_back(std::move(pManager));
+	//}
 
-	SpawnPattern();
-}
-
-std::vector<std::shared_ptr<Projectile>> ProjectileEditor::CreateProjectilePool(std::vector<ProjectileData::ProjectileJSON> vecProjectileJsons, float fGlobalSpeed, bool bUseGlobalSpeed)
-{
-	std::vector<std::shared_ptr<Projectile>> vecProjectilePool;
-
-	for (ProjectileData::ProjectileJSON pJson : vecProjectileJsons)
-	{
-		std::shared_ptr<Projectile> pProjectile = std::make_shared<Projectile>(
-			bUseGlobalSpeed == true
-			? fGlobalSpeed
-			: pJson.m_fSpeed,
-			pJson.m_fLifeTime
-		);
-		pProjectile->SetDirection(Vector2f(pJson.m_fAngle));
-		pProjectile->SetOffSet(Vector2f(pJson.m_fX, pJson.m_fY));
-		pProjectile->SetWave(pJson.m_fAngle, pJson.m_fAmplitude, pJson.m_fFrequency);
-		pProjectile->SetDelay(pJson.m_fDelay);
-
-		vecProjectilePool.push_back(std::move(pProjectile));
-	}
-
-	return vecProjectilePool;
+	//SpawnPattern();
 }
 
 void ProjectileEditor::SaveProjectile()
@@ -373,7 +345,7 @@ void ProjectileEditor::SaveProjectile()
 
 void ProjectileEditor::SpawnPattern()
 {
-	for (std::shared_ptr<ProjectileManager> manager : m_vecProjectileManager)
+	for (std::shared_ptr<ProjectileManager> manager : m_vecProjectileManagers)
 		manager->SpawnProjectiles(m_vSpawnPosition);
 }
 
@@ -392,7 +364,7 @@ ProjectileData::ManagerJSON ProjectileEditor::CreateDefaultManager()
 	manager.m_fGlobalSpeed = 0.0f;
 
 	manager.m_vecProjectiles.push_back(CreateDefaultProjectile());
-	
+
 	return manager;
 }
 
@@ -408,7 +380,7 @@ ProjectileData::ProjectileJSON ProjectileEditor::CreateDefaultProjectile()
 	blankProjectile.m_fAngle = 0.0f;
 	blankProjectile.m_fAmplitude = 0.0f;
 	blankProjectile.m_fFrequency = 0.0f;
-	
+
 	return blankProjectile;
 }
 #endif // _DEBUG

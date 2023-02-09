@@ -1,6 +1,18 @@
 [
     {
-        "file": "HUD_Widgets.json",
+        "file": "Change_Level_Widgets.json",
+        "name": "Change_Level_Widgets"
+    },
+    {
+        "file": "Game_Over_Widgets.json",
+        "name": "Game_Over_Widgets"
+    },
+    {
+        "file": "Game_Won_Widgets.json",
+        "name": "Game_Won_Widgets"
+    },
+    {
+        "file": "HUD_Day.json",
         "name": "HUD_Day"
     },
     {
@@ -9,10 +21,10 @@
     },
     {
         "file": "Pause_Widgets.json",
-        "name": "Pause"
+        "name": "Pause_Widgets"
     },
     {
         "file": "Settings_Widgets.json",
-        "name": "Settings"
+        "name": "Settings_Widgets"
     }
 ]

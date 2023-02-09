@@ -15,8 +15,8 @@ EntityEditor::EntityEditor()
 #if _DEBUG
 void EntityEditor::SpawnControlWindow(float width, float height)
 {
-	m_fWidth = width;
-	m_fHeight = height;
+	m_fWidth = width*2;
+	m_fHeight = height*2;
 
 	m_vSoundBankNamesList = AudioEngine::GetInstance()->GetSoundBankNamesList();
 
@@ -138,14 +138,22 @@ void EntityEditor::AddNewEntity()
 		entityData->mass = 1.0f;
 		entityData->speed = 10.0f;
 		entityData->behaviour = "None";
-		entityData->colliderShape = "Circle";
+		entityData->colliderShape = "Circle";//
 		entityData->colliderRadius.push_back(64.0f);
 		entityData->colliderRadius.push_back(64.0f);
+		//entityData->bColliderEnabled = true;
+		//entityData->bColliderStatic = false;
+		entityData->bColliderTrigger = false;
+		//entityData->sColliderLayer = "Enemy";
+		//entityData->bColliderInteractDecoration = true;
+		//entityData->bColliderInteractPlayer = true;
+		//entityData->bColliderInteractEnemy = true;
+		//entityData->bColliderInteractProjectile = true;
 		entityData->projectilePattern = "None";
 		entityData->projectileBullet = "None";
 		entityData->AI = true;
 		entityData->projectileSystem = true;
-		entityData->collider = false;
+		entityData->collider = true;
 		entityData->bProjectilePattern = true;
 		entityData->bProjectileBullet = true;
 		entityData->animationPath = "None";
@@ -312,10 +320,22 @@ void EntityEditor::ColliderWidget()
 		ImGui::SameLine();
 		if (ImGui::TreeNode("##Collider"))
 		{
+
+			ImGui::NewLine();
+			SetColliderEnabled();
 			ImGui::NewLine();
 			SetColliderShape();
 			ImGui::NewLine();
 			SetColliderSize();
+			ImGui::NewLine();
+			SetColliderLayer();
+			ImGui::NewLine();
+			SetColliderMask();
+			ImGui::NewLine();
+			SetColliderTrigger();
+			ImGui::NewLine();
+			SetColliderStatic();
+
 
 			ImGui::TreePop();
 		}
@@ -371,7 +391,7 @@ void EntityEditor::SetType()
 
 	static int entityType = 0;
 	std::string previewEntityType = m_vEntityDataCopy[m_iIdentifier].type;
-	const char* entityTypes[]{ "Player", "Enemy", "Projectile" };
+	const char* entityTypes[]{ "Player", "Enemy", "Projectile", "Item", "LevelTrigger"};
 	std::string lable = "##Entity" + displayText + std::to_string(m_iIdentifier);
 
 	if (ImGui::BeginCombo(lable.c_str(), previewEntityType.c_str()))
@@ -605,7 +625,7 @@ void EntityEditor::SetBehaviour()
 
 	static int activeBehaviour = 0;
 	std::string previewEntityBehaviour = m_vEntityDataCopy[m_iIdentifier].behaviour;
-	const char* behaviourList[]{ "Idle", "Seek", "Flee", "Patrol", "Follow", "Wander" };
+	const char* behaviourList[]{ "Idle", "Seek", "Flee", "Patrol", "Follow", "Wander", "Fire" };
 	std::string lable = "##Entity" + displayText + std::to_string(m_iIdentifier);
 
 	if (ImGui::BeginCombo(lable.c_str(), previewEntityBehaviour.c_str()))
@@ -725,10 +745,7 @@ void EntityEditor::SetColliderShape()
 void EntityEditor::SetColliderSize()
 {
 #if _DEBUG
-	ImGui::Checkbox("Lock To Scale", &m_bLockToScale);
-
-	if (m_bLockToScale)
-	{
+	if(ImGui::Button("Set to Scale")) {
 		m_vEntityDataCopy[m_iIdentifier].colliderRadius[0] = m_vEntityDataCopy[m_iIdentifier].scale[0];
 		m_vEntityDataCopy[m_iIdentifier].colliderRadius[1] = m_vEntityDataCopy[m_iIdentifier].scale[1];
 	}
@@ -758,6 +775,74 @@ void EntityEditor::SetColliderSize()
 		lable = "##Entity" + displayText + "y" + std::to_string(m_iIdentifier);
 		ImGui::DragFloat(lable.c_str(), &m_vEntityDataCopy[m_iIdentifier].colliderRadius[1], 1.0f, -m_fHeight, m_fHeight, "%.1f");
 	}
+#endif
+}
+
+void EntityEditor::SetColliderTrigger()
+{
+#if _DEBUG
+	ImGui::Checkbox("Trigger", &m_vEntityDataCopy[m_iIdentifier].bColliderTrigger);
+#endif
+}
+
+void EntityEditor::SetColliderLayer()
+{
+#if _DEBUG
+	std::string displayText = "Collider Layer";
+	ImGui::Text(displayText.c_str());
+
+	static int curLayer = 0;
+	std::string previewColliderLayer = m_vEntityDataCopy[m_iIdentifier].sColliderLayer;
+	const char* colliderList[]{ "Decoration", "Player", "Enemy", "PlayerProjectile", "EnemyProjectile"};
+	std::string lable = "##Entity" + displayText + std::to_string(m_iIdentifier);
+
+	if (ImGui::BeginCombo(lable.c_str(), previewColliderLayer.c_str()))
+	{
+		for (int i = 0; i < IM_ARRAYSIZE(colliderList); i++)
+		{
+			const bool isSelected = i == curLayer;
+			if (ImGui::Selectable(colliderList[i], isSelected))
+			{
+				curLayer = i;
+				previewColliderLayer = colliderList[i];
+			}
+		}
+
+		ImGui::EndCombo();
+
+		m_vEntityDataCopy[m_iIdentifier].sColliderLayer = colliderList[curLayer];
+	}
+#endif
+}
+
+void EntityEditor::SetColliderStatic()
+{
+#if _DEBUG
+	ImGui::Checkbox("Static", &m_vEntityDataCopy[m_iIdentifier].bColliderStatic);
+#endif
+}
+
+void EntityEditor::SetColliderEnabled()
+{
+#if _DEBUG
+	ImGui::Checkbox("Enabled", &m_vEntityDataCopy[m_iIdentifier].bColliderEnabled);
+#endif
+}
+
+void EntityEditor::SetColliderMask()
+{
+#if _DEBUG
+	std::string displayText = "Mask";
+	ImGui::Text(displayText.c_str());
+	ImGui::Checkbox("Decoration", &m_vEntityDataCopy[m_iIdentifier].bColliderInteractDecoration);
+	ImGui::SameLine();
+	ImGui::Checkbox("Player", &m_vEntityDataCopy[m_iIdentifier].bColliderInteractPlayer);
+	ImGui::SameLine();
+	ImGui::Checkbox("Enemy", &m_vEntityDataCopy[m_iIdentifier].bColliderInteractEnemy);
+	
+	ImGui::Checkbox("PlayerProjectile", &m_vEntityDataCopy[m_iIdentifier].bColliderInteractPlayerProjectile);
+	ImGui::SameLine();
+	ImGui::Checkbox("EnemyProjectile", &m_vEntityDataCopy[m_iIdentifier].bColliderInteractEnemyProjectile);
 #endif
 }
 

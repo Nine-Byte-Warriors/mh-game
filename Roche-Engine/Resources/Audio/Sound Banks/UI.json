@@ -1,12 +1,22 @@
 [
     {
         "audioType": 0,
-        "filePath": "Resources\\Audio\\bullettest.wav",
-        "name": "bullettest",
+        "filePath": "Resources\\Audio\\mouseclick.wav",
+        "name": "mouseclick",
         "pitchMax": 1.0,
         "pitchMin": 1.0,
         "randomPitch": false,
-        "tagName": "ButtonPress",
+        "tagName": "UISliderClick",
+        "volume": 1.0
+    },
+    {
+        "audioType": 0,
+        "filePath": "Resources\\Audio\\uiclick.wav",
+        "name": "uiclick",
+        "pitchMax": 1.0,
+        "pitchMin": 1.0,
+        "randomPitch": false,
+        "tagName": "UIButtonClick",
         "volume": 1.0
     }
 ]

@@ -2,10 +2,8 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
-#include "Vector2f.h"
 #include "Transform.h"
 #include "LayerMask.h"
-#include <functional>
 
 const enum class ColliderType
 {
@@ -23,30 +21,35 @@ enum class CollisionState
 
 class BoxCollider;
 class CircleCollider;
-class Health;
 class Collider
 {
 public:
     Collider() {}
-    Collider(bool trigger, std::shared_ptr<Transform>& transform, std::shared_ptr<Health>& health, int entityNum, std::string entityType);
+    Collider(
+        const std::shared_ptr<Transform>& transform,
+        const std::shared_ptr<Sprite>& sprite,
+        bool trigger, int entityNum, std::string entityType );
     Collider(Collider& col);
 
+private:
+    bool m_isEnabledCopy;
 protected:
+    bool m_isEnabled = true;
     ColliderType m_type = ColliderType::None;
     bool m_isTrigger = false;
-    LayerMask m_collisionMask = LayerMask(true, true, true, true);
+    bool m_isStatic = false;
+    LayerMask m_collisionMask = LayerMask(true, true, true, true, true);
     LayerNo m_layer = LayerNo::Enemy;
-
+    //std::shared_ptr<Entity> m_entity;
     std::shared_ptr<Transform> m_transform;
-    std::shared_ptr<Health> m_health;
+    std::shared_ptr<Sprite> m_sprite;
     int m_entityNum;
     std::string m_entityType;
 
     Vector2f m_lastValidPosition = Vector2f(0, 0);
 
-
     const int m_maxCollisions = 50;
-    int m_collisionCount = 0;
+    int m_curCollisionCount = 0;
     std::vector<std::shared_ptr<Collider>> m_curCollisions;
     std::map<std::shared_ptr<Collider>, CollisionState> m_collisions;
 
@@ -67,16 +70,22 @@ public:
     inline void SetIsTrigger(bool trigger) noexcept { m_isTrigger = trigger; }
     inline bool GetIsTrigger() noexcept { return m_isTrigger; };
 
+    inline void SetIsEnabled(bool enabled) noexcept { m_isEnabled = enabled; }
+    inline bool GetIsEnabled() noexcept { return m_isEnabled; }
+
+    inline void SetIsStatic(bool isStatic) noexcept { m_isStatic = isStatic; }
+    inline bool GetIsStatic() noexcept { return m_isStatic; };
+
     inline void SetLayer(LayerNo layer) { m_layer = layer; };
     inline LayerNo GetLayer() const noexcept { return m_layer; };
 
-    inline void SetCollisionMask(LayerMask collisionMask) noexcept { m_collisionMask = collisionMask; m_collisionMask = collisionMask; }
+    inline void SetCollisionMask(LayerMask collisionMask) noexcept { m_collisionMask = collisionMask; }
     inline LayerMask GetCollisionMask() noexcept { return m_collisionMask; };
 
     inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_transform; }
     inline void SetTransform(std::shared_ptr<Transform> tf) noexcept { m_transform = tf; }
 
-    inline std::shared_ptr<Health> GetHealth() { return m_health; };
+    inline void SetEntityNum(int entityNum) { m_entityNum = entityNum; };
     inline int GetEntityNum() { return m_entityNum; };
     inline std::string EntityType() { return m_entityType; };
 
@@ -93,6 +102,7 @@ public:
 
 
     virtual Vector2f ClosestPoint(Vector2f position) noexcept { return Vector2f(); }
+    void CheckDisabled();
 
     //Collision Checks
     virtual bool ToBox(BoxCollider& box) noexcept { return false; }
@@ -101,6 +111,7 @@ public:
     virtual bool CollisionCheck(std::shared_ptr<Collider> collider) noexcept { return false; }
 
     //Collision Resolution
+    bool ResolveCheck(std::shared_ptr<Collider> collider);
     virtual void Resolution(std::shared_ptr<Collider> collider) noexcept {};
     virtual void Resolve() {};
 

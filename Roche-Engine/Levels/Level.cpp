@@ -4,7 +4,6 @@
 
 #if _DEBUG
 extern bool g_bDebug;
-#include <imgui/imgui.h>
 #include "MouseCapture.h"
 #endif
 
@@ -42,17 +41,18 @@ void Level::CreateEntity()
     {
         Entity *entityPop = new Entity(m_entityController, i);
         m_entity.push_back(*entityPop);
+        m_entity[i].SetCollisionHandler(&m_collisionHandler);
         m_entity[i].Initialize(*m_gfx, m_cbMatrices);
-        delete entityPop;
-    }
+        m_entity[i].SetProjectileManagerInit(*m_gfx, m_cbMatrices);
 
-    m_collisionHandler.RemoveAllColliders();
-    for (int i = 0; i < m_iEntityAmount; i++)
-    {
+        DisplayEntityMaxHealth(i);
+
         if (m_entityController.HasCollider(i))
         {
             m_collisionHandler.AddCollider(m_entity[i].GetCollider());
         }
+
+        delete entityPop;
     }
 }
 
@@ -63,7 +63,7 @@ void Level::CreateUI()
     m_ui->RemoveAllUI();
     for ( unsigned int i = 0; i < m_uiEditor.GetScreens().size(); i++ )
 	    m_ui->AddUI( m_uiEditor.GetScreens()[i], m_uiEditor.GetScreenData()[i].name );
-	
+
     // find the player in the entity vector
     int playerIdx = 0;
     for ( unsigned int i = 0; i < m_entity.size(); i++ )
@@ -77,10 +77,7 @@ void Level::CreateUI()
 
     m_ui->Initialize( *m_gfx, &m_cbMatrices, m_uiEditor.GetWidgets(), *m_entity[playerIdx].GetHealth() );
     m_ui->HideAllUI();
-
-#if !_DEBUG
-    m_ui->ShowUI( "Credits" );
-#endif
+    EventSystem::Instance()->AddEvent(EVENTID::LevelOnCreateUI);
 }
 
 void Level::CreateTileMap()
@@ -95,7 +92,6 @@ void Level::CreateTileMap()
     m_tileMapLoader.SetLevel(m_tileMapEditor.GetLevel(TileMapLayer::Background), m_tileMapEditor.GetLevel(TileMapLayer::Foreground));
 #else
     m_tileMapLoader.LoadLevel("67x120file.json", "67x120file.json");
-
 #endif
 
     CreateTileMapDraw();
@@ -134,7 +130,7 @@ void Level::CreateTileMapDraw()
             float positionHeight = rowPositionTotalTileLength;
 
             (*tileMapDraw)[j].GetTransform()->SetPositionInit(positionWidth, positionHeight);
-            (*tileMapDraw)[j].GetTransform()->SetScaleInit(m_iTileSize, m_iTileSize);
+            (*tileMapDraw)[j].GetSprite()->SetWidthHeight( (float)m_iTileSize, (float)m_iTileSize );
         }
 
         m_tileMapDrawLayers.push_back(*tileMapDraw);
@@ -149,10 +145,7 @@ void Level::CreateTileMapDraw()
 void Level::OnSwitch()
 {
 	// Update level system
-	EventSystem::Instance()->AddEvent( EVENTID::SetCurrentLevelEvent, &m_iCurrentLevel );
-	EventSystem::Instance()->AddEvent( EVENTID::SetNextLevelEvent, &m_iNextLevel );
     EventSystem::Instance()->AddEvent( EVENTID::ShowCursorEvent );
-
     CreateEntity();
     CreateUI();
 }
@@ -186,7 +179,8 @@ void Level::RenderFrameEntity()
 
         if (m_entityController.HasProjectileBullet(i))
         {
-            m_entity[i].GetProjectileManager()->Draw(m_gfx->GetContext(), m_camera.GetWorldOrthoMatrix());
+            for (std::shared_ptr<ProjectileManager>& pManager : m_entity[i].GetProjectileManagers())
+                pManager->Draw(m_gfx->GetContext(), m_camera.GetWorldOrthoMatrix());
         }
     }
 }
@@ -326,13 +320,16 @@ void Level::EndFrame_End()
 
 void Level::Update( const float dt )
 {
-    UpdateTileMap( dt );
-    UpdateEntity( dt );
-    UpdateUI( dt );
+    if (m_bIsGamePaused == false) {
+        UpdateTileMap(dt);
+        UpdateEntity(dt);
 
-	m_projectileEditor->Update( dt );
-    m_collisionHandler.Update();
-    m_camera.Update( dt );
+        m_projectileEditor->Update(dt);
+        m_collisionHandler.Update();
+        m_camera.Update(dt);
+    }
+
+    UpdateUI(dt);
 }
 
 void Level::UpdateUI( const float dt )
@@ -343,29 +340,20 @@ void Level::UpdateUI( const float dt )
         CreateUI();
         m_uiEditor.SetShouldUpdate( false );
     }
-
+#endif
     m_uiEditor.Update( dt );
-    static bool firstLoadEver = true;
-    if ( m_uiEditor.ShouldShowAll() || firstLoadEver )
-    {
-        m_ui->ShowAllUI();
-        firstLoadEver = false;
-    }
-    else if ( m_uiEditor.GetCurrentScreenIndex() > -1 )
+    if ( m_uiEditor.GetCurrentScreenIndex() > -1 )
     {
         m_ui->HideAllUI();
         m_ui->ShowUI( m_uiEditor.GetCurrentScreenName() );
     }
-    else
-    {
-        m_ui->HideAllUI();
-    }
+#if _DEBUG
+    if ( m_uiEditor.ShouldShowAll() )
+        m_ui->ShowAllUI();
     if ( m_uiEditor.ShouldHideAll() )
-    {
         m_ui->HideAllUI();
-    }
 #endif
-    m_ui->Update( dt, m_uiEditor.GetWidgets() );
+    m_ui->Update( dt );
 }
 
 void Level::UpdateEntity(const float dt)
@@ -378,11 +366,11 @@ void Level::UpdateEntity(const float dt)
     {
         AddNewEntity();
     }
-    else if (m_iEntityAmount != m_entityController.GetSize() || m_entityController.HasComponentUpdated())
+    else if (m_iEntityAmount != m_entityController.GetSize() || m_entityController.HasComponentUpdated() || m_entityController.GetDead().size() != 0)
     {
         RemoveEntities();
     }
-
+    
 #if _DEBUG
     for (int i = 0; i < m_iEntityAmount; i++)
     {
@@ -393,6 +381,7 @@ void Level::UpdateEntity(const float dt)
     for (int i = 0; i < m_iEntityAmount; i++)
     {
         m_entity[i].Update(dt);
+        DisplayEntityCurrentHealth(i);
     }
 }
 
@@ -402,8 +391,12 @@ void Level::AddNewEntity()
     {
         Entity* entityPop = new Entity(m_entityController, i);
         m_entity.push_back(*entityPop);
+        m_entity[i].SetCollisionHandler(&m_collisionHandler);
         m_entity[i].Initialize(*m_gfx, m_cbMatrices);
+        m_entity[i].SetProjectileManagerInit(*m_gfx, m_cbMatrices);
         delete entityPop;
+
+        DisplayEntityMaxHealth(i);
 
         if (m_entityController.HasCollider(i))
         {
@@ -415,46 +408,70 @@ void Level::AddNewEntity()
 
         if (m_entityController.HasProjectileSystem(i))
         {
-            m_entity[i].GetProjectileManager()->Draw(m_gfx->GetContext(), m_camera.GetWorldOrthoMatrix());
+            for (std::shared_ptr<ProjectileManager>& pManager : m_entity[i].GetProjectileManagers())
+				pManager->Draw(m_gfx->GetContext(), m_camera.GetWorldOrthoMatrix());
         }
+
     }
 
-#if _DEBUG
-    m_iEntityAmount = m_entityEditor.GetEntityData().size();
-#else
     m_iEntityAmount = m_entityController.GetSize();
-#endif
     m_entityController.UpdateCopy();
 }
 
 void Level::RemoveEntities()
 {
+    m_entitiesDeleted = m_entityController.GetDead();
+
 #if _DEBUG
     m_entitiesDeleted = m_entityEditor.GetEntitiesDeleted();
 #endif
 
     for (int i = 0; i < m_entitiesDeleted.size(); i++)
     {
+        m_collisionHandler.RemoveCollider(m_entity[i].GetCollider());
         m_entity.erase(m_entity.begin() + m_entitiesDeleted[i]);
     }
 
-    m_collisionHandler.RemoveAllColliders();
     m_entitiesDeleted.clear();
 
     for (int i = 0; i < m_entity.size(); i++)
-    {
         m_entity[i].UpdateEntityNum(i);
-        m_entity[i].SetProjectileManagerInit(*m_gfx, m_cbMatrices);
-        if (m_entityController.HasCollider(i))
-        {
-            m_collisionHandler.AddCollider(m_entity[i].GetCollider());
-        }
-    }
+
 
 #if _DEBUG
     m_iEntityAmount = m_entityEditor.GetEntityData().size();
     m_entityEditor.ClearEntitiesDeleted();
+#else
+    m_iEntityAmount = m_entityController.GetSize();
 #endif
+    m_entityController.ClearDead();
+}
+
+void Level::DisplayEntityMaxHealth(int num)
+{
+    if (m_entity[num].GetType() == "Enemy")
+    {
+        float* maxHealthPtr = new float;
+        m_fMaxHealth += m_entity[num].GetHealth()->GetMaxHealth();
+        *maxHealthPtr = m_fMaxHealth;
+        EventSystem::Instance()->AddEvent(EVENTID::EnemyMaxHealth, maxHealthPtr);
+    }
+}
+
+void Level::DisplayEntityCurrentHealth(int num)
+{
+    if (num == 0)
+    {
+        *m_fCurrentHealth = 0;
+    }
+    if (m_entity[num].GetType() == "Enemy")
+    {
+        *m_fCurrentHealth += m_entity[num].GetHealth()->GetCurrentHealth();
+    }
+    if (num == m_iEntityAmount - 1)
+    {
+        EventSystem::Instance()->AddEvent(EVENTID::EnemyCurrentHealth, m_fCurrentHealth);
+    }
 }
 
 void Level::UpdateTileMap(const float dt)
@@ -495,6 +512,95 @@ void Level::UpdateTileMap(const float dt)
         m_bMapUpdate = false;
     }
 #endif
+
+    UpdateTileMapPlanting(dt);
+}
+
+void Level::UpdateTileMapPlanting(const float dt)
+{
+    int player = m_entityController.GetEntityNumFromName("Player");
+    int drawLayer = 1;
+    float radius = 200.0f;
+
+    bool isPlayerNearTheMouse = m_tileMapPaintOnMap.IsNearTheMouse(m_entity[player].GetTransform()->GetPosition(),
+        m_entity[player].GetSprite()->GetWidthHeight() / 2, radius);
+
+    if (isPlayerNearTheMouse)
+    {
+        bool isDrawOnMapAvalibleForPlayer = m_tileMapPaintOnMap.IsLeftMouseDown() && m_bIsWindowHovered;
+        if (isDrawOnMapAvalibleForPlayer)
+        {
+            int seedNum = m_entity[player].GetInventory()->GetActiveSeedPacket();
+            std::string seedString = m_entity[player].GetInventory()->GetName();
+            int entityNum = m_entityController.GetEntityEnemyNumFromName(seedString);
+
+            std::string texture = m_entity[player].GetInventory()->GetTexture();
+
+            int spawnPos = m_tileMapPaintOnMap.GetTileMapPos();
+
+            m_entity[player].GetInventory()->GetActiveSeedPacketCount();
+
+            bool isTilePlantable =
+                !m_tileMapLoader.GetTileTypeName(0, spawnPos).contains("Concrete") &&
+                !m_tileMapLoader.GetTileTypeName(1, spawnPos).contains("Concrete") &&
+                !m_tileMapLoader.GetTileTypeName(0, spawnPos).contains("Wood") &&
+                !m_tileMapLoader.GetTileTypeName(1, spawnPos).contains("Wood") &&
+                !m_tileMapLoader.GetTileTypeName(drawLayer, spawnPos).contains("transparent") &&
+                m_tileMapLoader.GetTileTypeName(drawLayer, spawnPos) != "EmptyPlot" &&
+                !m_entitySpawner.IsEntityPosTaken(spawnPos);// &&
+                //m_entity[player].GetInventory()->GetActiveSeedPacketCount() > 0;
+
+            if (isTilePlantable && !m_entitySpawner.IsPhaseNight())
+            {
+                m_tileMapLoader.UpdateTileType(drawLayer, spawnPos, m_entity[player].GetInventory()->GetName());
+                m_tileMapDrawLayers[drawLayer][spawnPos].GetSprite()->UpdateTex(m_gfx->GetDevice(), texture);
+
+                Vector2f offset = m_entityController.GetEnemyWidthHeight(entityNum) / 2;
+                Vector2f spawnMapPos = m_tileMapPaintOnMap.GetMapPos(m_entity[player].GetTransform()->GetPosition(), offset);
+                m_entitySpawner.AddEntityToSpawn(entityNum, spawnPos, spawnMapPos);
+
+                std::pair<std::string, int>* seedattempt = new std::pair<std::string, int>();
+                seedattempt->first = m_entity[player].GetInventory()->GetName();
+                seedattempt->second = 1;
+                EventSystem::Instance()->AddEvent(EVENTID::PlantSeedAttempt, seedattempt);
+            }
+        }
+    }
+
+    const float spawnTimmer = 0.5f;
+    if (m_entitySpawner.IsPhaseNight())
+    { 
+        static float timmer = spawnTimmer;
+        timmer += dt;
+
+        if (m_entitySpawner.GetSpawnEntitiesSize() != 0 && timmer > spawnTimmer)
+        {
+            timmer -= 0.5f;
+            static int count = 0;
+
+            std::string texture = "Resources\\Textures\\Tiles\\EmptyPlot.png";
+            int spawnPos = m_entitySpawner.GetSpawnEntitiesTileMapPos(count);
+            m_tileMapLoader.UpdateTileType(drawLayer, spawnPos, "EmptyPlot");
+            m_tileMapDrawLayers[1][spawnPos].GetSprite()->UpdateTex(m_gfx->GetDevice(), texture);
+
+            m_entitySpawner.SpawnEntity(count);
+
+            m_entityController.AddEntityData(m_entitySpawner.GetEntityData()[count]);
+            count++;
+
+            if (count >= m_entitySpawner.GetSpawnEntitiesSize())
+            {
+                count = 0;
+                m_entitySpawner.EntitiesAdded();
+            }
+        }
+
+        bool isAllEnemiesDead = m_entitySpawner.GetSpawnEntitiesSize() == 0 && *m_fCurrentHealth == 0;
+        if (isAllEnemiesDead && m_entitySpawner.IsPhaseNight())
+        {
+            EventSystem::Instance()->AddEvent(EVENTID::ChangePhase);
+        }
+    }
 }
 
 void Level::UpdateBothTileMaps(const float dt)
@@ -576,5 +682,35 @@ void Level::UpdateTileMapEmpty(const float dt)
         }
 
         m_tileMapEditor.SetLayerSwitchedDone();
+    }
+}
+
+void Level::AddToEvent() noexcept
+{
+    EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
+    EventSystem::Instance()->AddClient(EVENTID::GameUnpauseEvent, this);
+}
+
+void Level::RemoveFromEvent() noexcept
+{
+    EventSystem::Instance()->RemoveClient(EVENTID::GamePauseEvent, this);
+    EventSystem::Instance()->RemoveClient(EVENTID::GameUnpauseEvent, this);
+}
+
+void Level::HandleEvent(Event* event)
+{
+    // Switch level
+    switch (event->GetEventID())
+    {
+    case EVENTID::GamePauseEvent:
+    {
+        m_bIsGamePaused = true;
+    }
+    break;
+    case EVENTID::GameUnpauseEvent:
+    {
+        m_bIsGamePaused = false;
+    }
+    break;
     }
 }

@@ -1,1 +1,12 @@
-[]
+[
+    {
+        "audioType": 0,
+        "filePath": "Resources\\Audio\\itemequip.wav",
+        "name": "itemequip",
+        "pitchMax": 1.0,
+        "pitchMin": 1.0,
+        "randomPitch": false,
+        "tagName": "ShopPurchase",
+        "volume": 1.0
+    }
+]

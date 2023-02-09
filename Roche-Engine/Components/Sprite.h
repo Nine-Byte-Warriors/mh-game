@@ -55,6 +55,10 @@ public:
 	inline float GetHeight() const noexcept { return m_fHeight; }
 	inline void SetHeight( float height ) noexcept { m_fHeight = height; }
 
+	inline Vector2f GetWidthHeight() const noexcept { return { m_fWidth, m_fHeight }; };
+	inline void SetWidthHeight( Vector2f size ) noexcept { m_fWidth = size.x; m_fHeight = size.y; };
+	inline void SetWidthHeight( float width, float height ) noexcept { m_fWidth = width; m_fHeight = height; };
+
 	inline float GetRows() const noexcept { return m_iRows; }
 	inline void SetRows( float rows ) noexcept { m_iRows = rows; }
 
@@ -67,6 +71,9 @@ public:
 	inline void UpdateTex( ID3D11Device* device, std::string tex ) { texture->UpdateTexture( device, tex ); }
 	inline void UpdateTex( ID3D11Device* device, Colour tex ) { texture->UpdateTexture( device, tex ); }
 
+	inline bool HasTexture() { if (texture == nullptr) return false; return true; }
+
+	inline void SetShouldUpdate( bool shouldUpdate ) noexcept { m_bShouldUpdate = shouldUpdate; }
 	inline void UpdateFrameTime(float frameTime) noexcept { m_fHoldTime = frameTime; }
 private:
 	bool InitializeInternal( ID3D11Device* device, ID3D11DeviceContext* context,
@@ -85,8 +92,9 @@ private:
 	int m_iMaxFrameY = 1;
 
 	int m_iCurFrame = 0;
-	float m_fHoldTime = 1.0f;
+	float m_fHoldTime = 0.1f;
 	float m_fCurFrameTime = 0.0f;
+	bool m_bShouldUpdate = true;
 
 	std::unique_ptr<Texture> texture;
 	ConstantBuffer<Matrices>* cb_vs_matrix = nullptr;

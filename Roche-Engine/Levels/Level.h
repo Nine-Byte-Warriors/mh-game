@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "EntityEditor.h"
 #include "EntityController.h"
+#include "EntitySpawner.h"
 
 #include "Camera.h"
 #include "UIEditor.h"
@@ -13,6 +14,7 @@
 #include "TileMapEditor.h"
 #include "TileMapLoader.h"
 #include "TileMapPaintOnMap.h"
+
 #if _DEBUG
 #include "AudioEditor.h"
 #endif
@@ -20,19 +22,22 @@
 #include "LevelStateMachine.h"
 #include "CollisionHandler.h"
 
+
 /// <summary>
 /// The first level of the game.
 /// Inherits from Level to render/update objects used in each level.
 /// </summary>
-class Level : public LevelContainer
+class Level : public LevelContainer, public Listener
 {
 public:
-	Level( const std::string& name, int& levelId )
+	Level( const std::string& name )
 	{
 		m_sLevelName = name;
-		levelId++;
-		m_iCurrentLevel = levelId;
-		m_iNextLevel = levelId + 1;
+		AddToEvent();
+	}
+	~Level()
+	{
+		RemoveFromEvent();
 	}
 
 	void OnCreate() override;
@@ -57,16 +62,25 @@ public:
 	void CreateTileMap();
 	void CreateUI();
 
+	inline std::string GetLevelName() { return m_sLevelName; };
+
 private:
 	void RenderFrameEntity();
 	void UpdateUI( const float dt );
 	void UpdateEntity(const float dt);
 	void AddNewEntity();
 	void RemoveEntities();
+	void DisplayEntityMaxHealth(int num);
+	void DisplayEntityCurrentHealth(int num);
+
+	void AddToEvent() noexcept;
+	void RemoveFromEvent() noexcept;
+	void HandleEvent(Event* event) override;
 
 	// Tile Map
 	void CreateTileMapDraw();
 	void UpdateTileMap(const float dt);
+	void UpdateTileMapPlanting(const float dt);
 	void UpdateBothTileMaps(const float dt);
 	void UpdateTileMapTexture(const float dt);
 	void UpdateTileMapEmpty(const float dt);
@@ -90,6 +104,7 @@ private:
 	int m_iTileMapColumns;
 	EntityEditor m_entityEditor;
 	EntityController m_entityController;
+	EntitySpawner m_entitySpawner;
 	std::shared_ptr<ProjectileEditor> m_projectileEditor;
 
 	TextRenderer m_textRenderer;
@@ -102,11 +117,18 @@ private:
 	const int m_iTileSize = 32;
 	bool m_bMapUpdate = true;
 
-	std::vector<int> m_entitiesDeleted;
 
+	std::vector<int> m_entitiesDeleted;
 	Vector2f* m_vFakedPos;
 
-	bool m_bIsWindowHovered = false;
+	bool m_bIsWindowHovered = true;
+
+	bool m_bIsGamePaused = false;
+
+	float m_fMaxHealth = 0;
+	float* m_fCurrentHealth = new float;
+
+	Phase m_phase;
 };
 
 #endif

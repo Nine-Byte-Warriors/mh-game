@@ -4,11 +4,23 @@
 
 class Graphics;
 #include "Physics.h"
+#include "CircleCollider.h"
 
 class Projectile
 {
 public:
-	Projectile(float fSpeed, float fLifeTime = 999.9f);
+	enum ProjectileOwner
+	{
+		None = 0,
+		Player = 1,
+		Boss = 2,
+		Enemy = 3,
+		Item = 4,
+		LevelTrigger =5,
+	};
+
+
+	Projectile(float fSpeed, std::string type, float fLifeTime = 999.9f);
 	~Projectile() {}
 	
 	void Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat, Sprite::Type type);
@@ -20,6 +32,7 @@ public:
 	inline std::shared_ptr<Sprite> GetSprite() const noexcept { return m_sprite; }
 	inline std::shared_ptr<Physics> GetPhysics() const noexcept { return m_physics; }
 	inline std::shared_ptr<Transform> GetTransform() const noexcept { return m_transform; }
+	inline std::shared_ptr<Collider> GetCollider() const noexcept { return m_collider; }
 	inline float GetMaxLifeTime() const noexcept { return m_fMaxLifeTime; }
 	inline float GetDelay() const noexcept { return m_fDelay; }
 	
@@ -35,12 +48,16 @@ public:
 	void SpawnProjectile(Vector2f vSpawnPosition, Vector2f vTargetPosition, float fLifeTime);
 	void SpawnProjectile(Vector2f vSpawnPosition, float fLifeTime);
 	
+	void SetOwner(const ProjectileOwner owner) noexcept { m_owner = owner; }
+	const ProjectileOwner GetOwner() const noexcept { return m_owner; }
+	
 private:
 	void CalcDirection();
 
 	std::shared_ptr<Sprite> m_sprite;
 	std::shared_ptr<Physics> m_physics;
 	std::shared_ptr<Transform> m_transform;
+	std::shared_ptr<Collider> m_collider;
 	
 	float m_fSpeed;
 	float m_fDelay;
@@ -56,6 +73,8 @@ private:
 	float m_fAngle;
 	float m_fAmplitude;
 	float m_fFrequency;
+
+	ProjectileOwner m_owner;
 };
 
 #endif // !PROJECTILE_H

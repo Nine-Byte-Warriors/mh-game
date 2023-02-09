@@ -6,12 +6,13 @@
 enum class EVENTID
 {
 	// User Inputs
+	KeyInput,
 	CharInput,
+	MousePosition,
+	MouseCameraPosition,
 	ReadCharInput,
 	ClearCharBuffer,
-	MousePosition,
 	ImGuiMousePosition,
-	KeyInput,
 
 	LeftMouseClick,
 	LeftMouseRelease,
@@ -20,13 +21,22 @@ enum class EVENTID
 	MiddleMouseClick,
 	MiddleMouseRelease,
 
+	KeyInputUpdate_Up,
+	KeyInputUpdate_Left,
+	KeyInputUpdate_Down,
+	KeyInputUpdate_Right,
+	KeyInputUpdate_Dash,
+	KeyInputUpdate_Interact,
+
 	// Level System
 	SetNextLevelEvent,
 	SetCurrentLevelEvent,
+	AddLevelEvent,
+	RemoveLevelEvent,
 
 	// Game Events
 	GamePauseEvent,
-	GameUnPauseEvent,
+	GameUnpauseEvent,
 	GameSettingsEvent,
 	GameLevelChangeEvent,
 	GameEndLevelEvent,
@@ -34,7 +44,12 @@ enum class EVENTID
 	NextDay,
 	CurrentState,
 	CurrentPhase,
+	GetPhase,
 	CurrentDay,
+	GameRestartEvent,
+	PlayDayMusic,
+	PlayShopMusic,
+	PlayMainMenuMusic,
 
 	// Camera Actions
 	MoveUp,
@@ -47,6 +62,7 @@ enum class EVENTID
 	PlayerPosition,
 	PlayerFire,
 	PlayerDash,
+	PlayerInteract,
 	TargetPosition,
 	TogglePlayerMovement,
 
@@ -56,17 +72,42 @@ enum class EVENTID
 	PlantSeedAttempt,
 	PlantSeed,
 	BuySeed,
+	UpdateSeed,
+	GainCoins,
+	BuyPotion,
 
 	//UI
+	LevelOnCreateUI,
 	StartGame,
+	OpenCredits,
 	OpenSettings,
-	ResumeGame,
-	Back,
 	GeneralTab,
-	GrahpicsTab,
+	GraphicsTab,
 	MusicTab,
 	ControlTab,
-	OpenCredits,
+	PauseGame,
+	ResumeGame,
+	Back,
+	CurrentGamePhase,
+	BackToMainMenu,
+	WinWindow,
+	// PlayerDeath, // Added below, affects UI as well
+	// GameRestartEvent, // Added in game events, affects UI as well
+	SwapGameLevelsWindow,
+	SwapGameLevels,
+	CloseUIPopUp,
+	OpenLeaderboard,
+	UpdateScore,
+	ResetScore,
+	SaveScore,
+	RedOverlayColour,
+	GreenOverlayColour,
+	BlueOverlayColour,
+	HUDSwap,
+	// GameRestartEvent, // Added in game events, affects UI as well
+
+	// DEBUG
+	RemoveHealth,
 
 	// Utility
 	WindowSizeChangeEvent,
@@ -80,7 +121,9 @@ enum class EVENTID
 	PlayerDamage,
 	PlayerHeal,
 	PlayerDeath,
-	EnemyDeath
+	EnemyDeath,
+	EnemyMaxHealth,
+	EnemyCurrentHealth
 };
 
 /// <summary>
@@ -90,13 +133,13 @@ class Event
 {
 public:
 	// Constructor that sends event with data (cant be altered from the other side i believe)
-	Event( EVENTID eventID, void* data ) {
+	Event(EVENTID eventID, void* data) {
 		this->data = data;
 		this->eventID = eventID;
 	}
 
 	// Alternate constructor to just call an event proc without data
-	Event( EVENTID eventID )
+	Event(EVENTID eventID)
 	{
 		this->eventID = eventID;
 		this->data = nullptr;

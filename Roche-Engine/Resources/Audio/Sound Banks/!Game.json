@@ -1,0 +1,46 @@
+[
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\Boss.json",
+        "name": "Boss"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\EnemyBean.json",
+        "name": "EnemyBean"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\EnemyCarrot.json",
+        "name": "EnemyCarrot"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\EnemyCauliflower.json",
+        "name": "EnemyCauliflower"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\EnemyOnion.json",
+        "name": "EnemyOnion"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\EnemyPotato.json",
+        "name": "EnemyPotato"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\EnemyTomato.json",
+        "name": "EnemyTomato"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\MusicGame.json",
+        "name": "MusicGame"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\Player.json",
+        "name": "Player"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\ShopSounds.json",
+        "name": "ShopSounds"
+    },
+    {
+        "filePath": "Resources\\Audio\\Sound Banks\\UI.json",
+        "name": "UI"
+    }
+]

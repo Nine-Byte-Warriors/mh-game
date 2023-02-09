@@ -3,12 +3,11 @@
 #define PLAYERMOVEMENT_H
 
 #include "Physics.h"
-#include "Events/EventSystem.h"
 
-class PlayerMovement : Listener
+class PlayerMovement : public Listener
 {
 public:
-	PlayerMovement(std::shared_ptr<Physics> physics, std::shared_ptr<Sprite> sprite, float speed);
+	PlayerMovement(const std::shared_ptr<Physics>& physics, const std::shared_ptr<Sprite>& sprite, float speed);
 	~PlayerMovement();
 
 	void Update(const float dt);
@@ -20,6 +19,14 @@ public:
 	void AddToEvent() noexcept;
 
 private:
+	enum class Direction
+	{
+		Up,
+		Down,
+		Left,
+		Right
+	} m_eMoveDirection = Direction::Down;
+
 	std::shared_ptr<Physics> m_physics;
 	std::shared_ptr<Sprite> m_sprite;
 	float m_speed;

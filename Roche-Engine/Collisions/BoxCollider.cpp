@@ -1,14 +1,19 @@
 #include "stdafx.h"
 #include "BoxCollider.h"
 
-BoxCollider::BoxCollider(bool trigger, std::shared_ptr<Transform>& transform, std::shared_ptr<Health>& health, int entityNum, std::string entityType, float width, float height) : m_width(width), m_height(height)
+BoxCollider::BoxCollider(
+    const std::shared_ptr<Transform>& transform,
+    const std::shared_ptr<Sprite>& sprite,
+    bool trigger, int entityNum, std::string entityType, float width, float height) : m_width(width), m_height(height)
 {
     m_transform = transform;
-    m_health = health;
+    m_sprite = sprite;
+    m_isTrigger = trigger;
+
     m_entityNum = entityNum;
     m_entityType = entityType;
-    m_width = m_transform->GetSprite()->GetWidth();
-    m_height = m_transform->GetSprite()->GetHeight();
+    m_width = m_sprite->GetWidth();
+    m_height = m_sprite->GetHeight();
     m_type = ColliderType::Box;
 }
 
@@ -47,9 +52,9 @@ bool BoxCollider::ToBox(BoxCollider& box) noexcept
 {
     float box1HalfWidth = (m_width / 2);
     float box1HalfHeight = (m_height / 2);
-    
-    float box2HalfWidth = (m_width / 2);
-    float box2HalfHeight = (m_height / 2);
+
+    float box2HalfWidth = (box.GetWidth() / 2);
+    float box2HalfHeight = (box.GetHeight() / 2);
     Vector2f box1Pos = GetCenterPosition();
     Vector2f box2Pos = box.GetCenterPosition();
 
@@ -103,8 +108,10 @@ bool BoxCollider::ToPoint(Vector2f point) noexcept
 
 void BoxCollider::Resolution(std::shared_ptr<Collider> collider) noexcept
 {
-    if (m_isTrigger)
+    if (ResolveCheck(collider) == false)
+    {
         return;
+    }
 
     //Vector2f position = m_transform->GetPosition();
     Vector2f newPos = GetCenterPosition();
@@ -135,11 +142,19 @@ void BoxCollider::Resolution(std::shared_ptr<Collider> collider) noexcept
         }
         case ColliderType::Circle:
         {
+            auto circlePtr = std::dynamic_pointer_cast<CircleCollider>(collider);
+            CircleCollider circle = *circlePtr;
+            Vector2f shiftedX = Vector2f(m_lastValidPosition.x, closestPoint.y);
+            Vector2f shiftedY = Vector2f(closestPoint.x, m_lastValidPosition.y);
+            changeXValue = !circle.ToPoint(shiftedX);
+            changeYValue = !circle.ToPoint(shiftedY);
+        //----------------------------------------------------------------------
             //Vector2f closestPoint = ClosestPoint(GetCenterPosition());
 
             //auto circlePtr = std::dynamic_pointer_cast<CircleCollider>(collider);
             //CircleCollider circle = *circlePtr;
 
+            //circle
             //m_height = m_height + circle.GetRadius() ;
             //m_width = m_width + circle.GetRadius();
 
@@ -154,7 +169,7 @@ void BoxCollider::Resolution(std::shared_ptr<Collider> collider) noexcept
             break;
         }
     }
-    
+
     //change gameobjects position on either the x or y axis
     if (changeXValue)
     {

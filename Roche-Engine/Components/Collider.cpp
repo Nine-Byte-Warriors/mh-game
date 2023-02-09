@@ -1,13 +1,17 @@
 #include "stdafx.h"
 #include "Collider.h"
 
-Collider::Collider(bool trigger, std::shared_ptr<Transform>& transform, std::shared_ptr<Health>& health, int entityNum, std::string entityType)
+Collider::Collider(
+    const std::shared_ptr<Transform>& transform,
+    const std::shared_ptr<Sprite>& sprite,
+    bool trigger, int entityNum, std::string entityType)
 {
-    trigger;
-    transform;
-    health;
-    entityNum;
-    entityType;
+    m_transform = transform;
+    m_sprite = sprite;
+    m_isTrigger = trigger;
+
+    m_entityNum = entityNum;
+    m_entityType = entityType;
 }
 
 Collider::Collider(Collider& col)
@@ -18,9 +22,8 @@ Collider::Collider(Collider& col)
     m_isTrigger = col.m_isTrigger;
     m_lastValidPosition = col.m_lastValidPosition;
     m_layer = col.m_layer;
-
     m_transform = col.m_transform;
-    m_health = col.m_health;
+    m_sprite = col.m_sprite;
     m_entityNum = col.m_entityNum;
     m_entityType = col.m_entityType;
 
@@ -66,7 +69,7 @@ void Collider::RemoveDuplicateElements(std::vector<T>& vec)
 
 Vector2f Collider::Offset()
 {
-    return m_transform->GetScale() / 2.0f;
+    return m_sprite->GetWidthHeight() / 2.0f;
 }
 
 Vector2f Collider::GetCenterPosition()
@@ -77,15 +80,37 @@ Vector2f Collider::GetCenterPosition()
 
 void Collider::SetTransformPosition(Vector2f position)
 {
-    m_transform->SetPosition(position - Offset()); 
+    m_transform->SetPosition(position - Offset());
 }
 
 void Collider::LogCollision(std::shared_ptr<Collider>& col)
 {
-    if (m_collisionCount < m_maxCollisions)
+    if (m_curCollisionCount < m_maxCollisions)
     {
          m_curCollisions.push_back(col);
-         m_collisionCount++;
+         m_curCollisionCount++;
+    }
+}
+
+void Collider::CheckDisabled()
+{
+    if (m_isEnabled == false && m_isEnabledCopy == true)
+    {
+        m_collisions.clear();
+        m_curCollisions.clear();
+    }
+    m_isEnabledCopy = m_isEnabled;
+}
+
+bool Collider::ResolveCheck(std::shared_ptr<Collider> collider)
+{
+    if (m_isTrigger == true || collider->GetIsTrigger() == true)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
     }
 }
 
@@ -158,7 +183,7 @@ void Collider::ProcessCollisions()
     //            OnLeave(*itr->first);
     //            if ( m_collisions.size() == 1 )
     //                return;
-    //            itr = m_collisions.erase( itr ); 
+    //            itr = m_collisions.erase( itr );
     //            break;
     //        }
     //    }
@@ -192,18 +217,20 @@ void Collider::ProcessCollisions()
     }
     for (auto element: leavingColliders)
     {
-        m_collisions.erase( element ); 
-        m_collisionCount--;
+        m_collisions.erase( element );
+        //m_curCollisionCount--;
     }
 }
 
 void Collider::Update()
 {
+    CheckDisabled();
     if (m_curCollisions.size() == 0 && m_collisions.size() == 0)
         return;
 
     RemoveDuplicateElements<std::shared_ptr<Collider>>(m_curCollisions);
     ManageCollisions();
+    m_curCollisionCount = 0;
     ProcessCollisions();
 }
 

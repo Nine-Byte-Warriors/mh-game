@@ -6,10 +6,6 @@
 using json = nlohmann::json;
 #include "JsonLoading.h"
 
-#if _DEBUG
-#include <imgui/imgui.h>
-#endif
-
 //#define COLUMNS 40
 //#define ROWS 22
 
@@ -32,9 +28,9 @@ struct TileTypeData
 	bool button;
 };
 #if _DEBUG
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TileTypeData, name, type, colorR, colorG, colorB, colorA, button)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TileTypeData, name, colorR, colorG, colorB, colorA, button)
 #else
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TileTypeData, name, type, button)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TileTypeData, name, button)
 #endif
 
 class TileMap

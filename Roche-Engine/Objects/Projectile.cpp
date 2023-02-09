@@ -2,7 +2,7 @@
 #include "Projectile.h"
 #include "Graphics.h"
 
-Projectile::Projectile(float fSpeed, float fLifeTime)
+Projectile::Projectile(float fSpeed, std::string type, float fLifeTime)
 {
 	m_vSpawnPosition = Vector2f();
 	m_vTargetPosition = Vector2f();
@@ -19,22 +19,23 @@ Projectile::Projectile(float fSpeed, float fLifeTime)
 	m_fFrequency = 0.0f;
 	
 	m_sprite = std::make_shared<Sprite>();
-	m_transform = std::make_shared<Transform>(m_sprite);
+	m_transform = std::make_shared<Transform>( m_sprite );
 	m_physics = std::make_shared<Physics>(m_transform);
+	m_collider = std::make_shared<CircleCollider>(m_transform, m_sprite, true, 2, type, 32);
+
+	m_owner = ProjectileOwner::None;
 }
 
 void Projectile::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat, Sprite::Type type)
 {
 	m_sprite->Initialize(gfx.GetDevice(), gfx.GetContext(), type, mat);
 	m_transform->SetPositionInit(0.0f, 0.0f);
-	m_transform->SetScaleInit(m_sprite->GetWidth(), m_sprite->GetHeight());
 }
 
 void Projectile::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat, const std::string& sSpritePath)
 {
 	m_sprite->Initialize(gfx.GetDevice(), gfx.GetContext(), sSpritePath, mat);
 	m_transform->SetPositionInit(0.0f, 0.0f);
-	m_transform->SetScaleInit(m_sprite->GetWidth(), m_sprite->GetHeight());
 }
 
 void Projectile::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat, const std::string& sSpritePath, Vector2f vSize)
@@ -44,13 +45,16 @@ void Projectile::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>& mat, 
 
 	float fWidth = vSize.x == 0.0f ? m_sprite->GetWidth() : vSize.x;
 	float fHeight = vSize.y == 0.0f ? m_sprite->GetHeight() : vSize.y;
-	m_transform->SetScaleInit(fWidth, fHeight);
+	m_sprite->SetWidthHeight( fWidth, fHeight );
 }
 
 void Projectile::Update(const float dt)
 {
 	if (!IsAlive())
+	{
+		SetOwner(ProjectileOwner::None);
 		return;
+	}
 	
 	m_fDelay -= dt;
 	if (m_fDelay > 0.0f)
@@ -82,7 +86,7 @@ void Projectile::Draw(ID3D11DeviceContext* context, XMMATRIX orthoMatrix)
 
 void Projectile::SpawnProjectile(Vector2f vSpawnPosition, Vector2f vTargetPosition, float fLifeTime)
 {
-	m_fLifeTime = fLifeTime;
+	m_fLifeTime = fLifeTime <= 0.0f ? m_fMaxLifeTime : fLifeTime;
 	
 	m_vDirection = vSpawnPosition
 		.DirectionTo(vTargetPosition)

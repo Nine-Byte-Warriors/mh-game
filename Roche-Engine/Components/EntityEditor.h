@@ -7,9 +7,6 @@
 #include "Entity.h"
 #include "AIStateMachine.h"
 #include "AudioEngine.h"
-#if _DEBUG
-#include <imgui/imgui.h>
-#endif
 
 class EntityEditor
 {
@@ -69,6 +66,11 @@ private:
 	//Collider
 	void SetColliderShape();
 	void SetColliderSize();
+	void SetColliderTrigger();
+	void SetColliderLayer();
+	void SetColliderStatic();
+	void SetColliderEnabled();
+	void SetColliderMask();
 
 	//Audio
 	void SetSoundBank();
@@ -104,7 +106,6 @@ private:
 
 	bool m_bIsUpdated;
 	bool m_bLockPosition;
-	bool m_bLockToScale;
 
 	float m_fPushItemWidthFull = 210.0f;
 	float m_fPushItemWidthHalf = 100.0f;
