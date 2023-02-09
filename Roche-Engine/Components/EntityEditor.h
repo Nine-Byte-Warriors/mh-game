@@ -89,8 +89,6 @@ private:
 	std::string JsonFile = "Entity_Game.json";
 	std::string m_sBehaviourFile = "Behaviour.json";
 
-	std::string JsonFile = "Entity_Game.json";
-
 	std::vector<EntityData> m_vEntityData;
 
 	std::string m_sSelectedFileTex = "LoadFile.txt";
