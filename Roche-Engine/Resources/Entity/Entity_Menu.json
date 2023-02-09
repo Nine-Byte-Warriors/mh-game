@@ -9,6 +9,8 @@
         "bColliderEnabled": true,
         "bColliderInteractDecoration": true,
         "bColliderInteractEnemy": true,
+        "bColliderInteractEnemyProjectile": true,
+        "bColliderInteractPlayerProjectile": true,
         "bColliderInteractPlayer": true,
         "bColliderInteractProjectile": true,
         "bColliderStatic": false,
@@ -39,12 +41,8 @@
         "projectilePattern": "Resources\\Patterns\\DefaultPattern.ptn",
         "projectileSystem": true,
         "rotation": 0.0,
-<<<<<<< master-game:Roche-Engine/Resources/Entity/Entity_Menu.json
-        "rows": 3,
-=======
         "rows": 4,
         "sColliderLayer": "Enemy",
->>>>>>> updated aistates and aiflee to work and actually move away from player as per the loaded json:Roche-Engine/Resources/Entity/Entity.json
         "scale": [
             100.0,
             100.0
@@ -55,20 +53,17 @@
         "type": "Player"
     },
     {
-<<<<<<< master-game:Roche-Engine/Resources/Entity/Entity_Menu.json
-        "AI": true,
-        "animation": true,
-=======
         "AI": false,
         "AIStatePath": "None",
         "animation": false,
->>>>>>> AI states json are configured in the entity editor/json:Roche-Engine/Resources/Entity/Entity.json
         "animationPath": "Resources\\Textures\\Base_Projectile.json",
         "animationType": "Walk",
         "audio": false,
         "bColliderEnabled": true,
         "bColliderInteractDecoration": true,
         "bColliderInteractEnemy": true,
+        "bColliderInteractEnemyProjectile": true,
+        "bColliderInteractPlayerProjectile": true,
         "bColliderInteractPlayer": true,
         "bColliderInteractProjectile": true,
         "bColliderStatic": false,
@@ -109,8 +104,6 @@
         "speed": 10.0,
         "texture": "Resources\\Textures\\Base_Projectile.png",
         "type": "Projectile"
-<<<<<<< master-game:Roche-Engine/Resources/Entity/Entity_Menu.json
-=======
     },
     {
         "AI": true,
@@ -122,6 +115,8 @@
         "bColliderEnabled": true,
         "bColliderInteractDecoration": true,
         "bColliderInteractEnemy": true,
+        "bColliderInteractEnemyProjectile": true,
+        "bColliderInteractPlayerProjectile": true,
         "bColliderInteractPlayer": true,
         "bColliderInteractProjectile": true,
         "bColliderStatic": false,
@@ -162,9 +157,6 @@
         "speed": 1.0,
         "texture": "Resources\\Textures\\Entity\\Onion\\Onion.png",
         "type": "Enemy"
-<<<<<<< master-game:Roche-Engine/Resources/Entity/Entity_Menu.json
->>>>>>> updated aistates and aiflee to work and actually move away from player as per the loaded json:Roche-Engine/Resources/Entity/Entity.json
-=======
     },
     {
         "AI": true,
@@ -176,6 +168,8 @@
         "bColliderEnabled": true,
         "bColliderInteractDecoration": true,
         "bColliderInteractEnemy": true,
+        "bColliderInteractEnemyProjectile": true,
+        "bColliderInteractPlayerProjectile": true,
         "bColliderInteractPlayer": true,
         "bColliderInteractProjectile": true,
         "bColliderStatic": false,
@@ -216,6 +210,5 @@
         "speed": 10.0,
         "texture": "Resources\\Textures\\Entity\\Carrot\\Carrot.png",
         "type": "Enemy"
->>>>>>> AI states json are configured in the entity editor/json:Roche-Engine/Resources/Entity/Entity.json
     }
 ]
