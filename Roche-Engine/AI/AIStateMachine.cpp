@@ -22,7 +22,7 @@ void AIStateMachine::UpdateMachine(float fDelta)
 
 	for (AIState* pState : m_vecStates)
 	{
-        if (pState->CalculateActivation() <= pState->m_fActivationLevel)
+        if (pState->CalculateActivation() < pState->m_fActivationLevel)
             pState->Exit();
         else
 			m_vecActiveStates.push_back(pState);
@@ -71,63 +71,59 @@ AIState* AIStateMachine::NewState(AILogic::AIStateTypes eType)
 
 AIState* AIStateMachine::NewState(AIStateData::AIStateJson jState)
 {
+	AIState* pState = nullptr;
+
 	switch (jState.iStateType)
 	{
 	case AIStateTypes::Idle:
 	{
-		AIIdle* pState = new AIIdle(m_pAgent);
-		pState->SetActivation(jState.fActivate);
-		pState->SetBounds(jState.fMax, jState.fMin);
-		return pState;
+		pState = (AIState*) new AIIdle(m_pAgent);
+		break;
 	}
 	case AIStateTypes::Seek: 
 	{
-		AISeek* pState = new AISeek(m_pAgent);
-		pState->SetActivation(jState.fActivate);
-		pState->SetBounds(jState.fMax, jState.fMin);
-		pState->SetParams(jState.oSeekParams);
-		return pState;
+		AISeek* pSeek = new AISeek(m_pAgent);
+		pSeek->SetParams(jState.oSeekParams);
+		pState = (AIState*)pSeek;
+		break;
 	}
 	case AIStateTypes::Flee:
 	{
-		AIFlee* pState = new AIFlee(m_pAgent);
-		pState->SetActivation(jState.fActivate);
-		pState->SetBounds(jState.fMax, jState.fMin);
-		pState->SetParams(jState.oFleeParams);
-		return pState;
+		AIFlee* pFlee = new AIFlee(m_pAgent);
+		pFlee->SetParams(jState.oFleeParams);
+		pState = (AIState*)pFlee;
+		break;
 	}
 	case AIStateTypes::Patrol: 
 	{
-		AIPatrol* pState = new AIPatrol(m_pAgent);
-		pState->SetActivation(jState.fActivate);
-		pState->SetBounds(jState.fMax, jState.fMin);
-		pState->SetParams(jState.oPatrolParams);
-		return pState;
+		AIPatrol* pPatrol = new AIPatrol(m_pAgent);
+		pPatrol->SetParams(jState.oPatrolParams);
+		pState = (AIState*)pPatrol;
+		break;
 	}
 	case AIStateTypes::Follow: return new AIFollow(m_pAgent);
 	{
-		AIFollow* pState = new AIFollow(m_pAgent);
-		pState->SetActivation(jState.fActivate);
-		pState->SetBounds(jState.fMax, jState.fMin);
-		//pState->SetParams(jState.oFollowParams);
-		return pState;
+		AIFollow* pFollow = new AIFollow(m_pAgent);
+		pFollow->SetParams(jState.oFollowParams);
+		pState = (AIState*)pFollow;
+		break;
 	}
 	case AIStateTypes::Wander:
 	{
-		AIWander* pState = new AIWander(m_pAgent);
-		pState->SetActivation(jState.fActivate);
-		pState->SetBounds(jState.fMax, jState.fMin);
-		pState->SetParams(jState.oWanderParams);
-		return pState;
+		AIWander* pWander = new AIWander(m_pAgent);
+		pWander->SetParams(jState.oWanderParams);
+		pState = (AIState*)pWander;
 	}
 	case AIStateTypes::Fire: 
 	{
-		AIFire* pState = new AIFire(m_pAgent);
-		pState->SetActivation(jState.fActivate);
-		pState->SetBounds(jState.fMax, jState.fMin);
-		pState->SetParams(jState.oFireParams);
-		return pState;
+		AIFire* pFire = new AIFire(m_pAgent);
+		pFire->SetParams(jState.oFireParams);
+		pState = (AIState*)pFire;
 	}
 	default: return nullptr;
 	}
+
+	pState->SetActivation(jState.fActivate);
+	pState->SetBounds(jState.fMax, jState.fMin);
+	return pState;
 }

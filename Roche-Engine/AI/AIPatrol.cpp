@@ -14,6 +14,9 @@ using namespace AILogic;
 
 void AIPatrol::Update(const float dt)
 {
+	if (m_vecWaypoints.empty())
+		return;
+
 	// Get agent position from agent's GameObject
 	Vector2f vAgentPos = m_pAgent->GetPhysics()->GetTransform()->GetPosition();
 	
@@ -48,16 +51,21 @@ void AIPatrol::Enter()
 	Vector2f vTargetPosition = m_pAgent->GetTargetPosition();
 
 	// calculate the angle to each waypoint by dividing 360 by the number of waypoints
-	float fAngle = 360.0f / m_iWaypointCount;
+	float fAngleDelta = 2 * XM_PI / m_iWaypointCount;
 	
 	// calculate the position of each waypoint by using the angle and range
 	for (int i = 0; i < m_iWaypointCount; ++i)
 	{
 		// calculate the position of the waypoint
-		Vector2f vWaypointPosition = 
-			vTargetPosition +
-			(Vector2f(fAngle * i).Normalised() * m_fWaypointDistance);
-
+		float cosAngle = cosf(fAngleDelta * i);
+		float sinAngle = sinf(fAngleDelta * i);
+		
+		Vector2f vAngle = Vector2f(
+			cosAngle * m_fWaypointDistance,
+			sinAngle * m_fWaypointDistance
+		);
+		Vector2f vWaypointPosition = vTargetPosition + vAngle;
+		
 		// add the waypoint to the list of waypoints
 		m_vecWaypoints.push_back(vWaypointPosition);
 	}

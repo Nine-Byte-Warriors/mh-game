@@ -644,9 +644,6 @@
     <ClInclude Include="Components\BaseController.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Helper\AIStateData.h">
-      <Filter>Header Files\AI</Filter>
-    </ClInclude>
     <ClInclude Include="Components\EnemyController.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
@@ -658,6 +655,12 @@
     </ClInclude>
     <ClInclude Include="Objects\ScoreBoard.h">
       <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIStateData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIStateType.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

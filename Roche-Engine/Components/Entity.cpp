@@ -79,6 +79,7 @@ void Entity::SetComponents()
 		m_pController = std::make_shared<EnemyController>(m_pPhysics, m_pSprite, m_emitter);
 		m_agent->SetEmitter(m_emitter);
 
+		// DEBUG
 		if (m_entityController->GetName(m_iEntityNum) == "Onion")
 		{
 			//m_agent->LoadBehaviourFile("Resources\\Behaviours\\DefaultBehaviour.json");
@@ -89,6 +90,7 @@ void Entity::SetComponents()
 			m_agent->LoadBehaviourFile("Resources\\Behaviours\\PatrolBehaviour.json");
 			m_agent->FillStateMachine();
 		}
+		// !DEBUG
 	}
 
 	if (GetType() == "Item")
