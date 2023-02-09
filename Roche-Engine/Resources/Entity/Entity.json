@@ -1,6 +1,7 @@
 [
     {
         "AI": false,
+        "AIStatePath": "None",
         "animation": true,
         "animationPath": "Resources\\Textures\\Entity\\Carrot\\Carrot.json",
         "animationType": "Walk",
@@ -51,6 +52,7 @@
     },
     {
         "AI": false,
+        "AIStatePath": "None",
         "animation": false,
         "animationPath": "Resources\\Textures\\Base_Projectile.json",
         "animationType": "Walk",
@@ -101,6 +103,7 @@
     },
     {
         "AI": true,
+        "AIStatePath": "Resources\\Behaviours\\FleeBehaviour.json",
         "animation": true,
         "animationPath": "None",
         "animationType": "Walk",
@@ -151,6 +154,7 @@
     },
     {
         "AI": true,
+        "AIStatePath": "Resources\\Behaviours\\FleeBehaviour.json",
         "animation": true,
         "animationPath": "None",
         "animationType": "Walk",

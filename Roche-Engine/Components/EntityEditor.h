@@ -58,12 +58,7 @@ private:
 	void SetSpeed();
 
 	//AI
-	void AddBehaviour();
-	void DelBehaviour(int iIndex);
-	void ShowBehaviours();
-	void SaveBehavioursButton();
-	void LoadBehavioursButton();
-	void SetBehaviour();
+	void SetAIBehaviourPath();
 
 	//ProjectileSystem
 	void SetProjectilePattern();

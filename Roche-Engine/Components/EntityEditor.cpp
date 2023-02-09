@@ -156,6 +156,7 @@ void EntityEditor::AddNewEntity()
 		entityData->AI = true;	// <-- is this it?
 		// TODO : update json to include this line
 		//entityData->AIPath = "DefaultEntityBehaviour.json";
+		entityData->AIStatePath = "None";
 		entityData->projectileSystem = true;
 		entityData->collider = true;
 		entityData->bProjectilePattern = true;
@@ -287,13 +288,8 @@ void EntityEditor::AIWidget()
 		if (ImGui::TreeNode("##AI"))
 		{
 			ImGui::NewLine();
-			
-			// Target Area
-			AddBehaviour();
-			//DelBehaviour();
-			ShowBehaviours();
 
-			SetBehaviour();
+			SetAIBehaviourPath();
 
 			ImGui::TreePop();
 		}	
@@ -627,33 +623,34 @@ void EntityEditor::SetSpeed()
 #endif
 }
 
-void EntityEditor::SetBehaviour()
+void EntityEditor::SetAIBehaviourPath()
 {
 #if _DEBUG
-	std::string displayText = "Behaviour";
-	ImGui::Text(displayText.c_str());
-
-	static int activeBehaviour = 0;
-	std::string previewEntityBehaviour = m_vEntityDataCopy[m_iIdentifier].behaviour;
-	const char* behaviourList[]{ "Idle", "Seek", "Flee", "Patrol", "Follow", "Wander", "Fire" };
-	std::string lable = "##Entity" + displayText + std::to_string(m_iIdentifier);
-
-	if (ImGui::BeginCombo(lable.c_str(), previewEntityBehaviour.c_str()))
+	ImGui::Text("Behaviours");
+	m_sSelectedFileTex = m_vEntityDataCopy[m_iIdentifier].AIStatePath;
+	if (ImGui::Button("Load Behaviours"))
 	{
-		for (int i = 0; i < IM_ARRAYSIZE(behaviourList); i++)
+		std::shared_ptr<FileHandler::FileObject> foLoad = FileHandler::CreateFileObject(m_sSelectedFileTex);
+
+		foLoad = FileHandler::FileDialog(foLoad)
+			->UseOpenDialog()
+			->ShowDialog()
+			->StoreDialogResult();
+
+		if (foLoad->HasPath())
 		{
-			const bool isSelected = i == activeBehaviour;
-			if (ImGui::Selectable(behaviourList[i], isSelected))
-			{
-				activeBehaviour = i;
-				previewEntityBehaviour = behaviourList[i];
-			}
+			std::string sFullPath = foLoad->GetFullPath();
+			m_sSelectedFileTex = sFullPath.substr(sFullPath.find("Resources\\Behaviours\\"));
+			m_vEntityDataCopy[m_iIdentifier].AIStatePath = m_sSelectedFileTex;
+			m_bValidTex = true;
 		}
-
-		ImGui::EndCombo();
-
-		m_vEntityDataCopy[m_iIdentifier].behaviour = behaviourList[activeBehaviour];
+		else
+		{
+			m_sSelectedFileTex = "Open File Failed";
+			m_bValidTex = false;
+		}
 	}
+	ImGui::Text(m_sSelectedFileTex.c_str());
 #endif
 }
 
@@ -914,111 +911,4 @@ void EntityEditor::SaveEntity()
 	JsonLoading::SaveJson(m_vEntityData, FOLDER_PATH + JsonFile);
 	m_sSavedText = "Saved";
 #endif
-}
-
-void EntityEditor::AddBehaviour()
-{
-#if _DEBUG
-	if(!ImGui::Button("Add Behaviour"))
-		return;
-
-	int iCounter = m_vecBehaviours.size() + 1;
-	for (auto jBehaviour : m_vecBehaviours)
-	{
-		if (jBehaviour.iTypeID > iCounter)
-			iCounter = jBehaviour.iTypeID + 1;
-	}
-
-	AIStateData::AIStateJson jState = AIStateData::AIStateJson();
-	jState.iTypeID = iCounter;
-
-	m_vecBehaviours.emplace_back(jState);
-#endif // _DEBUG
-}
-
-void EntityEditor::DelBehaviour(int iIndex)
-{
-	for (auto jBehaviour : m_vecBehaviours)
-	{
-		if (jBehaviour.iTypeID == iIndex)
-			m_vecBehaviours.erase(m_vecBehaviours.begin() + iIndex);
-	}
-}
-
-void EntityEditor::SaveBehavioursButton()
-{
-#if _DEBUG
-	if (!ImGui::Button("Save Behaviours"))
-		return;
-	
-	std::shared_ptr<FileHandler::FileObject> foSave = FileHandler::CreateFileObject(m_sBehaviourFile);
-	foSave = FileHandler::FileDialog(foSave)
-		->UseSaveDialog()
-		->ShowDialog()
-		->StoreDialogResult();
-
-	if (foSave->HasPath())
-	{
-		m_sBehaviourFile = foSave->GetFilePath();
-		JsonLoading::SaveJson(m_vecBehaviours, AI_FOLDER_PATH + m_sBehaviourFile);
-
-		m_sSavedText = "Bevaiours Saved";
-	}
-	else
-		m_sSavedText = "Save Failed";
-#endif // _DEBUG
-}
-
-void EntityEditor::LoadBehavioursButton()
-{
-#if _DEBUG
-	if (!ImGui::Button("Load Behaviours"))
-		return;
-
-	std::shared_ptr<FileHandler::FileObject> foLoad = FileHandler::CreateFileObject(m_sBehaviourFile);
-	foLoad = FileHandler::FileDialog(foLoad)
-		->UseOpenDialog()
-		->ShowDialog()
-		->StoreDialogResult();
-
-	if (foLoad->HasPath())
-	{
-		m_sBehaviourFile = foLoad->GetFilePath();
-		JsonLoading::LoadJson(m_vecBehaviours, AI_FOLDER_PATH + m_sBehaviourFile);
-
-		m_sSavedText = "Bevaiours Loaded";
-	}
-	else
-		m_sSavedText = "Load Failed";
-	
-#endif // _DEBUG
-}
-
-void EntityEditor::ShowBehaviours()
-{
-#if _DEBUG
-	SaveBehavioursButton();
-	
-	for (int i = 0; i < m_vecBehaviours.size(); i++)
-	{
-		std::string sDelBtnTxt = "Delete Behaviour##";
-		sDelBtnTxt.append(std::to_string(i).c_str());
-
-		if (ImGui::Button(sDelBtnTxt.c_str()))
-			DelBehaviour(i);
-
-		std::string lable = "Behaviour##" + std::to_string(i);
-		std::string sState = AILogic::m_mapStateType.find(m_vecBehaviours[i].iStateType)->second;
-		if (ImGui::BeginCombo(lable.c_str(), sState.c_str()))
-		{
-			ImGui::Text(sState.c_str());
-
-			for (auto jPair : m_mapStateType)
-			{
-				if (ImGui::Selectable(jPair.second.c_str(), m_vecBehaviours[i].iStateType == jPair.first))
-					m_vecBehaviours[i].iStateType = jPair.first;
-			}
-		}
-	}
-#endif // _DEBUG
 }
