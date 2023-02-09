@@ -85,8 +85,8 @@ void Entity::SetComponents()
 			pManager->SetOwner(Projectile::ProjectileOwner::Enemy);
 
 		m_pController = std::make_shared<EnemyController>(m_pPhysics, m_pSprite, m_emitter);
-		m_carrotEnemy = std::make_shared<CarrotEnemy>(this);
 
+		m_carrotEnemy = std::make_shared<CarrotEnemy>(this);
 		m_agent->SetEmitter(m_emitter);
 	}
 
@@ -407,8 +407,8 @@ void Entity::UpdateColliderRadius()
 	}
 	else if (m_colliderCircle == nullptr)
 	{
-		m_colliderCircle = std::make_shared<CircleCollider>(m_transform, m_sprite, true, m_iEntityNum, GetType(), 32);
-		m_colliderBox = std::make_shared<BoxCollider>(m_transform, m_sprite, true, m_iEntityNum, GetType(), 32, 32);
+		m_colliderCircle = std::make_shared<CircleCollider>(m_pTransform, m_pSprite, true, m_iEntityNum, GetType(), 32);
+		m_colliderBox = std::make_shared<BoxCollider>(m_pTransform, m_pSprite, true, m_iEntityNum, GetType(), 32, 32);
 	}
 }
 

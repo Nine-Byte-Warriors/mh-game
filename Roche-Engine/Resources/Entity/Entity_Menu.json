@@ -73,7 +73,7 @@
         "bColliderInteractProjectile": true,
         "bColliderStatic": false,
         "bColliderTrigger": true,
-        "bProjectileBullet": false,
+        "bProjectileBullet": true,
         "bProjectilePattern": true,
         "behaviour": "None",
         "collider": true,

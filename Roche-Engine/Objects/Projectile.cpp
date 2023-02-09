@@ -19,9 +19,9 @@ Projectile::Projectile(float fSpeed, std::string type, float fLifeTime)
 	m_fFrequency = 0.0f;
 	
 	m_pSprite = std::make_shared<Sprite>();
-	m_pTransform = std::make_shared<Transform>( m_pSprite );
+	m_pTransform = std::make_shared<Transform>(m_pSprite);
 	m_pPhysics = std::make_shared<Physics>(m_pTransform);
-	m_pColliderCircle = std::make_shared<CircleCollider>(m_pTransform, m_pSprite, true, 0, "entityType", 1.0f);
+	m_pCollider = std::make_shared<CircleCollider>(m_pTransform, m_pSprite, true, 2, type, 32);
 
 	m_owner = ProjectileOwner::None;
 }
