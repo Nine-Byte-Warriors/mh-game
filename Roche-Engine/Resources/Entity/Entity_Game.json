@@ -1,8 +1,8 @@
 [
     {
         "AI": false,
-        "animation": true,
         "AIStatePath": "None",
+        "animation": true,
         "animationPath": "Resources\\Textures\\Entity\\Carrot\\Carrot.json",
         "animationType": "Walk",
         "audio": false,
@@ -53,8 +53,8 @@
     },
     {
         "AI": false,
-        "animation": false,
         "AIStatePath": "None",
+        "animation": false,
         "animationPath": "Resources\\Textures\\Base_Projectile.json",
         "animationType": "Walk",
         "audio": false,
@@ -105,8 +105,8 @@
     },
     {
         "AI": true,
+        "AIStatePath": "Resources\\Behaviours\\FleeBehaviour.json",
         "animation": true,
-        "AIStatePath": "None",
         "animationPath": "None",
         "animationType": "Walk",
         "audio": false,
@@ -157,8 +157,8 @@
     },
     {
         "AI": true,
-        "animation": true,
         "AIStatePath": "None",
+        "animation": true,
         "animationPath": "None",
         "animationType": "Walk",
         "audio": false,
@@ -209,8 +209,8 @@
     },
     {
         "AI": true,
-        "animation": true,
         "AIStatePath": "None",
+        "animation": true,
         "animationPath": "None",
         "animationType": "Walk",
         "audio": false,
@@ -261,8 +261,8 @@
     },
     {
         "AI": false,
-        "animation": false,
         "AIStatePath": "None",
+        "animation": false,
         "animationPath": "None",
         "animationType": "Walk",
         "audio": false,
@@ -313,8 +313,8 @@
     },
     {
         "AI": false,
-        "animation": false,
         "AIStatePath": "None",
+        "animation": false,
         "animationPath": "None",
         "animationType": "Walk",
         "audio": false,
@@ -365,8 +365,8 @@
     },
     {
         "AI": false,
-        "animation": false,
         "AIStatePath": "None",
+        "animation": false,
         "animationPath": "None",
         "animationType": "Walk",
         "audio": false,
@@ -417,8 +417,8 @@
     },
     {
         "AI": false,
-        "animation": false,
         "AIStatePath": "None",
+        "animation": false,
         "animationPath": "None",
         "animationType": "Walk",
         "audio": false,
@@ -469,8 +469,8 @@
     },
     {
         "AI": false,
-        "animation": false,
         "AIStatePath": "None",
+        "animation": false,
         "animationPath": "None",
         "animationType": "Walk",
         "audio": false,
@@ -521,8 +521,8 @@
     },
     {
         "AI": true,
-        "animation": true,
         "AIStatePath": "None",
+        "animation": true,
         "animationPath": "Resources\\Textures\\Entity\\Tomato\\Tomato.json",
         "animationType": "Walk",
         "audio": false,
@@ -573,8 +573,8 @@
     },
     {
         "AI": true,
-        "animation": true,
         "AIStatePath": "None",
+        "animation": true,
         "animationPath": "Resources\\Textures\\Entity\\Runner Bean\\Runner Bean.json",
         "animationType": "Walk",
         "audio": false,
@@ -625,8 +625,8 @@
     },
     {
         "AI": true,
-        "animation": true,
         "AIStatePath": "None",
+        "animation": true,
         "animationPath": "Resources\\Textures\\Entity\\Potato\\Potato.json",
         "animationType": "Walk",
         "audio": false,

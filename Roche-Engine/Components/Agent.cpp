@@ -12,63 +12,6 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_pPhysics(physics)
 
 	m_sBehaviourFile = "";
 
-	AIState* pSeekState = m_pStateMachine->NewState(AILogic::AIStateTypes::Seek);
-	pSeekState->SetBounds(1.0f, 0.0f);
-	pSeekState->SetActivation(0.0f);
-	m_mapStates.emplace(AIStateTypes::Seek, pSeekState);
-
-	AIState* pIdleState = m_pStateMachine->NewState(AILogic::AIStateTypes::Idle);
-	pIdleState->SetActivation(1.0f);
-	m_mapStates.emplace(AIStateTypes::Idle, pIdleState);
-
-	AIState* pFleeState = m_pStateMachine->NewState(AILogic::AIStateTypes::Flee);
-	pFleeState->SetBounds(1.0f, 0.0f);
-	pFleeState->SetActivation(0.0f);
-	m_mapStates.emplace(AIStateTypes::Flee, pFleeState);
-
-	AIStateData::PatrolParams* patrolParams = new AIStateData::PatrolParams();
-	patrolParams->fDistanceToWaypoint = 200.0f;
-	patrolParams->fSensingRange = 10.0f;
-	patrolParams->iWaypointCount = 6;
-	patrolParams->ePatrolType = PatrolType::Loop;
-
-	AIState* pPatrolState = m_pStateMachine->NewState(AIStateTypes::Patrol);
-	pPatrolState->SetBounds(1.0f, 0.0f);
-	pPatrolState->SetActivation(0.0f);
-	pPatrolState->SetParams((void*)patrolParams);
-	m_mapStates.emplace(AIStateTypes::Patrol, pPatrolState);
-
-	AIStateData::FollowParams* followParams = new AIStateData::FollowParams();
-	followParams->bKeepRange = true;
-	followParams->fFollowRange = 200.0f;
-	followParams->fRepulseRange = 100.0f;
-
-	AIState* pFollowState = m_pStateMachine->NewState(AIStateTypes::Follow);
-	pFollowState->SetBounds(1.0f, 0.0f);
-	pFollowState->SetActivation(0.0f);
-	pFollowState->SetParams(followParams);
-	m_mapStates.emplace(AIStateTypes::Follow, pFollowState);
-
-	AIStateData::WanderParams* pWanderParams = new AIStateData::WanderParams();
-	pWanderParams->fWanderAngle = 5.0f;
-	pWanderParams->fWanderDelay = 0.5f;
-
-	AIState* pWanderState = m_pStateMachine->NewState(AIStateTypes::Wander);
-	pWanderState->SetBounds(1.0f, 0.0f);
-	pWanderState->SetActivation(0.0f);
-	pWanderState->SetParams(pWanderParams);
-	m_mapStates.emplace(AIStateTypes::Wander, pWanderState);
-
-	AIStateData::FireParams* pFireParams = new AIStateData::FireParams();
-	pFireParams->fRange = 200.0f;
-	pFireParams->fRate = 0.5f;
-
-	AIState* pFireState = m_pStateMachine->NewState(AIStateTypes::Fire);
-	pFireState->SetBounds(1.0f, 0.0f);
-	pFireState->SetActivation(0.0f);
-	pFireState->SetParams(pFireParams);
-	m_mapStates.emplace(AIStateTypes::Fire, pFireState);
-
 	AddToEvent();
 }
 
