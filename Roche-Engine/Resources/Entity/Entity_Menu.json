@@ -151,7 +151,7 @@
             64.0
         ],
         "soundBankName": "",
-        "speed": 10.0,
+        "speed": 1.0,
         "texture": "Resources\\Textures\\Entity\\Onion\\Onion.png",
         "type": "Enemy"
 >>>>>>> updated aistates and aiflee to work and actually move away from player as per the loaded json:Roche-Engine/Resources/Entity/Entity.json

@@ -29,6 +29,7 @@
       "fMinRange": 0.0
     },
     "oWanderParams": {
+		"fRange": 0.0,
       "fWanderAngle": 0.0,
       "fWanderDelay": 0.0
     }

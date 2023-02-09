@@ -1,9 +1,9 @@
 [
  {
-    "fActivate": 0.2,
+    "fActivate": 0.8,
     "fMax": 1.0,
     "fMin": 0.0,
-    "iStateType": 1,
+    "iStateType": 3,
     "iTypeID": 0,
     "oFleeParams": {
       "fMaxRange": 0.0,
@@ -20,13 +20,13 @@
     },
     "oPatrolParams": {
       "ePatrolType": 0,
-      "fDistanceToWaypoint": 0.0,
-      "fSensingRange": 0.0,
-      "iWaypointCount": 0
+      "fDistanceToWaypoint": 100.0,
+      "fSensingRange": 200.0,
+      "iWaypointCount": 4
     },
 	"oSeekParams": {
-      "fMaxRange": 400.0,
-      "fMinRange": 100.0
+      "fMaxRange": 0.0,
+      "fMinRange": 0.0
     },
     "oWanderParams": {
 		"fRange": 0.0,

@@ -42,6 +42,7 @@ namespace AIStateData
 
 	struct WanderParams
 	{
+		float fRange;
 		float fWanderAngle;
 		float fWanderDelay;
 	};

@@ -44,8 +44,6 @@ void AIPatrol::Update(const float dt)
 
 void AIPatrol::Enter()
 {
-	GetPatrolParams();
-
 	// Get target position
 	Vector2f vTargetPosition = m_pAgent->GetTargetPosition();
 
@@ -68,13 +66,12 @@ void AIPatrol::Enter()
 	m_iCurrentWaypoint = RND::Get(0, m_iWaypointCount - 1);
 }
 
-void AIPatrol::GetPatrolParams()
+void AIPatrol::SetParams(AIStateData::PatrolParams params)
 {
-	AIStateData::PatrolParams* pParams = (AIStateData::PatrolParams*)m_params;
-	m_ePatrolType = pParams->ePatrolType;
-	m_fRange = pParams->fSensingRange;
-	m_fWaypointDistance = pParams->fDistanceToWaypoint;
-	m_iWaypointCount = pParams->iWaypointCount;
+	m_ePatrolType = params.ePatrolType;
+	m_fRange = params.fSensingRange;
+	m_fWaypointDistance = params.fDistanceToWaypoint;
+	m_iWaypointCount = params.iWaypointCount;
 }
 
 int AIPatrol::GetNextWaypoint() noexcept
