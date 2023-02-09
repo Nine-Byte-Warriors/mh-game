@@ -14,12 +14,10 @@ namespace AILogic
         virtual ~AIFollow() = default;
 
         virtual void Update(const float dt) override;
-        virtual void Enter() override { GetFollowParams(); }
-        virtual void Exit() override {};
+        
+        void SetParams(AIStateData::FollowParams params);
 
     private:
-        void GetFollowParams();
-
         bool IsTargetInRange(Vector2f vAgentPos, Vector2f vTargetPos) noexcept 
             { return m_fFollowRange >= vAgentPos.Distance(vTargetPos); }
 

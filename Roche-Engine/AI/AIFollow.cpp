@@ -29,14 +29,11 @@ void AIFollow::Update(const float dt)
 
 	// Update the physics model
 	m_pAgent->GetPhysics()->Update(dt);
-
-
 }
 
-void AIFollow::GetFollowParams()
+void AIFollow::SetParams(AIStateData::FollowParams params)
 {
-	AIStateData::FollowParams* pParams = (AIStateData::FollowParams*)m_params;
-	m_fFollowRange = pParams->fFollowRange;
-	m_fRepulseRange = pParams->fRepulseRange;
-	m_bKeepRange = pParams->bKeepRange;
+	m_fFollowRange = params.fFollowRange;
+	m_fRepulseRange = params.fRepulseRange;
+	m_bKeepRange = params.bKeepRange;
 }

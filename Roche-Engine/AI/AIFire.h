@@ -5,7 +5,6 @@
 #include "AIState.h"
 #include "Agent.h"
 #include "Emitter.h"
-#include "AIStateData.h"
 
 namespace AILogic
 {

@@ -21,7 +21,7 @@
     "oPatrolParams": {
       "ePatrolType": 0,
       "fDistanceToWaypoint": 100.0,
-      "fSensingRange": 200.0,
+      "fSensingRange": 50.0,
       "iWaypointCount": 4
     },
 	"oSeekParams": {
