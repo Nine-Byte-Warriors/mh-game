@@ -29,7 +29,8 @@ struct EntityData
 	bool bColliderInteractDecoration;
 	bool bColliderInteractPlayer;
 	bool bColliderInteractEnemy;
-	bool bColliderInteractProjectile;
+	bool bColliderInteractPlayerProjectile;
+	bool bColliderInteractEnemyProjectile;
 	std::string projectilePattern;
 	std::string projectileBullet;
 	bool AI;
@@ -67,7 +68,8 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(EntityData,
 	bColliderInteractDecoration,
 	bColliderInteractPlayer,
 	bColliderInteractEnemy,
-	bColliderInteractProjectile,
+	bColliderInteractPlayerProjectile,
+	bColliderInteractEnemyProjectile,
 	projectilePattern,
 	projectileBullet,
 	AI,
@@ -159,8 +161,6 @@ private:
 	// Inherited via Listener
 	void HandleEvent(Event* event) override;
 	void AddToEvent() noexcept;
-
-	std::string JsonFile = "Entity.json";
 
 	std::vector<EntityData> m_entityEnemyData;
 	std::vector<EntityData> m_entityData;
