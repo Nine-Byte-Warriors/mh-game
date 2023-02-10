@@ -18,7 +18,7 @@ Health::Health(std::string type, int entityNum, std::shared_ptr<Collider> collid
 	collider->AddOnEnterCallback(f);
 	if (m_sType == "Player")
 	{
-		m_fCurrentHealth = m_fMaxHealth;
+		SetHealth(6);
 	}
 	AddToEvent();
 }
