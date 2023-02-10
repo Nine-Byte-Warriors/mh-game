@@ -66,6 +66,8 @@ GameManager::~GameManager()
 	EventSystem::Instance()->RemoveClient(EVENTID::UpdateBrightness_Day, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::SetPlayerInventory, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::LoadPlayerInventory, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::SetPlayerMoney, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::LoadPlayerMoney, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::ReinitializeGameManager, this);
 }
 
@@ -125,6 +127,12 @@ void GameManager::HandleEvent(Event* event)
 	case EVENTID::LoadPlayerInventory:
 		EventSystem::Instance()->AddEvent(EVENTID::SavePlayerInventory, &m_vSeedOptions);
 		break;
+	case EVENTID::SetPlayerMoney:
+		m_fSaveMoney = *static_cast<int*>(event->GetData());
+		break;
+	case EVENTID::LoadPlayerMoney:
+		EventSystem::Instance()->AddEvent(EVENTID::GetPlayerMoney, &m_fSaveMoney);
+		break;
 	default:
 		break;
 	}
@@ -148,6 +156,8 @@ void GameManager::AddToEvent() noexcept
 	EventSystem::Instance()->AddClient(EVENTID::UpdateBrightness_Day, this);
 	EventSystem::Instance()->AddClient(EVENTID::SetPlayerInventory, this);
 	EventSystem::Instance()->AddClient(EVENTID::LoadPlayerInventory, this);
+	EventSystem::Instance()->AddClient(EVENTID::SetPlayerMoney, this);
+	EventSystem::Instance()->AddClient(EVENTID::LoadPlayerMoney, this);
 	EventSystem::Instance()->AddClient(EVENTID::ReinitializeGameManager, this);
 }
 
