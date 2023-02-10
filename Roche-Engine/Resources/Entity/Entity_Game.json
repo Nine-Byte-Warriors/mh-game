@@ -117,7 +117,7 @@
         "bColliderTrigger": true,
         "bProjectileBullet": true,
         "bProjectilePattern": true,
-        "behaviour": "None",
+        "behaviour": "Idle",
         "collider": true,
         "colliderRadius": [
             64.0,
