@@ -79,6 +79,14 @@ void Input::UpdateKeyboard( const float dt )
 		return;
 	}
 
+	// convert keybinds for processing
+	std::function<unsigned char(std::string&)> TransformInput = [&](std::string& keyBind) -> unsigned char
+	{
+		std::transform( keyBind.begin(), keyBind.end(), keyBind.begin(),
+			[]( unsigned char c ) { return std::toupper( c ); } );
+		return *( reinterpret_cast<unsigned char*>( const_cast<char*>( keyBind.c_str() ) ) );
+	};
+
     // Handle input for single key presses
 	while (!m_keyboard.KeyBufferIsEmpty())
 	{
@@ -116,17 +124,18 @@ void Input::UpdateKeyboard( const float dt )
 			EventSystem::Instance()->AddEvent( EVENTID::ChangePhase );
 #endif
 
+		if ( kbe.IsPress() == Keyboard::KeyboardEvent::EventType::Press )
+		{
+			if ( keycode == TransformInput( m_keyInputs[Key::Dash] ) )
+				EventSystem::Instance()->AddEvent( EVENTID::PlayerDash );
+
+			if ( keycode == TransformInput( m_keyInputs[Key::Interact] ) )
+				EventSystem::Instance()->AddEvent( EVENTID::BuySeed );
+		}
+
         if ( keycode == VK_ESCAPE )
             EventSystem::Instance()->AddEvent( EVENTID::PauseGame );
 	}
-
-	// convert keybinds for processing
-	std::function<unsigned char(std::string&)> TransformInput = [&](std::string& keyBind) -> unsigned char
-	{
-		std::transform( keyBind.begin(), keyBind.end(), keyBind.begin(),
-			[]( unsigned char c ) { return std::toupper( c ); } );
-		return *( reinterpret_cast<unsigned char*>( const_cast<char*>( keyBind.c_str() ) ) );
-	};
 
     // Handle continuous key presses
     if ( m_keyboard.KeyIsPressed( TransformInput( m_keyInputs[Key::Up] ) ) )
@@ -140,12 +149,6 @@ void Input::UpdateKeyboard( const float dt )
 
     if ( m_keyboard.KeyIsPressed( TransformInput( m_keyInputs[Key::Right] ) ) )
         EventSystem::Instance()->AddEvent( EVENTID::MoveRight );
-
-	if ( m_keyboard.KeyIsPressed( TransformInput( m_keyInputs[Key::Dash] ) ) )
-		EventSystem::Instance()->AddEvent( EVENTID::PlayerDash );
-
-	if ( m_keyboard.KeyIsPressed( TransformInput( m_keyInputs[Key::Interact] ) ) )
-		EventSystem::Instance()->AddEvent( EVENTID::PlayerInteract );
 }
 
 void Input::AddToEvent() noexcept

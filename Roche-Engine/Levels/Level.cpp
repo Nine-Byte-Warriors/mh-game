@@ -93,7 +93,8 @@ void Level::CreateUI()
         }
     }
 
-    m_ui->Initialize( *m_gfx, &m_cbMatrices, m_uiEditor.GetWidgets(), *m_entity[playerIdx].GetHealth() );
+    m_ui->Initialize( *m_gfx, &m_cbMatrices, m_uiEditor.GetWidgets(),
+        *m_entity[playerIdx].GetHealth(), *m_entity[playerIdx].GetInventory() );
     m_ui->HideAllUI();
     EventSystem::Instance()->AddEvent(EVENTID::LevelOnCreateUI);
 }
@@ -408,7 +409,7 @@ void Level::UpdateEntity(const float dt)
     {
         RemoveEntities();
     }
-    
+
 #if _DEBUG
     for (int i = 0; i < m_iEntityAmount; i++)
     {
@@ -460,7 +461,7 @@ void Level::AddNewEntity()
 }
 
 void Level::RemoveEntities()
-{    
+{
 #if _DEBUG
     m_entitiesDeleted = m_entityEditor.GetEntitiesDeleted();
 #else
@@ -646,7 +647,7 @@ void Level::UpdateTileMapPlanting(const float dt)
 
     const float spawnTimmer = 0.2f;
     if (m_entitySpawner.IsPhaseNight())
-    { 
+    {
         static float timmer = spawnTimmer;
         timmer += dt;
 

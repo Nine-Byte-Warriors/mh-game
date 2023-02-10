@@ -61,8 +61,8 @@ void AudioEditor::SpawnSoundBankWindow(AudioType audioType)
 					if (audioType == SFX) {
 						if (ImGui::Checkbox(std::string("Random Pitch##").append(std::to_string(i)).append("random pitch").c_str(), &randomPitchEnabled)) {
 							m_vSoundFileInfo[i].randomPitch = !m_vSoundFileInfo[i].randomPitch;
+							randomPitchEnabled = !m_vSoundFileInfo[i].randomPitch;
 							AudioEngine::GetInstance()->SetRandomPitch(AudioEngine::GetInstance()->FindSoundBankFile(AudioEngine::GetInstance()->GetFileName(m_vSoundFileInfo[i].filePath), m_sActiveSoundBankName, audioType));
-
 						}
 
 						if (m_vSoundFileInfo[i].randomPitch) {

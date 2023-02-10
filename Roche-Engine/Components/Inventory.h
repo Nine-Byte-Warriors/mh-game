@@ -5,7 +5,7 @@
 class Inventory : public Listener
 {
 public :
-	Inventory();
+	Inventory(std::string type);
 	~Inventory();
 
 	inline int GetCoinCount() const noexcept { return m_iCoinAmount; }
@@ -37,6 +37,7 @@ private:
 
 	int m_iCoinAmount;
 	int m_iCurrentSeed;
+	std::string m_sType;
 	// seed packet name, seed count per packet
 	std::map<std::string, int> m_vSeedOptions;
 	std::vector<bool> m_vSelectedSeeds = { true, false, false, false, false, false };
