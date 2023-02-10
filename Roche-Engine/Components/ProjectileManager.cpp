@@ -72,6 +72,9 @@ std::vector<std::shared_ptr<ProjectileManager>> ProjectileManager::GenerateManag
 		if (jMan.m_bLoop)
 			pManager->EnableRepeat();
 
+		if (jMan.m_bUseTarget)
+			pManager->EnableTargeting();
+
 		vecManagers.push_back(std::move(pManager));
 	}
 
