@@ -14,7 +14,7 @@ Inventory::Inventory()
 	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Potato", 0 } );
 	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Tomato", 0 } );
 	m_iCurrentSeed = 0;
-	m_iCoinAmount = 0;
+	m_iCoinAmount = 20;
 }
 
 Inventory::~Inventory() { RemoveFromEvent(); }
@@ -152,50 +152,50 @@ void Inventory::HandleEvent( Event* event )
 	{
 		std::pair<std::string, int>* seedsBought = static_cast<std::pair<std::string, int>*>( event->GetData() );
 
-		if (seedsBought->first.contains("Carrot") && m_iCoinAmount >= 2)
+		if (seedsBought->first.contains("Carrot") && m_iCoinAmount >= 1)
 		{
-			UpdateCoins(-2);
+			UpdateCoins(-1);
 			BuySeedPacket("Carrot", seedsBought->second);
 		}
-		if (seedsBought->first.contains("Potato") && m_iCoinAmount >= 1)
+		if (seedsBought->first.contains("Potato") && m_iCoinAmount >= 5)
 		{
-			UpdateCoins(-1);
+			UpdateCoins(-5);
 			BuySeedPacket("Potato", seedsBought->second);
 		}
-		if (seedsBought->first.contains("Bean") && m_iCoinAmount >= 1)
+		if (seedsBought->first.contains("Bean") && m_iCoinAmount >= 5)
 		{
-			UpdateCoins(-1);
+			UpdateCoins(-5);
 			BuySeedPacket("Bean", seedsBought->second);
 		}
-		if (seedsBought->first.contains("Onion") && m_iCoinAmount >= 1)
+		if (seedsBought->first.contains("Onion") && m_iCoinAmount >= 2)
 		{
-			UpdateCoins(1);
+			UpdateCoins(-2);
 			BuySeedPacket("Onion", seedsBought->second);
 		}
-		if (seedsBought->first.contains("Cauliflower") && m_iCoinAmount >= 1)
+		if (seedsBought->first.contains("Cauliflower") && m_iCoinAmount >= 2)
 		{
-			UpdateCoins(-1);
+			UpdateCoins(-2);
 			BuySeedPacket("Cauliflower", seedsBought->second);
 		}
-		if (seedsBought->first.contains("Tomato") && m_iCoinAmount >= 1)
+		if (seedsBought->first.contains("Tomato") && m_iCoinAmount >= 4)
 		{
-			UpdateCoins(-1);
+			UpdateCoins(-4);
 			BuySeedPacket("Tomato", seedsBought->second);
 		}
 	}
 	break;
 	case EVENTID::BuyPotion:
 	{
-		if (m_iCoinAmount >= 1)
+		if (m_iCoinAmount >= 5)
 		{
-			UpdateCoins(-1);
+			UpdateCoins(-5);
 			EventSystem::Instance()->AddEvent(EVENTID::PlayerHeal);
 		}
 	}
 	break;
 	case EVENTID::GainCoins:
 	{
-		UpdateCoins( 1 );
+		UpdateCoins(*static_cast<int*>(event->GetData()) );
 	}
 	break;
 	default: break;

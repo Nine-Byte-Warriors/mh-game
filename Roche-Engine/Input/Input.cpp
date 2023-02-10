@@ -145,7 +145,7 @@ void Input::UpdateKeyboard( const float dt )
 		EventSystem::Instance()->AddEvent( EVENTID::PlayerDash );
 
 	if ( m_keyboard.KeyIsPressed( TransformInput( m_keyInputs[Key::Interact] ) ) )
-		EventSystem::Instance()->AddEvent( EVENTID::PlayerInteract );
+		EventSystem::Instance()->AddEvent( EVENTID::BuySeed);
 }
 
 void Input::AddToEvent() noexcept

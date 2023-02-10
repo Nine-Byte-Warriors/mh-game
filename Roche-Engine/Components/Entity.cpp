@@ -65,9 +65,9 @@ void Entity::SetComponents()
 	}
 
 	if (m_colliderBox)
-		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderBox);
+		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderBox, m_entityController->GetName(m_iEntityNum));
 	else if (m_colliderCircle)
-		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderCircle);
+		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderCircle, m_entityController->GetName(m_iEntityNum));
 
 	if(m_health)
 		m_health->SetHealth( m_entityController->GetHealth(m_iEntityNum) );
