@@ -11,7 +11,7 @@ private:
 	std::shared_ptr<std::vector<LayerMask>> m_matrix;
 
 public:
-	CollisionMatrix() { m_matrix = std::make_shared < std::vector<LayerMask>>(4); };
+	CollisionMatrix() { m_matrix = std::make_shared < std::vector<LayerMask>>(5); };
 	//mask for each layer
 	inline void SetLayerMask(int mask, LayerMask layerMask) noexcept 
 	{ m_matrix->at(mask) = layerMask; }
