@@ -757,15 +757,6 @@
     <None Include="Resources\Patterns\SlowWiggle.ptn">
       <Filter>Resource Files\Patterns</Filter>
     </None>
-    <None Include="Resources\Fonts\midnight_chalker_128.spritefont">
-      <Filter>Resource Files\Fonts</Filter>
-    </None>
-    <None Include="Resources\Fonts\midnight_chalker_160.spritefont">
-      <Filter>Resource Files\Fonts</Filter>
-    </None>
-    <None Include="Resources\Fonts\midnight_chalker_200.spritefont">
-      <Filter>Resource Files\Fonts</Filter>
-    </None>
     <None Include="Resources\Fonts\midnight_chalker_72.spritefont">
       <Filter>Resource Files\Fonts</Filter>
     </None>
@@ -781,19 +772,31 @@
     <None Include="Resources\Fonts\midnight_chalker_36.spritefont">
       <Filter>Resource Files\Fonts</Filter>
     </None>
-    <None Include="Resources\Fonts\midnight_chalker_72.spritefont">
+    <None Include="Resources\Patterns\DefaultProjectile.ptn">
+      <Filter>Resource Files\Patterns</Filter>
+    </None>
+    <None Include="Resources\Fonts\midnight_chalker_16_fixed.spritefont">
       <Filter>Resource Files\Fonts</Filter>
     </None>
-    <None Include="Resources\Fonts\midnight_chalker_16.spritefont">
+    <None Include="Resources\Fonts\midnight_chalker_20_fixed.spritefont">
       <Filter>Resource Files\Fonts</Filter>
     </None>
-    <None Include="Resources\Fonts\midnight_chalker_20.spritefont">
+    <None Include="Resources\Fonts\midnight_chalker_24_fixed.spritefont">
       <Filter>Resource Files\Fonts</Filter>
     </None>
-    <None Include="Resources\Fonts\midnight_chalker_24.spritefont">
+    <None Include="Resources\Fonts\midnight_chalker_36_fixed.spritefont">
       <Filter>Resource Files\Fonts</Filter>
     </None>
-    <None Include="Resources\Fonts\midnight_chalker_36.spritefont">
+    <None Include="Resources\Fonts\midnight_chalker_72_fixed.spritefont">
+      <Filter>Resource Files\Fonts</Filter>
+    </None>
+    <None Include="Resources\Fonts\midnight_chalker_128_fixed.spritefont">
+      <Filter>Resource Files\Fonts</Filter>
+    </None>
+    <None Include="Resources\Fonts\midnight_chalker_160_fixed.spritefont">
+      <Filter>Resource Files\Fonts</Filter>
+    </None>
+    <None Include="Resources\Fonts\midnight_chalker_200_fixed.spritefont">
       <Filter>Resource Files\Fonts</Filter>
     </None>
     <None Include="Resources\Patterns\DefaultProjectile.ptn">
