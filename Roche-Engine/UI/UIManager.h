@@ -23,7 +23,7 @@ public:
 	UIManager() { AddToEvent(); }
 	~UIManager() { RemoveAllUI(); RemoveFromEvent(); }
 
-	void Initialize( const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::vector<std::shared_ptr<Widget>>>& widgets, Health& health );
+	void Initialize( const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::vector<std::shared_ptr<Widget>>>& widgets, Health& health, Inventory& inventory );
 	void Update( const float dt );
 	void Draw( VertexShader vtx, PixelShader pix, XMMATRIX worldOrtho, TextRenderer* textRenderer );
 

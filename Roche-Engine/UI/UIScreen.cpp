@@ -9,10 +9,11 @@ extern bool g_bDebug;
 #endif
 #define RENDER_IF_IN_BOX( x, y, z, code ) if ( x >= y && x <= ( y + z ) ) code
 
-void UIScreen::Initialize( const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::shared_ptr<Widget>>& widgets, Health& health )
+void UIScreen::Initialize( const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::shared_ptr<Widget>>& widgets, Health& health, Inventory& inventory )
 {
 	m_cbMatrices = mat;
 	m_vWidgets = widgets;
+	m_pInventory = &inventory;
 	m_pPlayerHealth = &health;
 	m_pDevice = gfx.GetDevice();
 	m_pContext = gfx.GetContext();
@@ -70,10 +71,10 @@ void UIScreen::Update( const float dt )
 					if ( !m_vWidgets[i]->GetIsHidden() )
 					{
 						if ( m_vWidgets[i]->GetButtonWidget()->Resolve(
-							std::to_string( m_inventory.GetSeedPacketCount( SeedStrings[j] ) ),
-							Colors::White, m_textures, m_mouseData, m_inventory.IsActiveSeedPacket( j ) ) )
+							std::to_string( m_pInventory->GetSeedPacketCount( SeedStrings[j] ) ),
+							Colors::White, m_textures, m_mouseData, m_pInventory->IsActiveSeedPacket( j ) ) )
 						{
-							m_inventory.SetActiveSeedPacket( j );
+							m_pInventory->SetActiveSeedPacket( j );
 						}
 					}
 				}
@@ -399,7 +400,7 @@ void UIScreen::Update( const float dt )
 
 			if ( m_vWidgets[i]->GetAction() == "Coins" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve(std::to_string( m_inventory.GetCoinCount() ), Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+				m_vWidgets[i]->GetImageWidget()->Resolve(std::to_string( m_pInventory->GetCoinCount() ), Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
 			}
 			if ( m_vWidgets[i]->GetAction() == "Score Label" )
 			{
