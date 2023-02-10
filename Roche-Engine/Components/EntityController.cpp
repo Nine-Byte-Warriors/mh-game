@@ -308,6 +308,7 @@ void EntityController::RemoveEnemiesFromEntityData()
 		num++;
 	}
 }
+
 void EntityController::ClearDead()
 {
 	m_dead.clear();

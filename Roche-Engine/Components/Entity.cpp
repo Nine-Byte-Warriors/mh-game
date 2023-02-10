@@ -21,6 +21,8 @@ Entity::Entity(EntityController& entityController, int EntityNum)
 
 	m_entityController = &entityController;
 	m_iEntityNum = EntityNum;
+
+	m_sName = m_entityController->GetName(m_iEntityNum);
 }
 
 Entity::~Entity()
@@ -122,7 +124,9 @@ void Entity::SetProjectileManagerInit(const Graphics& gfx, ConstantBuffer<Matric
 		std::string texture = m_entityController->GetProjectileBullet(m_iEntityNum)->texture;
 
 		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
+		{
 			pManager->InitialiseFromFile(gfx, mat, texture);
+		}
 	}
 }
 
