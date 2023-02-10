@@ -260,7 +260,8 @@ void Level::SpawnFinalBoss()
 
 void Level::BossDead()
 {
-    EventSystem::Instance()->AddEvent(EVENTID::ChangePhase);
+    EventSystem::Instance()->AddEvent(EVENTID::WinWindow);
+    OutputDebugStringA("Boss Dead");
 }
 
 void Level::EndFrame_Start()

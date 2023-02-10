@@ -137,6 +137,12 @@ void Health::FilterName(std::string name)
 		m_iEnemyScoreReward = 50;
 		return;
 	}
+	if (name.contains("Corn"))
+	{
+		m_iEnemyMoneyReward = 30;
+		m_iEnemyScoreReward = 1000;
+		return;
+	}
 }
 
 void Health::AddToEvent() noexcept
