@@ -25,24 +25,25 @@ void GameManager::SetNextDay()
 
 void GameManager::SetPhase()
 {
-	if (m_currentPhase == Phase::DayPhase)
+	if (m_currentPhase == Phase::DayPhase) {
 		m_currentPhase = Phase::NightPhase;
+	}
 	else if (m_currentPhase == Phase::NightPhase)
 	{
-		if (m_currentDay >= 5)
-		{
-			EventSystem::Instance()->AddEvent(EVENTID::WinWindow);
-		}
-		else {
+		// NO WIN WINDOW CURRENTLY, BOSS SHOULD CALL IT AFTER DYING
+		//if (m_currentDay >= 6)
+		//{
+		//	EventSystem::Instance()->AddEvent(EVENTID::WinWindow);
+		//}
+		if (m_currentDay >= 6) {
+			EventSystem::Instance()->AddEvent(EVENTID::FinalNight);
+		} else if(m_currentDay <= 5) {
 			m_currentPhase = Phase::DayPhase;
-			SetNextDay();
 		}
 	}
+		
 
 	EventSystem::Instance()->AddEvent(EVENTID::CurrentPhase, &m_currentPhase);
-
-	if (m_currentPhase == Phase::NightPhase && m_currentDay == 5)
-		EventSystem::Instance()->AddEvent(EVENTID::FinalNight);
 
 	if (m_currentDay < 5 || m_currentPhase == Phase::DayPhase)
 	{
