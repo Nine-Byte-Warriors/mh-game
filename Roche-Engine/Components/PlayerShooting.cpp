@@ -26,7 +26,7 @@ void PlayerShooting::Update(float dt)
 	}
 
 	// handle mouse shooting actions/event
-	if (m_bIsShooting && shootingDelay < 0 /*&& !firstNight*/)
+	if (m_bIsShooting && shootingDelay < 0 && m_currentGamePhase == Phase::NightPhase)
 	{
 		m_pEmitter->EmitProjectile();
 		AudioEngine::GetInstance()->PlayAudio(PLAYER, "EntityBulletShot", SFX);
