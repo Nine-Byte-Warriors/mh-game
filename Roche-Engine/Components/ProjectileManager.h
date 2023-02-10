@@ -33,8 +33,6 @@ public:
 		m_vTargetPosition = vTargetPosition - vOffSet;
 	}
 
-	void UpdatePattern(std::string filepath);
-
 	void SpawnProjectile(Vector2f vSpawnPosition, float fLifeTime);
 	void SpawnProjectiles(Vector2f vSpawnPosition);
 
