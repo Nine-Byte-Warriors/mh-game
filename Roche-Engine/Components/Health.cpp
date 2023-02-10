@@ -7,11 +7,12 @@
 #define ENEMY "EnemyCarrot"
 
 
-Health::Health(std::string type, int entityNum, std::shared_ptr<Collider> collider)
+Health::Health(std::string type, int entityNum, std::shared_ptr<Collider> collider,std::string name)
 {
 	m_sType = type;
 	m_iEntityNum = entityNum;
 	m_collider = collider;
+	FilterName(name);
 
 	std::function<void(Collider&)> f = std::bind(&Health::Hit, this, std::placeholders::_1);
 	collider->AddOnEnterCallback(f);
@@ -49,8 +50,9 @@ void Health::TakeDamage( float damageAmount )
 #else
 			EventSystem::Instance()->AddEvent( EVENTID::EnemyDeath, &m_iEntityNum );
 #endif
-			EventSystem::Instance()->AddEvent(EVENTID::UpdateScore);
-			EventSystem::Instance()->AddEvent(EVENTID::GainCoins);
+			
+			EventSystem::Instance()->AddEvent(EVENTID::UpdateScore, &m_iEnemyScoreReward);
+			EventSystem::Instance()->AddEvent(EVENTID::GainCoins, &m_iEnemyMoneyReward);
 		}
 
 		m_bIsDead = true;
@@ -59,6 +61,7 @@ void Health::TakeDamage( float damageAmount )
 
 void Health::Heal( float healAmount )
 {
+	OutputDebugStringA("HEAL");
 	m_fCurrentHealth += healAmount;
 	if ( m_fCurrentHealth >= m_fMaxHealth )
 		m_fCurrentHealth = m_fMaxHealth;
@@ -89,6 +92,46 @@ void Health::SetEntityNum(int num)
 	m_iEntityNum = num;
 }
 
+void Health::FilterName(std::string name)
+{
+	if (name.contains("Carrot"))
+	{
+		m_iEnemyMoneyReward =3;
+		m_iEnemyScoreReward = 20;
+		return;
+	}
+	if (name.contains("Potato"))
+	{
+		m_iEnemyMoneyReward = 10;
+		m_iEnemyScoreReward = 80;
+		return;
+	}
+	if (name.contains("Bean"))
+	{
+		m_iEnemyMoneyReward = 9;
+		m_iEnemyScoreReward = 50;
+		return;
+	}
+	if (name.contains("Onion"))
+	{
+		m_iEnemyMoneyReward = 5;
+		m_iEnemyScoreReward = 30;
+		return;
+	}
+	if (name.contains("Cauliflower"))
+	{
+		m_iEnemyMoneyReward = 5;
+		m_iEnemyScoreReward = 40;
+		return;
+	}
+	if (name.contains("Tomato"))
+	{
+		m_iEnemyMoneyReward = 8;
+		m_iEnemyScoreReward = 50;
+		return;
+	}
+}
+
 void Health::AddToEvent() noexcept
 {
 	EventSystem::Instance()->AddClient( EVENTID::PlayerDamage, this );
@@ -115,7 +158,7 @@ void Health::HandleEvent( Event* event )
 		break;
 	case EVENTID::PlayerHeal:
 		if ( m_sType == "Player" )
-			Heal( 1 );
+			Heal( 0.5 );
 		break;
 	case EVENTID::SavePlayerHealth:
 		if (m_sType == "Player")
