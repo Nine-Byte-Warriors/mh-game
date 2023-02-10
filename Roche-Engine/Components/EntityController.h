@@ -158,8 +158,8 @@ public:
 	void ClearDead();
 	std::vector<int> GetDead();
 
-private:
 	void RemoveEnemiesFromEntityData();
+private:
 	void RemoveNonEnemiesFromEntityEnemyData();
 	
 	// Inherited via Listener
