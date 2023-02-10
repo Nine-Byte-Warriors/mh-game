@@ -251,16 +251,6 @@ void Level::SpawnFinalBoss()
     m_entityController.AddEntityData(m_entitySpawner.GetEntityData()[0]);
 
     m_entitySpawner.EntitiesAdded();
-
-    DisplayEntityMaxHealth(entitynum);
-
-    float* delay = new float(0.1);
-    EventSystem::Instance()->AddEvent(EVENTID::ShootingDelay, delay);
-}
-
-void Level::BossDead()
-{
-    EventSystem::Instance()->AddEvent(EVENTID::ChangePhase);
 }
 
 void Level::EndFrame_Start()
@@ -375,18 +365,6 @@ void Level::Update( const float dt )
         m_collisionHandler.Update();
         m_camera.Update(dt);
     }
-
-    //if (m_bIsFinalNight)
-    //{
-    //    int entitynum = m_entityController.GetEntityNumFromName("Corn");
-
-    //    if (m_entity[entitynum].GetName() == "Corn")
-    //    {
-    //        DisplayEntityCurrentHealth(entitynum);
-    //        //*m_fCurrentHealth += m_entity[entitynum].GetHealth()->GetCurrentHealth();
-    //        //EventSystem::Instance()->AddEvent(EVENTID::EnemyCurrentHealth, m_fCurrentHealth);
-    //    }
-    //}
 
     UpdateUI(dt);
 }
@@ -549,7 +527,6 @@ void Level::CleanUpEntities()
 
 void Level::DisplayEntityMaxHealth(int num)
 {
-    if (m_entity.size() == 0) return;
     if (m_entity[num].GetType() == "Enemy")
     {
         float* maxHealthPtr = new float;
@@ -704,7 +681,7 @@ void Level::UpdateTileMapPlanting(const float dt)
         }
 
         bool isAllEnemiesDead = m_entitySpawner.GetSpawnEntitiesSize() == 0 && *m_fCurrentHealth < 1;
-        if (isAllEnemiesDead && m_entitySpawner.IsPhaseNight() && !m_bIsFinalNight)
+        if (isAllEnemiesDead && m_entitySpawner.IsPhaseNight())
         {
             CleanUpEntities();
             EventSystem::Instance()->AddEvent(EVENTID::ChangePhase);
@@ -799,7 +776,6 @@ void Level::AddToEvent() noexcept
     EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
     EventSystem::Instance()->AddClient(EVENTID::GameUnpauseEvent, this);
     EventSystem::Instance()->AddClient(EVENTID::FinalNight, this);
-    EventSystem::Instance()->AddClient(EVENTID::CharacterDead, this);
 }
 
 void Level::RemoveFromEvent() noexcept
@@ -807,7 +783,6 @@ void Level::RemoveFromEvent() noexcept
     EventSystem::Instance()->RemoveClient(EVENTID::GamePauseEvent, this);
     EventSystem::Instance()->RemoveClient(EVENTID::GameUnpauseEvent, this);
     EventSystem::Instance()->RemoveClient(EVENTID::FinalNight, this);
-    EventSystem::Instance()->RemoveClient(EVENTID::CharacterDead, this);
 }
 
 void Level::HandleEvent(Event* event)
@@ -827,12 +802,8 @@ void Level::HandleEvent(Event* event)
     case EVENTID::FinalNight:
     {
         SpawnFinalBoss();
-        m_bIsFinalNight = true;
         break;
     }
-    case EVENTID::CharacterDead:
-        BossDead();
-        break;
     break;
     }
 }

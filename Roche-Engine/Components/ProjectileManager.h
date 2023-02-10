@@ -9,7 +9,7 @@
 #include "CollisionHandler.h"
 
 #define PATTERN_FOLDER_PATH "Resources\\Patterns\\"
-#define INITIAL_POOL_COUNT 20
+#define INITIAL_POOL_COUNT 10
 
 class ProjectileManager
 {
@@ -26,7 +26,7 @@ public:
 	void Update(const float dt);
 	void Draw( ID3D11DeviceContext* context, XMMATRIX orthoMatrix );
 
-	void SetProjectilePool(std::vector<std::shared_ptr<Projectile>> vecProjectilePool, std::string sImagePath);
+	void SetProjectilePool(std::vector<std::shared_ptr<Projectile>> vecProjectilePool);
 	inline void SetDelay(const float fDelay) noexcept { m_fDelay = fDelay; }
 	inline void SetTargetPosition(const Vector2f vTargetPosition) noexcept
 	{ 
@@ -35,19 +35,17 @@ public:
 	}
 
 	void SpawnProjectile(Vector2f vSpawnPosition, float fLifeTime);
-	void SpawnProjectiles(Vector2f vSpawnPosition, Vector2f vTargetPosition);
+	void SpawnProjectiles(Vector2f vSpawnPosition);
 
 	inline std::vector<std::shared_ptr<Projectile>> GetProjector() const noexcept { return m_vecProjectilePool; };
 	inline bool IsFinished() const noexcept { return m_fDuration <= 0.0f; }
 	inline void EnableRepeat() noexcept { m_bWillRepeat = true; }
-	inline void EnableTargeting() noexcept { m_bUseTarget = true; }
 
 	inline void SetOwner(const Projectile::ProjectileOwner owner) noexcept { m_owner = owner; }
 
 private:
 	void SpawnProjectile();
 	std::shared_ptr<Projectile> GetFreeProjectile();
-	std::shared_ptr<ProjectilePayLoad> GetProjectilePayLoad();
 
 	void UpdateProjectilePool(std::vector<ProjectileData::ProjectileJSON> vecProjectileJsons);
 
@@ -57,11 +55,10 @@ private:
 	float m_fTotalDuration;
 	float m_fDuration;
 	bool m_bWillRepeat;
-	bool m_bUseTarget;
 	Vector2f m_vSpawnPosition;
 	Vector2f m_vTargetPosition;
 	std::vector<std::shared_ptr<Projectile>> m_vecProjectilePool;
-	std::vector<std::shared_ptr<ProjectilePayLoad>> m_vecPayLoads;
+	std::vector<ProjectilePayLoad> m_vecProjectilePayLoad;
 
 	std::vector<ProjectileData::ManagerJSON> m_vecManagers;
 	Projectile::ProjectileOwner m_owner;

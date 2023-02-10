@@ -89,7 +89,6 @@ private:
 	void RenderFrameTileMap();
 
 	void SpawnFinalBoss();
-	void BossDead();
 
 	// Objects
 	Camera m_camera;
@@ -132,7 +131,6 @@ private:
 
 	float m_fMaxHealth = 0;
 	float* m_fCurrentHealth = new float;
-	bool m_bIsFinalNight = false;
 
 	Phase m_phase;
 };

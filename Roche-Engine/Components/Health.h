@@ -4,6 +4,7 @@
 
 class Collider;
 
+
 class Health : public Listener
 {
 public:
@@ -35,7 +36,7 @@ private:
 	float m_fCurrentHealth;
 	float m_fMaxHealth;
 	bool m_bIsDead = false;
-	std::string m_sName;
+
 };
 
 #endif

@@ -14,5 +14,8 @@ void Emitter::Update(float dt)
 void Emitter::EmitProjectile()
 {
 	for (std::shared_ptr<ProjectileManager>& pProjectileManager : m_vecProjectileManagers)
-		pProjectileManager->SpawnProjectiles(m_vSpawnPosition, m_vTargetPosition);
+	{
+		pProjectileManager->SetTargetPosition(m_vTargetPosition);
+		pProjectileManager->SpawnProjectiles(m_vSpawnPosition);
+	}
 }

@@ -46,7 +46,7 @@ public:
 	};
 	inline std::string GetSoundBankName() const noexcept { return m_sSoundBankName; };
 	inline std::shared_ptr<Emitter> GetEmitter() const noexcept { return m_emitter; }
-	inline std::string GetName() const noexcept { return m_sName; }
+
 	Vector2f GetPos() { return *m_vPosition; }
 
 	std::string GetType();
@@ -141,7 +141,6 @@ private:
 
 	bool m_bAudio;
 	std::string m_sSoundBankName;
-	std::string m_sName;
 };
 
 #endif
