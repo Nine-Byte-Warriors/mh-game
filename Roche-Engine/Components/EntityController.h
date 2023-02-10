@@ -127,6 +127,8 @@ public:
 	std::string GetColliderLayer(int num);
 	bool GetColliderStatic(int num);
 	std::vector<bool> GetColliderMask(int num);
+	
+	std::string GetAIStatePath(const int num) { return m_entityData[num].sAIStatePath; }
 
 	EntityData* GetProjectileBullet(int num);
 

@@ -349,7 +349,19 @@ void Entity::UpdateBehaviour()
 		{
 			m_agent->SetBehaviour( AILogic::AIStateTypes::Fire );
 		}
+		
 	}
+
+	if (m_agent == nullptr)
+		return;
+
+	if (!m_entityController->HasAI(m_iEntityNum))
+		return;
+
+	if (m_agent->HasBehaviourFile())
+		return;
+
+	m_agent->LoadBehaviourFile(m_entityController->GetAIStatePath(m_iEntityNum));
 }
 
 void Entity::UpdateProjectilePattern()
