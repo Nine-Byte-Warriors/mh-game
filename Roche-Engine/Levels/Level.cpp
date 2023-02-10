@@ -35,6 +35,16 @@ void Level::OnCreate()
 
 void Level::CreateEntity()
 {
+#ifdef _DEBUG
+#else
+    m_entityController.RemoveEnemiesFromEntityData();
+#endif
+
+    m_fMaxHealth = 0.01;
+    *m_fCurrentHealth = 0.01;
+    EventSystem::Instance()->AddEvent(EVENTID::EnemyMaxHealth, &m_fMaxHealth);
+    EventSystem::Instance()->AddEvent(EVENTID::EnemyCurrentHealth, m_fCurrentHealth);
+
     m_entity.clear();
     m_iEntityAmount = m_entityController.GetSize();
     for (int i = 0; i < m_iEntityAmount; i++)
@@ -53,6 +63,14 @@ void Level::CreateEntity()
         }
 
         delete entityPop;
+    }
+
+    for (int i = 0; i < m_entity.size(); i++)
+    {
+        if (m_entity[i].GetType() == "Player")
+        {
+            m_entity[i].GetInventory()->LoadInventory();
+        }
     }
 }
 
@@ -75,7 +93,8 @@ void Level::CreateUI()
         }
     }
 
-    m_ui->Initialize( *m_gfx, &m_cbMatrices, m_uiEditor.GetWidgets(), *m_entity[playerIdx].GetHealth() );
+    m_ui->Initialize( *m_gfx, &m_cbMatrices, m_uiEditor.GetWidgets(),
+        *m_entity[playerIdx].GetHealth(), *m_entity[playerIdx].GetInventory() );
     m_ui->HideAllUI();
     EventSystem::Instance()->AddEvent(EVENTID::LevelOnCreateUI);
 }
@@ -172,15 +191,18 @@ void Level::RenderFrame()
 
 void Level::RenderFrameEntity()
 {
-    for (int i = 0; i < m_iEntityAmount; i++)
+    for (int i = 0; i < m_entity.size(); i++)
     {
-        m_entity[i].GetSprite()->UpdateBuffers(m_gfx->GetContext());
-        m_entity[i].GetSprite()->Draw(m_entity[i].GetTransform()->GetWorldMatrix(), m_camera.GetWorldOrthoMatrix());
-
-        if (m_entityController.HasProjectileBullet(i))
+        if (m_entity[i].GetSprite())
         {
-            for (std::shared_ptr<ProjectileManager>& pManager : m_entity[i].GetProjectileManagers())
-                pManager->Draw(m_gfx->GetContext(), m_camera.GetWorldOrthoMatrix());
+            m_entity[i].GetSprite()->UpdateBuffers(m_gfx->GetContext());
+            m_entity[i].GetSprite()->Draw(m_entity[i].GetTransform()->GetWorldMatrix(), m_camera.GetWorldOrthoMatrix());
+
+            if (m_entityController.HasProjectileBullet(i))
+            {
+                for (std::shared_ptr<ProjectileManager>& pManager : m_entity[i].GetProjectileManagers())
+                    pManager->Draw(m_gfx->GetContext(), m_camera.GetWorldOrthoMatrix());
+            }
         }
     }
 }
@@ -214,6 +236,21 @@ void Level::RenderFrameTileMap()
             }
         }
     }
+}
+
+void Level::SpawnFinalBoss()
+{
+    int entitynum = m_entityController.GetEntityEnemyNumFromName("Corn");
+    std::string texture = m_entityController.GetTexture(entitynum);
+
+    Vector2f spawnpos = Vector2f(500, 500);
+    m_entitySpawner.AddEntityToSpawn(entitynum, 0, spawnpos);
+
+    m_entitySpawner.SpawnEntity(0);
+
+    m_entityController.AddEntityData(m_entitySpawner.GetEntityData()[0]);
+
+    m_entitySpawner.EntitiesAdded();
 }
 
 void Level::EndFrame_Start()
@@ -366,11 +403,13 @@ void Level::UpdateEntity(const float dt)
     {
         AddNewEntity();
     }
+#if _DEBUG
     else if (m_iEntityAmount != m_entityController.GetSize() || m_entityController.HasComponentUpdated() || m_entityController.GetDead().size() != 0)
+#endif
     {
         RemoveEntities();
     }
-    
+
 #if _DEBUG
     for (int i = 0; i < m_iEntityAmount; i++)
     {
@@ -378,10 +417,13 @@ void Level::UpdateEntity(const float dt)
     }
 #endif
 
-    for (int i = 0; i < m_iEntityAmount; i++)
+    for (int i = 0; i < m_entity.size(); i++)
     {
-        m_entity[i].Update(dt);
-        DisplayEntityCurrentHealth(i);
+        if (m_entity[i].GetSprite())
+        {
+            m_entity[i].Update(dt);
+            DisplayEntityCurrentHealth(i);
+        }
     }
 }
 
@@ -420,15 +462,26 @@ void Level::AddNewEntity()
 
 void Level::RemoveEntities()
 {
-    m_entitiesDeleted = m_entityController.GetDead();
-
 #if _DEBUG
     m_entitiesDeleted = m_entityEditor.GetEntitiesDeleted();
+#else
+    for (int i = 0; i < m_entity.size(); i++)
+    {
+        if (m_entity[i].GetHealth() && m_entity[i].GetHealth()->GetCurrentHealth() <= 0)
+        {
+            m_collisionHandler.RemoveCollider(m_entity[i].GetCollider());
+            std::string texture = "Resources\\Textures\\Tiles\\transparent.png";
+            m_entity[i].GetSprite()->UpdateTex(m_gfx->GetDevice(), texture);
+            m_entity[i].GetAI()->SetBehaviour(AILogic::AIStateTypes::Idle);
+            m_entity[i].GetTransform()->SetPosition(-9999, -9999);
+        }
+    }
 #endif
 
+#if _DEBUG
     for (int i = 0; i < m_entitiesDeleted.size(); i++)
     {
-        m_collisionHandler.RemoveCollider(m_entity[i].GetCollider());
+        m_collisionHandler.RemoveCollider(m_entity[m_entitiesDeleted[i]].GetCollider());
         m_entity.erase(m_entity.begin() + m_entitiesDeleted[i]);
     }
 
@@ -437,14 +490,39 @@ void Level::RemoveEntities()
     for (int i = 0; i < m_entity.size(); i++)
         m_entity[i].UpdateEntityNum(i);
 
-
-#if _DEBUG
     m_iEntityAmount = m_entityEditor.GetEntityData().size();
     m_entityEditor.ClearEntitiesDeleted();
 #else
     m_iEntityAmount = m_entityController.GetSize();
 #endif
     m_entityController.ClearDead();
+}
+
+void Level::CleanUpEntities()
+{
+#if _DEBUG
+#else
+    for (int i = 0; i < m_entity.size(); i++)
+    {
+        if (m_entity[i].GetType() != "Player" && m_entity[i].GetType() != "Decoration" && m_entity[i].GetType() != "Item" && m_entity[i].GetType() != "LevelTrigger")
+        {
+            m_collisionHandler.RemoveCollider(m_entity[i].GetCollider());
+            std::string texture = "Resources\\Textures\\Tiles\\transparent.png";
+            if (m_entity[i].GetSprite())
+            {
+                m_entity[i].GetSprite()->UpdateTex(m_gfx->GetDevice(), texture);
+            }
+            if (m_entity[i].GetAI())
+            {
+                m_entity[i].GetAI()->SetBehaviour(AILogic::AIStateTypes::Idle);
+            }
+            if (m_entity[i].GetTransform())
+            {
+                m_entity[i].GetTransform()->SetPosition(-9999, -9999);
+            }
+        }
+    }
+#endif
 }
 
 void Level::DisplayEntityMaxHealth(int num)
@@ -547,8 +625,8 @@ void Level::UpdateTileMapPlanting(const float dt)
                 !m_tileMapLoader.GetTileTypeName(1, spawnPos).contains("Wood") &&
                 !m_tileMapLoader.GetTileTypeName(drawLayer, spawnPos).contains("transparent") &&
                 m_tileMapLoader.GetTileTypeName(drawLayer, spawnPos) != "EmptyPlot" &&
-                !m_entitySpawner.IsEntityPosTaken(spawnPos);// &&
-                //m_entity[player].GetInventory()->GetActiveSeedPacketCount() > 0;
+                !m_entitySpawner.IsEntityPosTaken(spawnPos) &&
+                m_entity[player].GetInventory()->GetActiveSeedPacketCount() > 0;
 
             if (isTilePlantable && !m_entitySpawner.IsPhaseNight())
             {
@@ -567,16 +645,23 @@ void Level::UpdateTileMapPlanting(const float dt)
         }
     }
 
-    const float spawnTimmer = 0.5f;
+    const float spawnTimmer = 0.2f;
     if (m_entitySpawner.IsPhaseNight())
-    { 
+    {
         static float timmer = spawnTimmer;
         timmer += dt;
 
         if (m_entitySpawner.GetSpawnEntitiesSize() != 0 && timmer > spawnTimmer)
         {
-            timmer -= 0.5f;
+            timmer -= spawnTimmer;
             static int count = 0;
+
+            if (count == 0)
+            {
+                float* shootingDelay = new float;
+                *shootingDelay = spawnTimmer * m_entitySpawner.GetSpawnEntitiesSize();
+                EventSystem::Instance()->AddEvent(EVENTID::ShootingDelay, shootingDelay);
+            }
 
             std::string texture = "Resources\\Textures\\Tiles\\EmptyPlot.png";
             int spawnPos = m_entitySpawner.GetSpawnEntitiesTileMapPos(count);
@@ -595,9 +680,10 @@ void Level::UpdateTileMapPlanting(const float dt)
             }
         }
 
-        bool isAllEnemiesDead = m_entitySpawner.GetSpawnEntitiesSize() == 0 && *m_fCurrentHealth == 0;
+        bool isAllEnemiesDead = m_entitySpawner.GetSpawnEntitiesSize() == 0 && *m_fCurrentHealth < 1;
         if (isAllEnemiesDead && m_entitySpawner.IsPhaseNight())
         {
+            CleanUpEntities();
             EventSystem::Instance()->AddEvent(EVENTID::ChangePhase);
         }
     }
@@ -689,12 +775,14 @@ void Level::AddToEvent() noexcept
 {
     EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
     EventSystem::Instance()->AddClient(EVENTID::GameUnpauseEvent, this);
+    EventSystem::Instance()->AddClient(EVENTID::FinalNight, this);
 }
 
 void Level::RemoveFromEvent() noexcept
 {
     EventSystem::Instance()->RemoveClient(EVENTID::GamePauseEvent, this);
     EventSystem::Instance()->RemoveClient(EVENTID::GameUnpauseEvent, this);
+    EventSystem::Instance()->RemoveClient(EVENTID::FinalNight, this);
 }
 
 void Level::HandleEvent(Event* event)
@@ -710,6 +798,11 @@ void Level::HandleEvent(Event* event)
     case EVENTID::GameUnpauseEvent:
     {
         m_bIsGamePaused = false;
+    }
+    case EVENTID::FinalNight:
+    {
+        SpawnFinalBoss();
+        break;
     }
     break;
     }

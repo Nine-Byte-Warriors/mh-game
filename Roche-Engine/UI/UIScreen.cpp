@@ -9,10 +9,11 @@ extern bool g_bDebug;
 #endif
 #define RENDER_IF_IN_BOX( x, y, z, code ) if ( x >= y && x <= ( y + z ) ) code
 
-void UIScreen::Initialize( const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::shared_ptr<Widget>>& widgets, Health& health )
+void UIScreen::Initialize( const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::shared_ptr<Widget>>& widgets, Health& health, Inventory& inventory )
 {
 	m_cbMatrices = mat;
 	m_vWidgets = widgets;
+	m_pInventory = &inventory;
 	m_pPlayerHealth = &health;
 	m_pDevice = gfx.GetDevice();
 	m_pContext = gfx.GetContext();
@@ -36,6 +37,9 @@ void UIScreen::InitializeWidgets()
 
 void UIScreen::Update( const float dt )
 {
+	if ( m_mouseData.Hover )
+		m_mouseData.Hover = false;
+
 	if ( !m_mouseData.LPress )
 		m_mouseData.Locked = false;
 
@@ -67,10 +71,10 @@ void UIScreen::Update( const float dt )
 					if ( !m_vWidgets[i]->GetIsHidden() )
 					{
 						if ( m_vWidgets[i]->GetButtonWidget()->Resolve(
-							std::to_string( m_inventory.GetSeedPacketCount( SeedStrings[j] ) ),
-							Colors::White, m_textures, m_mouseData, m_inventory.IsActiveSeedPacket( j ) ) )
+							std::to_string( m_pInventory->GetSeedPacketCount( SeedStrings[j] ) ),
+							Colors::White, m_textures, m_mouseData, m_pInventory->IsActiveSeedPacket( j ) ) )
 						{
-							m_inventory.SetActiveSeedPacket( j );
+							m_pInventory->SetActiveSeedPacket( j );
 						}
 					}
 				}
@@ -102,19 +106,19 @@ void UIScreen::Update( const float dt )
 			if ( m_vWidgets[i]->GetAction() == "Close" )
 			{
 				if ( !m_vWidgets[i]->GetIsHidden() )
-					if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Quit Game", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE) )
+					if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Quit Game", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE ) )
 						EventSystem::Instance()->AddEvent( EVENTID::QuitGameEvent );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Back To Menu" )
 			{
-				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Back To Menu", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE, false) )
-					EventSystem::Instance()->AddEvent( EVENTID::BackToMainMenu );
+				if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Back To Menu", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE ) )
+					EventSystem::Instance()->AddEvent( EVENTID::FadeToBlack_Game );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Start" )
 			{
 				if ( !m_vWidgets[i]->GetIsHidden() )
-					if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Start Game", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE, false) )
-						EventSystem::Instance()->AddEvent( EVENTID::StartGame );
+					if ( m_vWidgets[i]->GetButtonWidget()->Resolve( "Start Game", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE ) )
+						EventSystem::Instance()->AddEvent( EVENTID::FadeToBlack_Start );
 			}
 			if ( m_vWidgets[i]->GetAction() == "Settings" )
 			{
@@ -149,13 +153,13 @@ void UIScreen::Update( const float dt )
 			{
 				if ( !m_vWidgets[i]->GetIsHidden() )
 					if (m_vWidgets[i]->GetButtonWidget()->Resolve("Restart", Colors::White, m_textures, m_mouseData, false ,FontSize::LARGE))
-						EventSystem::Instance()->AddEvent(EVENTID::GameRestartEvent);
+						EventSystem::Instance()->AddEvent(EVENTID::FadeToBlack_GameRestart);
 			}
 			if (m_vWidgets[i]->GetAction() == "Confirm")
 			{
 				if ( !m_vWidgets[i]->GetIsHidden() )
 					if (m_vWidgets[i]->GetButtonWidget()->Resolve("Yes", Colors::White, m_textures, m_mouseData, false, FontSize::LARGE))
-						EventSystem::Instance()->AddEvent(EVENTID::SwapGameLevels);
+						EventSystem::Instance()->AddEvent(EVENTID::FadeToBlack_Shop);
 			}
 			if (m_vWidgets[i]->GetAction() == "Deny")
 			{
@@ -355,22 +359,20 @@ void UIScreen::Update( const float dt )
 			}
 			if ( m_vWidgets[i]->GetAction() == "" )
 			{
-				static float maxHealth = 1;
-				static float currentHealth = 1;
-				if ((*m_fCurrentHealth / *m_fMaxHealth) < 1 && (*m_fCurrentHealth / *m_fMaxHealth) > 0)
+				if ((*m_fCurrentHealthPtr / *m_fMaxHealthPtr) < 1 && (*m_fCurrentHealthPtr / *m_fMaxHealthPtr) > 0)
 				{
-					maxHealth = *m_fMaxHealth;
-					currentHealth = *m_fCurrentHealth;
+					m_fMaxHealth = *m_fMaxHealthPtr;
+					m_fCurrentHealth = *m_fCurrentHealthPtr;
 				}
 
-				float percentageHelth = 100 * currentHealth / maxHealth;
-				if (percentageHelth > 100)
+				m_fPercentageHealth = 100 * m_fCurrentHealth / m_fMaxHealth;
+				if (m_fPercentageHealth > 100)
 				{
-					percentageHelth = 100;
+					m_fPercentageHealth = 100;
 				}
 				std::string temp = m_textures[2];
 				m_textures[2] = "";
-				m_vWidgets[i]->GetEnergyBarWidget()->Resolve( m_textures, percentageHelth);
+				m_vWidgets[i]->GetEnergyBarWidget()->Resolve( m_textures, m_fPercentageHealth);
 				m_textures[2] = temp;
 			}
 			m_vWidgets[i]->GetEnergyBarWidget()->Update( dt );
@@ -398,7 +400,7 @@ void UIScreen::Update( const float dt )
 
 			if ( m_vWidgets[i]->GetAction() == "Coins" )
 			{
-				m_vWidgets[i]->GetImageWidget()->Resolve(std::to_string( m_inventory.GetCoinCount() ), Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
+				m_vWidgets[i]->GetImageWidget()->Resolve(std::to_string( m_pInventory->GetCoinCount() ), Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
 			}
 			if ( m_vWidgets[i]->GetAction() == "Score Label" )
 			{
@@ -656,6 +658,10 @@ void UIScreen::Update( const float dt )
 			{
 				m_vWidgets[i]->GetImageWidget()->Resolve("", Colors::AntiqueWhite, "Resources\\Textures\\UI\\Title\\Title.png");
 			}
+			if (m_vWidgets[i]->GetAction() == "Backdrop")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("", Colors::AntiqueWhite, "Resources\\Textures\\UI\\Backdrop\\Main menu backdrop.png");
+			}
 			if ( m_vWidgets[i]->GetAction() == "" )
 			{
 				m_vWidgets[i]->GetImageWidget()->Resolve( "", Colors::AntiqueWhite, "Resources\\Textures\\UI\\Board\\Board.png" );
@@ -798,6 +804,9 @@ void UIScreen::Update( const float dt )
 		m_fBoxPos = { 0.0f, 0.0f };
 		m_fBoxSize = { m_vScreenSize.x, m_vScreenSize.y };
 	}
+
+	if ( !m_mouseData.Hover )
+		EventSystem::Instance()->AddEvent( EVENTID::CursorUpdate_Normal );
 }
 
 void UIScreen::Draw( VertexShader& vtx, PixelShader& pix, XMMATRIX worldOrtho, TextRenderer* textRenderer )
@@ -923,11 +932,11 @@ void UIScreen::HandleEvent( Event* event )
 	case EVENTID::RightMouseRelease: { m_mouseData.RPress = false; } break;
 	case EVENTID::MiddleMouseClick: { m_mouseData.MPress = true; } break;
 	case EVENTID::MiddleMouseRelease: { m_mouseData.MPress = false; } break;
-	case EVENTID::EnemyMaxHealth: { 
-		m_fMaxHealth = static_cast<float*>(event->GetData());
+	case EVENTID::EnemyMaxHealth: {
+		m_fMaxHealthPtr = static_cast<float*>(event->GetData());
 	} break;
-	case EVENTID::EnemyCurrentHealth: { 
-		m_fCurrentHealth = static_cast<float*>(event->GetData());
+	case EVENTID::EnemyCurrentHealth: {
+		m_fCurrentHealthPtr = static_cast<float*>(event->GetData());
 	} break;
 #if _DEBUG
 	case EVENTID::ImGuiMousePosition:

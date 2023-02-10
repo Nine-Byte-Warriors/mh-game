@@ -42,6 +42,7 @@ enum class EVENTID
 	GameEndLevelEvent,
 	ChangePhase,
 	NextDay,
+	FinalNight,
 	CurrentState,
 	CurrentPhase,
 	GetPhase,
@@ -50,6 +51,17 @@ enum class EVENTID
 	PlayDayMusic,
 	PlayShopMusic,
 	PlayMainMenuMusic,
+	SavePlayerHealth,
+	LoadPlayerHealth,
+	GetPlayerHealth,
+	SetPlayerHealth,
+	SetPlayerInventory,
+	GetPlayerInventory,
+	LoadPlayerInventory,
+	SavePlayerInventory,
+	ShootingDelay,
+	RemoveAllColliders,
+	ReinitializeGameManager,
 
 	// Camera Actions
 	MoveUp,
@@ -91,6 +103,7 @@ enum class EVENTID
 	CurrentGamePhase,
 	BackToMainMenu,
 	WinWindow,
+
 	// PlayerDeath, // Added below, affects UI as well
 	// GameRestartEvent, // Added in game events, affects UI as well
 	SwapGameLevelsWindow,
@@ -104,12 +117,30 @@ enum class EVENTID
 	GreenOverlayColour,
 	BlueOverlayColour,
 	HUDSwap,
+	
+	UpdateBrightness,
+	UpdateBrightness_Day,
+	FadeToBlack_Start,
+	FadeToBlack_Game,
+	FadeToBlack_GameRestart,
+	FadeToBlack_Shop,
+	FadeFromBlack,
+
 	// GameRestartEvent, // Added in game events, affects UI as well
 
 	// DEBUG
 	RemoveHealth,
 
 	// Utility
+	CursorUpdate_Normal,
+	CursorUpdate_Link,
+	CursorUpdate_Precision,
+	CursorUpdate_Move,
+	CursorUpdate_Help,
+	CursorUpdate_Text,
+	CursorUpdate_Pen,
+	CursorUpdate_Unavailable,
+
 	WindowSizeChangeEvent,
 	UpdateSettingsEvent,
 	RemoveUIItemEvent,

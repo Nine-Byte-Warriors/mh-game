@@ -21,8 +21,6 @@ Entity::Entity(EntityController& entityController, int EntityNum)
 
 	m_entityController = &entityController;
 	m_iEntityNum = EntityNum;
-
-
 }
 
 Entity::~Entity()
@@ -65,9 +63,9 @@ void Entity::SetComponents()
 	}
 
 	if (m_colliderBox)
-		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderBox);
+		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderBox, m_entityController->GetName(m_iEntityNum));
 	else if (m_colliderCircle)
-		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderCircle);
+		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderCircle, m_entityController->GetName(m_iEntityNum));
 
 	if(m_health)
 		m_health->SetHealth( m_entityController->GetHealth(m_iEntityNum) );
@@ -75,12 +73,13 @@ void Entity::SetComponents()
 	if (GetType() == "Player")
 	{
 		m_pController = std::make_shared<PlayerController>(m_physics, m_sprite, m_emitter);
-		m_inventory = std::make_shared<Inventory>();
+		m_inventory = std::make_shared<Inventory>(GetType());
 	}
 
 	if (GetType() == "Enemy")
 	{
-		m_agent->SetEmitter(m_emitter);
+		if(m_agent && m_emitter)
+			m_agent->SetEmitter(m_emitter);
 	}
 
 	if (GetType() == "Item")
@@ -90,8 +89,6 @@ void Entity::SetComponents()
 
 	if (GetType() == "LevelTrigger")
 	{
-		for (std::shared_ptr<ProjectileManager>& pManager : m_vecProjectileManagers)
-			pManager->SetOwner(Projectile::ProjectileOwner::LevelTrigger);
 		m_levelTrigger = std::make_shared<LevelTrigger>(GetCollider());
 	}
 }
@@ -135,7 +132,7 @@ void Entity::Update(const float dt)
 	m_transform->Update();
 	m_physics->Update(dt);
 
-	if (m_entityController->HasAI(m_iEntityNum))
+	if (m_entityController->HasAI(m_iEntityNum) && m_agent && !m_agent->IsStateMachineNULL())
 		m_agent->Update(dt);
 
 	if (m_entityController->HasProjectileSystem(m_iEntityNum))

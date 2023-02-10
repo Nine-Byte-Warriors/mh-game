@@ -26,7 +26,7 @@ public:
 	UIScreen() { AddToEvent(); }
 	~UIScreen() { RemoveFromEvent(); }
 
-	void Initialize( const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::shared_ptr<Widget>>& widgets, Health& health );
+	void Initialize( const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::shared_ptr<Widget>>& widgets, Health& health, Inventory& inventory );
 	void Update( const float dt );
 	void Draw( VertexShader& vtx, PixelShader& pix, XMMATRIX worldOrtho, TextRenderer* textRenderer );
 
@@ -61,13 +61,16 @@ private:
 	float m_fCurrentY;
 
 	// Global data
-	Inventory m_inventory;
+	Inventory* m_pInventory;
 	Health* m_pPlayerHealth;
 	ScoreBoard m_scoreBoard;
 
-	float* m_fMaxHealth = new float;
-	float* m_fCurrentHealth = new float;
-  
+	float* m_fMaxHealthPtr = new float;
+	float* m_fCurrentHealthPtr = new float;
+	float m_fMaxHealth;
+	float m_fCurrentHealth;
+	float m_fPercentageHealth;
+
 	// Button state textures
 	std::vector<std::string> m_textures =
 	{

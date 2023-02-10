@@ -5,6 +5,8 @@ void GameManager::Initialize()
 {
 	m_currentState = GameState::Unpaused;
 	m_currentPhase = Phase::DayPhase;
+	UpdateBrightness();
+	EventSystem::Instance()->AddEvent(EVENTID::CurrentPhase, &m_currentPhase);
 	m_currentDay = 1;
 }
 
@@ -16,33 +18,35 @@ void GameManager::SetCurrentState(GameState state)
 
 void GameManager::SetNextDay()
 {
-	if (m_currentDay <= 5)
-		m_currentDay++;
-	else
-		m_currentDay = 1;
+	m_currentDay++;
 
 	EventSystem::Instance()->AddEvent(EVENTID::CurrentDay, &m_currentDay);
 }
 
 void GameManager::SetPhase()
 {
-	if (m_currentPhase == Phase::DayPhase)
-	{
+	if (m_currentPhase == Phase::DayPhase) {
 		m_currentPhase = Phase::NightPhase;
 	}
 	else if (m_currentPhase == Phase::NightPhase)
 	{
+		if (m_currentDay >= 5) {
+			EventSystem::Instance()->AddEvent(EVENTID::WinWindow);
+			return;
+		}
+		
 		m_currentPhase = Phase::DayPhase;
 	}
-	EventSystem::Instance()->AddEvent(EVENTID::CurrentPhase, &m_currentPhase);
-	if (m_currentState == GameState::Unpaused) {
-		EventSystem::Instance()->AddEvent(EVENTID::HUDSwap);
-	}
 
-	if (m_currentPhase == Phase::DayPhase)
-		DayPhase();
-	else if (m_currentPhase == Phase::NightPhase)
-		NightPhase();
+	EventSystem::Instance()->AddEvent(EVENTID::CurrentPhase, &m_currentPhase);
+
+	if (m_currentPhase == Phase::NightPhase && m_currentDay == 5)
+		EventSystem::Instance()->AddEvent(EVENTID::FinalNight);
+
+	if (m_currentState == GameState::Unpaused)
+		EventSystem::Instance()->AddEvent(EVENTID::HUDSwap);
+
+	UpdateBrightness();
 }
 
 GameManager::~GameManager()
@@ -57,6 +61,13 @@ GameManager::~GameManager()
 	EventSystem::Instance()->RemoveClient(EVENTID::PlayDayMusic, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::PlayShopMusic, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::PlayMainMenuMusic, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::SetPlayerHealth, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::LoadPlayerHealth, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::UpdateBrightness, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::UpdateBrightness_Day, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::SetPlayerInventory, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::LoadPlayerInventory, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ReinitializeGameManager, this);
 }
 
 void GameManager::HandleEvent(Event* event)
@@ -69,11 +80,13 @@ void GameManager::HandleEvent(Event* event)
 	case EVENTID::ChangePhase:
 		SetPhase();
 		break;
-
 	case EVENTID::NextDay:
 		SetNextDay();
 		break;
 	case EVENTID::GameRestartEvent:
+		Initialize(); // reinitialize game manager
+		break;
+	case EVENTID::ReinitializeGameManager:
 		Initialize(); // reinitialize game manager
 		break;
 	case EVENTID::PauseGame:
@@ -85,6 +98,7 @@ void GameManager::HandleEvent(Event* event)
 		if (m_currentState == GameState::Paused) {
 			SetCurrentState(GameState::Unpaused);
 		}
+		break;
 	case EVENTID::PlayDayMusic:
 		AudioEngine::GetInstance()->PlayAudio("MusicGame", "DayPhaseMusic", MUSIC);
 		break;
@@ -93,6 +107,24 @@ void GameManager::HandleEvent(Event* event)
 		break;
 	case EVENTID::PlayMainMenuMusic:
 		AudioEngine::GetInstance()->PlayAudio("MusicMenu", "MainMenuMusic", MUSIC);
+		break;
+	case EVENTID::SetPlayerHealth:
+		m_fSaveCurrentHealth = *static_cast<float*>(event->GetData());
+		break;
+	case EVENTID::LoadPlayerHealth:
+		EventSystem::Instance()->AddEvent(EVENTID::GetPlayerHealth,&m_fSaveCurrentHealth);
+		break;
+	case EVENTID::UpdateBrightness:
+		UpdateBrightness();
+		break;
+	case EVENTID::UpdateBrightness_Day:
+		UpdateBrightness_Day();
+		break;
+	case EVENTID::SetPlayerInventory:
+		m_vSeedOptions = *static_cast<std::map<std::string, int>*>(event->GetData());
+		break;
+	case EVENTID::LoadPlayerInventory:
+		EventSystem::Instance()->AddEvent(EVENTID::SavePlayerInventory, &m_vSeedOptions);
 		break;
 	default:
 		break;
@@ -111,6 +143,13 @@ void GameManager::AddToEvent() noexcept
 	EventSystem::Instance()->AddClient(EVENTID::PlayDayMusic, this);
 	EventSystem::Instance()->AddClient(EVENTID::PlayShopMusic, this);
 	EventSystem::Instance()->AddClient(EVENTID::PlayMainMenuMusic, this);
+	EventSystem::Instance()->AddClient(EVENTID::SetPlayerHealth, this);
+	EventSystem::Instance()->AddClient(EVENTID::LoadPlayerHealth, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateBrightness, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateBrightness_Day, this);
+	EventSystem::Instance()->AddClient(EVENTID::SetPlayerInventory, this);
+	EventSystem::Instance()->AddClient(EVENTID::LoadPlayerInventory, this);
+	EventSystem::Instance()->AddClient(EVENTID::ReinitializeGameManager, this);
 }
 
 void GameManager::DayPhase()
@@ -118,7 +157,6 @@ void GameManager::DayPhase()
 	*m_fRedOverlay = 1.0f;
 	*m_fGreenOverlay = 1.0f;
 	*m_fBlueOverlay = 1.0f;
-	UpdateBrigtness();
 }
 
 void GameManager::NightPhase()
@@ -126,11 +164,20 @@ void GameManager::NightPhase()
 	*m_fRedOverlay = 0.8f;
 	*m_fGreenOverlay = 0.8f;
 	*m_fBlueOverlay = 1.0f;
-	UpdateBrigtness();
 }
 
-void GameManager::UpdateBrigtness()
+void GameManager::UpdateBrightness_Day()
 {
+	m_currentPhase = Phase::DayPhase;
+	UpdateBrightness();
+}
+
+void GameManager::UpdateBrightness()
+{
+	if (m_currentPhase == Phase::DayPhase)
+		DayPhase();
+	else if (m_currentPhase == Phase::NightPhase)
+		NightPhase();
 	EventSystem::Instance()->AddEvent(EVENTID::RedOverlayColour, m_fRedOverlay);
 	EventSystem::Instance()->AddEvent(EVENTID::GreenOverlayColour, m_fGreenOverlay);
 	EventSystem::Instance()->AddEvent(EVENTID::BlueOverlayColour, m_fBlueOverlay);

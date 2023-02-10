@@ -4,8 +4,9 @@
 
 #define SHOPSOUNDS "ShopSounds"
 #define PLAYER "Player"
-Inventory::Inventory()
+Inventory::Inventory(std::string type)
 {
+	m_sType = type;
 	AddToEvent();
 	m_vSeedOptions.emplace(std::pair<std::string, int>{ "Bean", 0 });
 	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Carrot", 0 } );
@@ -14,7 +15,7 @@ Inventory::Inventory()
 	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Potato", 0 } );
 	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Tomato", 0 } );
 	m_iCurrentSeed = 0;
-	m_iCoinAmount = 0;
+	m_iCoinAmount = 20;
 }
 
 Inventory::~Inventory() { RemoveFromEvent(); }
@@ -91,6 +92,7 @@ void Inventory::BuySeedPacket( const std::string& seedName, int amountBought )
 {
 	AudioEngine::GetInstance()->PlayAudio(SHOPSOUNDS, "ShopPurchase", SFX);
 	ChangeSeedPacketValue(seedName, amountBought);
+	EventSystem::Instance()->AddEvent(EVENTID::SetPlayerInventory, &m_vSeedOptions);
 }
 
 void Inventory::ChangeSeedPacketValue( const std::string& seedName, int amountToChange )
@@ -110,6 +112,11 @@ void Inventory::UpdateCoins(int amountToChange)
 	m_iCoinAmount += amountToChange;
 }
 
+void Inventory::LoadInventory()
+{
+	EventSystem::Instance()->AddEvent(EVENTID::LoadPlayerInventory);
+}
+
 void Inventory::AddToEvent() noexcept
 {
 	EventSystem::Instance()->AddClient( EVENTID::IncrementSeedPacket, this );
@@ -118,6 +125,7 @@ void Inventory::AddToEvent() noexcept
 	EventSystem::Instance()->AddClient( EVENTID::UpdateSeed, this );
 	EventSystem::Instance()->AddClient(EVENTID::GainCoins, this);
 	EventSystem::Instance()->AddClient(EVENTID::BuyPotion, this);
+	EventSystem::Instance()->AddClient(EVENTID::SavePlayerInventory, this);
 }
 
 void Inventory::RemoveFromEvent() noexcept
@@ -128,6 +136,7 @@ void Inventory::RemoveFromEvent() noexcept
 	EventSystem::Instance()->RemoveClient( EVENTID::UpdateSeed, this );
 	EventSystem::Instance()->RemoveClient(EVENTID::GainCoins, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::BuyPotion, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::SavePlayerInventory, this);
 }
 
 void Inventory::HandleEvent( Event* event )
@@ -152,50 +161,61 @@ void Inventory::HandleEvent( Event* event )
 	{
 		std::pair<std::string, int>* seedsBought = static_cast<std::pair<std::string, int>*>( event->GetData() );
 
-		if (seedsBought->first.contains("Carrot") && m_iCoinAmount >= 2)
+		if (seedsBought->first.contains("Carrot") && m_iCoinAmount >= 1)
 		{
-			UpdateCoins(-2);
+			UpdateCoins(-1);
 			BuySeedPacket("Carrot", seedsBought->second);
 		}
-		if (seedsBought->first.contains("Potato") && m_iCoinAmount >= 1)
+		if (seedsBought->first.contains("Potato") && m_iCoinAmount >= 5)
 		{
-			UpdateCoins(-1);
+			UpdateCoins(-5);
 			BuySeedPacket("Potato", seedsBought->second);
 		}
-		if (seedsBought->first.contains("Bean") && m_iCoinAmount >= 1)
+		if (seedsBought->first.contains("Bean") && m_iCoinAmount >= 5)
 		{
-			UpdateCoins(-1);
+			UpdateCoins(-5);
 			BuySeedPacket("Bean", seedsBought->second);
 		}
-		if (seedsBought->first.contains("Onion") && m_iCoinAmount >= 1)
+		if (seedsBought->first.contains("Onion") && m_iCoinAmount >= 2)
 		{
-			UpdateCoins(1);
+			UpdateCoins(-2);
 			BuySeedPacket("Onion", seedsBought->second);
 		}
-		if (seedsBought->first.contains("Cauliflower") && m_iCoinAmount >= 1)
+		if (seedsBought->first.contains("Cauliflower") && m_iCoinAmount >= 2)
 		{
-			UpdateCoins(-1);
+			UpdateCoins(-2);
 			BuySeedPacket("Cauliflower", seedsBought->second);
 		}
-		if (seedsBought->first.contains("Tomato") && m_iCoinAmount >= 1)
+		if (seedsBought->first.contains("Tomato") && m_iCoinAmount >= 4)
 		{
-			UpdateCoins(-1);
+			UpdateCoins(-4);
 			BuySeedPacket("Tomato", seedsBought->second);
 		}
 	}
 	break;
 	case EVENTID::BuyPotion:
 	{
-		if (m_iCoinAmount >= 1)
+		if (m_iCoinAmount >= 5 && m_sType == "Player")
 		{
-			UpdateCoins(-1);
+			UpdateCoins(-5);
+			AudioEngine::GetInstance()->PlayAudio(SHOPSOUNDS, "ShopPurchase", SFX);
 			EventSystem::Instance()->AddEvent(EVENTID::PlayerHeal);
 		}
 	}
 	break;
 	case EVENTID::GainCoins:
 	{
-		UpdateCoins( 1 );
+		UpdateCoins(*static_cast<int*>(event->GetData()) );
+	}
+	break;
+	case EVENTID::SavePlayerInventory:
+	{
+		std::map<std::string, int> tempMap = *static_cast<std::map<std::string, int>*>(event->GetData());
+
+		if (tempMap.size() == m_vSeedOptions.size())
+		{
+			m_vSeedOptions = tempMap;
+		}
 	}
 	break;
 	default: break;

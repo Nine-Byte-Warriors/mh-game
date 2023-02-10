@@ -3,14 +3,14 @@
 #include "UIScreen.h"
 #include "Graphics.h"
 
-void UIManager::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::vector<std::shared_ptr<Widget>>>& widgets, Health& health)
+void UIManager::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::vector<std::shared_ptr<Widget>>>& widgets, Health& health, Inventory& inventory)
 {
 	m_vWindowSize = { (float)gfx.GetWidth(), (float)gfx.GetHeight() };
 	int index = 0;
 	for (auto const& UIItem : m_mUiList)
 	{
 		UIItem.second->SetScreenSize(m_vWindowSize);
-		UIItem.second->Initialize(gfx, mat, widgets[index], health);
+		UIItem.second->Initialize(gfx, mat, widgets[index], health, inventory);
 		index++;
 	}
 
@@ -120,7 +120,7 @@ void UIManager::HandleEvent(Event* event)
 		case EVENTID::RemoveUIItemEvent: { RemoveUI(*static_cast<std::string*>(event->GetData())); } break;
 		case EVENTID::StartGame:
 		{
-			RemoveAllUI();
+			HideAllUI();
 			AudioEngine::GetInstance()->UnloadAllAudio();
 			EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, m_vLevelNames[LOADING]);
 			EventSystem::Instance()->AddEvent(EVENTID::RemoveLevelEvent, m_vLevelNames[MENU]);
@@ -128,6 +128,7 @@ void UIManager::HandleEvent(Event* event)
 			EventSystem::Instance()->AddEvent(EVENTID::AddLevelEvent, m_vLevelNames[GAME]);
 			EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, m_vLevelNames[GAME]);
 			EventSystem::Instance()->AddEvent(EVENTID::PlayDayMusic);
+			EventSystem::Instance()->AddEvent(EVENTID::FadeFromBlack);
 			m_sCurrentLevel = *m_vLevelNames[GAME];
 			HideAllUI();
 			ShowUI("HUD_Day");
@@ -147,7 +148,7 @@ void UIManager::HandleEvent(Event* event)
 		break;
 		case EVENTID::PauseGame:
 		{
-			if (m_sCurrentLevel == "Game") {
+			if (m_sCurrentLevel == "Game" || m_sCurrentLevel == "Shop") {
 				HideAllUI();
 				ShowUI("Pause_Widgets");
 				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
@@ -188,6 +189,8 @@ void UIManager::HandleEvent(Event* event)
 			EventSystem::Instance()->AddEvent(EVENTID::AddLevelEvent, m_vLevelNames[MENU]);
 			EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, m_vLevelNames[MENU]);
 			EventSystem::Instance()->AddEvent(EVENTID::PlayMainMenuMusic);
+			EventSystem::Instance()->AddEvent(EVENTID::FadeFromBlack);
+			EventSystem::Instance()->AddEvent(EVENTID::ReinitializeGameManager);
 			m_sCurrentLevel = *m_vLevelNames[MENU];
 			HideAllUI();
 			ShowUI("Menu_Widgets");
@@ -216,6 +219,7 @@ void UIManager::HandleEvent(Event* event)
 			EventSystem::Instance()->AddEvent(EVENTID::AddLevelEvent, m_vLevelNames[GAME]);
 			EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, m_vLevelNames[GAME]);
 			EventSystem::Instance()->AddEvent(EVENTID::PlayDayMusic);
+			EventSystem::Instance()->AddEvent(EVENTID::FadeFromBlack);
 			m_sCurrentLevel = *m_vLevelNames[GAME];
 			ShowUI("HUD_Day");
 		}
@@ -229,19 +233,26 @@ void UIManager::HandleEvent(Event* event)
 		case EVENTID::SwapGameLevels:
 		{
 			HideAllUI();
+			// get PLAYER HEALTH
+			EventSystem::Instance()->AddEvent(EVENTID::SavePlayerHealth);
 			if (m_sCurrentLevel == *m_vLevelNames[GAME]) {
+				EventSystem::Instance()->AddEvent(EVENTID::RemoveAllColliders);
 				EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, m_vLevelNames[SHOP]);
 				EventSystem::Instance()->AddEvent(EVENTID::PlayShopMusic);
+				EventSystem::Instance()->AddEvent(EVENTID::FadeFromBlack);
 				m_sCurrentLevel = *m_vLevelNames[SHOP];
 				ShowUI("HUD_Shop");
 			}
 			else {
+				EventSystem::Instance()->AddEvent(EVENTID::RemoveAllColliders);
 				EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, m_vLevelNames[GAME]);
 				EventSystem::Instance()->AddEvent(EVENTID::PlayDayMusic);
+				EventSystem::Instance()->AddEvent(EVENTID::FadeFromBlack);
 				m_sCurrentLevel = *m_vLevelNames[GAME];
 				ShowUI("HUD_Day");
 			}
-			
+			//set
+			EventSystem::Instance()->AddEvent(EVENTID::LoadPlayerHealth);
 		}
 		break;
 		case EVENTID::CloseUIPopUp:
@@ -302,9 +313,6 @@ void UIManager::AddToEvent() noexcept
 	EventSystem::Instance()->AddClient(EVENTID::OpenLeaderboard, this);
 	EventSystem::Instance()->AddClient(EVENTID::BackToMainMenu, this);
 	EventSystem::Instance()->AddClient(EVENTID::HUDSwap, this);
-	//EventSystem::Instance()->AddClient(EVENTID::, this);
-	//EventSystem::Instance()->AddClient(EVENTID::, this);
-
 }
 
 void UIManager::RemoveFromEvent() noexcept
@@ -328,8 +336,6 @@ void UIManager::RemoveFromEvent() noexcept
 	EventSystem::Instance()->RemoveClient(EVENTID::OpenLeaderboard, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::BackToMainMenu, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::HUDSwap, this);
-	//EventSystem::Instance()->RemoveClient(EVENTID::, this);
-	//EventSystem::Instance()->RemoveClient(EVENTID::, this);
 }
 
 void UIManager::HideAllUI()

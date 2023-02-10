@@ -10,7 +10,7 @@ struct EntityData
 {
 	std::string name;
 	std::string texture;
-	std::string type;
+	std::string type; 
 	std::vector<float> position;
 	std::vector<float> scale;
 	float rotation;
@@ -154,8 +154,8 @@ public:
 	void ClearDead();
 	std::vector<int> GetDead();
 
-private:
 	void RemoveEnemiesFromEntityData();
+private:
 	void RemoveNonEnemiesFromEntityEnemyData();
 	
 	// Inherited via Listener
