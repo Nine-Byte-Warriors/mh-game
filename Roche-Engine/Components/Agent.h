@@ -51,6 +51,8 @@ private:
 	float m_fDelay, m_fMaxDelay;
 
 	std::shared_ptr<Emitter> m_pEmitter;
+
+	std::pair < Sprite*, Vector2f*>* dPair;
 };
 
 #endif
