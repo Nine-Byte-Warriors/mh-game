@@ -13,7 +13,7 @@ Health::Health(std::string type, int entityNum, std::shared_ptr<Collider> collid
 	m_iEntityNum = entityNum;
 	m_collider = collider;
 	FilterName(name);
-	m_sName = name;
+
 	std::function<void(Collider&)> f = std::bind(&Health::Hit, this, std::placeholders::_1);
 	collider->AddOnEnterCallback(f);
 	AddToEvent();
@@ -54,9 +54,6 @@ void Health::TakeDamage( float damageAmount )
 			EventSystem::Instance()->AddEvent(EVENTID::UpdateScore, &m_iEnemyScoreReward);
 			EventSystem::Instance()->AddEvent(EVENTID::GainCoins, &m_iEnemyMoneyReward);
 		}
-
-		if(m_sName == "Corn")
-			EventSystem::Instance()->AddEvent(EVENTID::CharacterDead, &m_sName);
 
 		m_bIsDead = true;
 	}

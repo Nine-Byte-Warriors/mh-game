@@ -117,7 +117,6 @@ enum class EVENTID
 	GreenOverlayColour,
 	BlueOverlayColour,
 	HUDSwap,
-	CharacterDead,
 	
 	UpdateBrightness,
 	UpdateBrightness_Day,

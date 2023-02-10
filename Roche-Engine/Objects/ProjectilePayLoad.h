@@ -7,35 +7,18 @@
 class ProjectilePayLoad
 {
 public:
-	ProjectilePayLoad(std::vector<std::shared_ptr<Projectile>> vecProjectiles, std::string sImagePath);
+	void Initialise(std::vector<std::shared_ptr<Projectile>> vecProjectiles);
 	
 	void Update(const float dt)
 	{
-		bIsActive = false;
-		
 		for (std::shared_ptr<Projectile> pProjectile : m_vecProjectiles)
-		{
 			pProjectile->Update(dt);
-			if (pProjectile->IsAlive())
-				bIsActive = true;
-		}
 	}
 
-	void Initialise(const Graphics& gfx, ConstantBuffer<Matrices>& mat);
-	
 	void Draw(ID3D11DeviceContext* context, XMMATRIX orthoMatrix)
 	{
 		for (std::shared_ptr<Projectile> pProjectile : m_vecProjectiles)
 			pProjectile->Draw(context, orthoMatrix);
-	}
-
-	void SetSpawnPosition(Vector2f vSpawnPosition)
-	{
-		for (std::shared_ptr<Projectile> pProjectile : m_vecProjectiles)
-		{
-			pProjectile->GetTransform()->SetPosition(vSpawnPosition);
-			pProjectile->GetTransform()->Update();
-		}
 	}
 
 	void SetTargetPosition(Vector2f vTargetPosition)
@@ -74,11 +57,10 @@ public:
 		bIsActive = true;
 
 		for (std::shared_ptr<Projectile> pProjectile : m_vecProjectiles)
-			pProjectile->SpawnProjectile(vSpawnPosition, vTargetPosition, fLifeTime);
+			pProjectile->SpawnProjectile(vSpawnPosition, fLifeTime);
 	}
 
 	std::vector<std::shared_ptr<Projectile>> m_vecProjectiles;
-	std::string m_sImagePath;
 	bool bIsActive;
 	Vector2f m_vTargetPosition;
 };

@@ -4,8 +4,7 @@
 
 #include "Physics.h"
 #include "AIStateMachine.h"
-
-class Emitter;
+#include "Emitter.h"
 
 namespace AILogic { class AIState; }
 
@@ -33,7 +32,9 @@ public:
 
 	void SetEmitter(std::shared_ptr<Emitter>& pEmitter) { m_pEmitter = pEmitter; }
 	std::shared_ptr<Emitter> GetEmitter() const { return m_pEmitter; }
-	inline bool IsStateMachineNULL() { return m_pStateMachine; }
+	inline bool IsStateMachineNULL() { return !m_pStateMachine; }
+
+	void Fire(Vector2f vSpawnPosition, Vector2f vTargetPosition);
 
 	void AddToEvent() noexcept;
 	void RemoveFromEvent() noexcept;
@@ -47,7 +48,11 @@ private:
 	Vector2f m_vTargetPos;
 	float m_fSpeed;
 
+	float m_fDelay, m_fMaxDelay;
+
 	std::shared_ptr<Emitter> m_pEmitter;
+
+	std::pair < Sprite*, Vector2f*>* dPair;
 };
 
 #endif

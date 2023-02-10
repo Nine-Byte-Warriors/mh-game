@@ -346,7 +346,7 @@ void ProjectileEditor::SaveProjectile()
 void ProjectileEditor::SpawnPattern()
 {
 	for (std::shared_ptr<ProjectileManager> manager : m_vecProjectileManagers)
-		manager->SpawnProjectiles(m_vSpawnPosition, Vector2f::Left());
+		manager->SpawnProjectiles(m_vSpawnPosition);
 }
 
 ProjectileData::ManagerJSON ProjectileEditor::CreateDefaultManager()

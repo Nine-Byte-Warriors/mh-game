@@ -9,6 +9,8 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_physics(physics)
 
 	m_pStateMachine = new AIStateMachine(this);
 
+	m_pEmitter = nullptr;
+
 	AIState* pSeekState = m_pStateMachine->NewState(AIStateTypes::Seek);
 	pSeekState->SetBounds(1.0f, 0.0f);
 	pSeekState->SetActivation(0.0f);
@@ -61,6 +63,9 @@ Agent::Agent(const std::shared_ptr<Physics>& physics) : m_physics(physics)
 	pFireState->SetActivation(0.0f);
 	m_mapStates.emplace(AIStateTypes::Fire, pFireState);
 
+	m_fDelay = 0.0f;
+	m_fMaxDelay = 0.5f;
+	
 	AddToEvent();
 }
 
@@ -70,6 +75,13 @@ void Agent::Update(const float dt)
 	for (auto const& [key, value] : m_mapStates)
 		m_pStateMachine->AddState(value);
 	m_pStateMachine->UpdateMachine(dt);
+
+	m_fDelay -= dt;
+	if (m_fDelay <= 0.0f)
+	{
+		m_fDelay = m_fMaxDelay;
+		Fire(m_vTargetPos, m_physics->GetTransform()->GetPosition());
+	}
 }
 
 #if _DEBUG
@@ -241,6 +253,17 @@ void Agent::ResetBehaviour()
 	m_mapStates.find(AIStateTypes::Fire)->second->SetActivation(0.0f);
 }
 
+void Agent::Fire(Vector2f vSpawnPosition, Vector2f vTargetPosition)
+{
+	if (!m_pEmitter)
+		return;
+	
+	m_pEmitter->SetSpawnPosition(vSpawnPosition);
+	m_pEmitter->SetTargetPosition(vTargetPosition);
+	
+	m_pEmitter->EmitProjectile();
+}
+
 void Agent::AddToEvent() noexcept
 {
 	EventSystem::Instance()->AddClient(EVENTID::MouseCameraPosition, this);
@@ -257,21 +280,12 @@ void Agent::HandleEvent(Event* event)
 {
 	switch (event->GetEventID())
 	{
-	case EVENTID::MouseCameraPosition:
-	{
-		if (m_bTargetMouse)
-		{
-			m_vTargetPos = *static_cast<Vector2f*>(event->GetData());
-		}
-
-		break;
-	}
+	
 	case EVENTID::PlayerPosition:
-		if (!m_bTargetMouse)
-		{
-			std::pair < Sprite*, Vector2f*>* dPair = (std::pair<Sprite*, Vector2f*>*)(event->GetData());
-			m_vTargetPos = *dPair->second + Vector2f(dPair->first->GetWidthHeight() / 2);
-		}
+		
+		dPair = (std::pair<Sprite*, Vector2f*>*)(event->GetData());
+		m_vTargetPos = *dPair->second + Vector2f(dPair->first->GetWidthHeight() / 2);
+		
 		break;
 	default:
 		break;
