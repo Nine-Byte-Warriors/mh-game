@@ -235,6 +235,7 @@ void UIManager::HandleEvent(Event* event)
 			HideAllUI();
 			// get PLAYER HEALTH
 			EventSystem::Instance()->AddEvent(EVENTID::SavePlayerHealth);
+			EventSystem::Instance()->AddEvent(EVENTID::SavePlayerMoney);
 			if (m_sCurrentLevel == *m_vLevelNames[GAME]) {
 				EventSystem::Instance()->AddEvent(EVENTID::RemoveAllColliders);
 				EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, m_vLevelNames[SHOP]);
@@ -253,6 +254,7 @@ void UIManager::HandleEvent(Event* event)
 			}
 			//set
 			EventSystem::Instance()->AddEvent(EVENTID::LoadPlayerHealth);
+			EventSystem::Instance()->AddEvent(EVENTID::LoadPlayerMoney);
 		}
 		break;
 		case EVENTID::CloseUIPopUp:

@@ -49,6 +49,7 @@ private:
 	float* m_fBlueOverlay = new float;
 
 	float m_fSaveCurrentHealth;
+	int m_fSaveMoney;
 
 	std::map<std::string, int> m_vSeedOptions;
 };

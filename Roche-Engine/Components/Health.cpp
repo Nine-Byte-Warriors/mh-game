@@ -16,6 +16,10 @@ Health::Health(std::string type, int entityNum, std::shared_ptr<Collider> collid
 	m_sName = name;
 	std::function<void(Collider&)> f = std::bind(&Health::Hit, this, std::placeholders::_1);
 	collider->AddOnEnterCallback(f);
+	if (m_sType == "Player")
+	{
+		m_fCurrentHealth = m_fMaxHealth;
+	}
 	AddToEvent();
 }
 

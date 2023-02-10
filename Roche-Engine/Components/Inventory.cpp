@@ -126,6 +126,8 @@ void Inventory::AddToEvent() noexcept
 	EventSystem::Instance()->AddClient(EVENTID::GainCoins, this);
 	EventSystem::Instance()->AddClient(EVENTID::BuyPotion, this);
 	EventSystem::Instance()->AddClient(EVENTID::SavePlayerInventory, this);
+	EventSystem::Instance()->AddClient(EVENTID::SavePlayerMoney, this);
+	EventSystem::Instance()->AddClient(EVENTID::GetPlayerMoney, this);
 }
 
 void Inventory::RemoveFromEvent() noexcept
@@ -137,6 +139,8 @@ void Inventory::RemoveFromEvent() noexcept
 	EventSystem::Instance()->RemoveClient(EVENTID::GainCoins, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::BuyPotion, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::SavePlayerInventory, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::SavePlayerMoney, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::GetPlayerMoney, this);
 }
 
 void Inventory::HandleEvent( Event* event )
@@ -218,6 +222,18 @@ void Inventory::HandleEvent( Event* event )
 		}
 	}
 	break;
+	case EVENTID::SavePlayerMoney:
+	{
+		EventSystem::Instance()->AddEvent(EVENTID::SetPlayerMoney, &m_iCoinAmount);
+	}
+	break;
+	case EVENTID::GetPlayerHealth:
+		if (m_sType == "Player")
+		{
+			m_iCoinAmount = *static_cast<int*>(event->GetData());
+		}
+	break;
+	
 	default: break;
 	}
 }
