@@ -4,8 +4,9 @@
 
 #define SHOPSOUNDS "ShopSounds"
 #define PLAYER "Player"
-Inventory::Inventory()
+Inventory::Inventory(std::string type)
 {
+	m_sType = type;
 	AddToEvent();
 	m_vSeedOptions.emplace(std::pair<std::string, int>{ "Bean", 0 });
 	m_vSeedOptions.emplace( std::pair<std::string, int>{ "Carrot", 0 } );
@@ -194,9 +195,10 @@ void Inventory::HandleEvent( Event* event )
 	break;
 	case EVENTID::BuyPotion:
 	{
-		if (m_iCoinAmount >= 5)
+		if (m_iCoinAmount >= 5 && m_sType == "Player")
 		{
 			UpdateCoins(-5);
+			AudioEngine::GetInstance()->PlayAudio(SHOPSOUNDS, "ShopPurchase", SFX);
 			EventSystem::Instance()->AddEvent(EVENTID::PlayerHeal);
 		}
 	}

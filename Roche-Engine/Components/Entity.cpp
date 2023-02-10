@@ -73,7 +73,7 @@ void Entity::SetComponents()
 	if (GetType() == "Player")
 	{
 		m_pController = std::make_shared<PlayerController>(m_physics, m_sprite, m_emitter);
-		m_inventory = std::make_shared<Inventory>();
+		m_inventory = std::make_shared<Inventory>(GetType());
 	}
 
 	if (GetType() == "Enemy")

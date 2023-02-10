@@ -3,14 +3,14 @@
 #include "UIScreen.h"
 #include "Graphics.h"
 
-void UIManager::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::vector<std::shared_ptr<Widget>>>& widgets, Health& health)
+void UIManager::Initialize(const Graphics& gfx, ConstantBuffer<Matrices>* mat, const std::vector<std::vector<std::shared_ptr<Widget>>>& widgets, Health& health, Inventory& inventory)
 {
 	m_vWindowSize = { (float)gfx.GetWidth(), (float)gfx.GetHeight() };
 	int index = 0;
 	for (auto const& UIItem : m_mUiList)
 	{
 		UIItem.second->SetScreenSize(m_vWindowSize);
-		UIItem.second->Initialize(gfx, mat, widgets[index], health);
+		UIItem.second->Initialize(gfx, mat, widgets[index], health, inventory);
 		index++;
 	}
 
