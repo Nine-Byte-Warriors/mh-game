@@ -298,5 +298,50 @@
         ],
         "type": "Button",
         "zindex": 19
+    },
+    {
+        "action": "",
+        "hide": false,
+        "name": "Day Night Background",
+        "position": [
+            1701.0,
+            737.0
+        ],
+        "scale": [
+            200.0,
+            200.0
+        ],
+        "type": "Image",
+        "zindex": 20
+    },
+    {
+        "action": "Current Day Label",
+        "hide": false,
+        "name": "Day Night Label",
+        "position": [
+            1766.0,
+            769.0
+        ],
+        "scale": [
+            64.0,
+            64.0
+        ],
+        "type": "Image",
+        "zindex": 21
+    },
+    {
+        "action": "Current Day Value",
+        "hide": false,
+        "name": "Day Night Value",
+        "position": [
+            1770.0,
+            823.0
+        ],
+        "scale": [
+            64.0,
+            64.0
+        ],
+        "type": "Image",
+        "zindex": 22
     }
 ]

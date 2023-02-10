@@ -398,6 +398,15 @@ void UIScreen::Update( const float dt )
 				m_vWidgets[i]->GetImageWidget()->Resolve( "SFX Volumne", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::VERY_LARGE );
 			}
 
+			if (m_vWidgets[i]->GetAction() == "Current Day Label")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("Current Day", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::LARGE);
+			}
+			if (m_vWidgets[i]->GetAction() == "Current Day Value")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("00", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::LARGE);
+			}
+
 			if ( m_vWidgets[i]->GetAction() == "Coins" )
 			{
 				m_vWidgets[i]->GetImageWidget()->Resolve(std::to_string( m_pInventory->GetCoinCount() ), Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png");
