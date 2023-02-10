@@ -42,6 +42,7 @@ enum class EVENTID
 	GameEndLevelEvent,
 	ChangePhase,
 	NextDay,
+	FinalNight,
 	CurrentState,
 	CurrentPhase,
 	GetPhase,
@@ -54,6 +55,8 @@ enum class EVENTID
 	LoadPlayerHealth,
 	GetPlayerHealth,
 	SetPlayerHealth,
+	ShootingDelay,
+	RemoveAllColliders,
 
 	// Camera Actions
 	MoveUp,
