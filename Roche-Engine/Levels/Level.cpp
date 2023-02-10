@@ -252,12 +252,10 @@ void Level::SpawnFinalBoss()
 
     m_entitySpawner.EntitiesAdded();
 
-    //DisplayEntityMaxHealth(entitynum);
+    DisplayEntityMaxHealth(entitynum);
 
-    float* maxhealth = new float(m_entity[entitynum].GetHealth()->GetMaxHealth());
-    EventSystem::Instance()->AddEvent(EVENTID::EnemyMaxHealth, maxhealth);
-
-    m_bIsFinalBossSpawned = true;
+    float* delay = new float(0.1);
+    EventSystem::Instance()->AddEvent(EVENTID::ShootingDelay, delay);
 }
 
 void Level::BossDead()
@@ -378,17 +376,17 @@ void Level::Update( const float dt )
         m_camera.Update(dt);
     }
 
-    if (m_bIsFinalNight)
-    {
-        int entitynum = m_entityController.GetEntityNumFromName("Corn");
+    //if (m_bIsFinalNight)
+    //{
+    //    int entitynum = m_entityController.GetEntityNumFromName("Corn");
 
-        if (m_entity[entitynum].GetName() == "Corn")
-        {
-            DisplayEntityCurrentHealth(entitynum);
-            *m_fCurrentHealth += m_entity[entitynum].GetHealth()->GetCurrentHealth();
-            EventSystem::Instance()->AddEvent(EVENTID::EnemyCurrentHealth, m_fCurrentHealth);
-        }
-    }
+    //    if (m_entity[entitynum].GetName() == "Corn")
+    //    {
+    //        DisplayEntityCurrentHealth(entitynum);
+    //        //*m_fCurrentHealth += m_entity[entitynum].GetHealth()->GetCurrentHealth();
+    //        //EventSystem::Instance()->AddEvent(EVENTID::EnemyCurrentHealth, m_fCurrentHealth);
+    //    }
+    //}
 
     UpdateUI(dt);
 }
@@ -551,6 +549,7 @@ void Level::CleanUpEntities()
 
 void Level::DisplayEntityMaxHealth(int num)
 {
+    if (m_entity.size() == 0) return;
     if (m_entity[num].GetType() == "Enemy")
     {
         float* maxHealthPtr = new float;
