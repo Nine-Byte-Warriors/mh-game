@@ -649,7 +649,7 @@
     <ClInclude Include="LevelTrigger.h" />
     <ClInclude Include="Objects\ScoreBoard.h" />
     <ClInclude Include="Objects\ShopItem.h" />
-    <ClInclude Include="ProjectileData.h" />
+    <ClInclude Include="Components\ProjectileData.h" />
     <ClInclude Include="TileMap\TileMapPaintOnMap.h" />
     <ClInclude Include="UI\Widgets\MouseData.h" />
     <ClInclude Include="Utility\Helper\MouseCapture.h" />

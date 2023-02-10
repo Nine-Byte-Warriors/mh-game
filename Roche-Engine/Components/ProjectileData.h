@@ -31,12 +31,11 @@ namespace ProjectileData {
 		bool m_bUseGlobalSpeed;
 		float m_fGlobalSpeed;
 		bool m_bLoop;
-		bool m_bUserTarger;
 		bool m_bUseTarget;
 
 		std::vector<ProjectileJSON> m_vecProjectiles;
 	};
-	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ManagerJSON, m_sID, m_sName, m_sImagePath, m_fWidth, m_fHeight, m_fDelay, m_iCount, m_bLoop, m_vecProjectiles, m_bUserTarger);
+	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ManagerJSON, m_sID, m_sName, m_sImagePath, m_fWidth, m_fHeight, m_fDelay, m_iCount, m_bLoop, m_vecProjectiles, m_bUseTarget);
 }
 
 #endif
