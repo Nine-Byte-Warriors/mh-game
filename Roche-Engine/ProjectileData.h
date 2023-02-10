@@ -16,7 +16,6 @@ namespace ProjectileData {
 		float m_fAngle;
 		float m_fAmplitude;
 		float m_fFrequency;
-		//onDeathEvent or endOfLifeTimeEvent
 	};
 	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ProjectileJSON, m_fSpeed, m_fLifeTime, m_fDelay, m_fX, m_fY, m_fAngle, m_fAmplitude, m_fFrequency);
 
@@ -32,7 +31,6 @@ namespace ProjectileData {
 		bool m_bUseGlobalSpeed;
 		float m_fGlobalSpeed;
 		bool m_bLoop;
-		//shapeIdentifier/formation/pattern
 		bool m_bUserTarger;
 		bool m_bUseTarget;
 
