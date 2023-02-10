@@ -35,10 +35,10 @@ int ScoreBoard::GetScore()
 std::string ScoreBoard::GetScoreStr()
 {
 	std::string scoreStr = "";
+
 	for (int i = 0; i < (scoreDigitsSize - std::to_string(m_iScore).length()); i++)
-	{
 		scoreStr += "0";
-	}
+	
 	scoreStr += std::to_string(m_iScore);
 
 	return scoreStr;
