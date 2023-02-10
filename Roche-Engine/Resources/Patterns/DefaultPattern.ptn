@@ -2,7 +2,6 @@
     {
       "m_bLoop": false,
       "m_bUseTarget": true,
-	  "m_bUserTarger": false,
 	  "m_bUseGlobalSpeed": false,
 	  "m_fGlobalSpeed": 0.0,
 	  "m_fDelay": 0.0,
