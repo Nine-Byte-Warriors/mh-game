@@ -117,7 +117,7 @@
         "bColliderTrigger": true,
         "bProjectileBullet": true,
         "bProjectilePattern": true,
-        "behaviour": "None",
+        "behaviour": "Idle",
         "collider": true,
         "colliderRadius": [
             64.0,
@@ -137,8 +137,8 @@
             400.0,
             400.0
         ],
-        "projectileBullet": "None",
-        "projectilePattern": "None",
+        "projectileBullet": "Projectile1",
+        "projectilePattern": "Resources\\Patterns\\DefaultPattern.ptn",
         "projectileSystem": true,
         "rotation": 0.0,
         "rows": 3,
@@ -698,8 +698,8 @@
             418.0,
             500.0
         ],
-        "projectileBullet": "None",
-        "projectilePattern": "None",
+        "projectileBullet": "Projectile1",
+        "projectilePattern": "Resources\\Patterns\\SlowWiggle.ptn",
         "projectileSystem": true,
         "rotation": 0.0,
         "rows": 2,
