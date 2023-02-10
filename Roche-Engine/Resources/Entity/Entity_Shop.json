@@ -448,7 +448,7 @@
         "projectileSystem": false,
         "rotation": 0.0,
         "rows": 1,
-        "sColliderLayer": "Enemy",
+        "sColliderLayer": "Decoration",
         "scale": [
             199.0,
             90.0
