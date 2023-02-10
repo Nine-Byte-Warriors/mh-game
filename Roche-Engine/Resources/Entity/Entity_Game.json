@@ -32,8 +32,8 @@
         ],
         "name": "Player",
         "position": [
-            1099.0,
-            45.0
+            1012.0,
+            -100.0
         ],
         "projectileBullet": "Projectile1",
         "projectilePattern": "Resources\\Patterns\\SlowWiggle.ptn",

@@ -88,7 +88,7 @@ void ScoreBoard::HandleEvent(Event* event)
 	{
 	case EVENTID::UpdateScore:
 	{
-		UpdateScore(150);
+		UpdateScore(*static_cast<int*>(event->GetData()));
 		break;
 	}
 	case EVENTID::ResetScore:

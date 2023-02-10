@@ -63,9 +63,9 @@ void Entity::SetComponents()
 	}
 
 	if (m_colliderBox)
-		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderBox);
+		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderBox, m_entityController->GetName(m_iEntityNum));
 	else if (m_colliderCircle)
-		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderCircle);
+		m_health = std::make_shared<Health>(GetType(), m_iEntityNum, m_colliderCircle, m_entityController->GetName(m_iEntityNum));
 
 	if(m_health)
 		m_health->SetHealth( m_entityController->GetHealth(m_iEntityNum) );
@@ -73,7 +73,7 @@ void Entity::SetComponents()
 	if (GetType() == "Player")
 	{
 		m_pController = std::make_shared<PlayerController>(m_physics, m_sprite, m_emitter);
-		m_inventory = std::make_shared<Inventory>();
+		m_inventory = std::make_shared<Inventory>(GetType());
 	}
 
 	if (GetType() == "Enemy")
