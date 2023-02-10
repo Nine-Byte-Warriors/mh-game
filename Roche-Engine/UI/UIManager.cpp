@@ -148,7 +148,7 @@ void UIManager::HandleEvent(Event* event)
 		break;
 		case EVENTID::PauseGame:
 		{
-			if (m_sCurrentLevel == "Game") {
+			if (m_sCurrentLevel == "Game" || m_sCurrentLevel == "Shop") {
 				HideAllUI();
 				ShowUI("Pause_Widgets");
 				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
@@ -190,6 +190,7 @@ void UIManager::HandleEvent(Event* event)
 			EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, m_vLevelNames[MENU]);
 			EventSystem::Instance()->AddEvent(EVENTID::PlayMainMenuMusic);
 			EventSystem::Instance()->AddEvent(EVENTID::FadeFromBlack);
+			EventSystem::Instance()->AddEvent(EVENTID::ReinitializeGameManager);
 			m_sCurrentLevel = *m_vLevelNames[MENU];
 			HideAllUI();
 			ShowUI("Menu_Widgets");

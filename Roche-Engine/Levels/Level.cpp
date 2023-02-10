@@ -64,6 +64,14 @@ void Level::CreateEntity()
 
         delete entityPop;
     }
+
+    for (int i = 0; i < m_entity.size(); i++)
+    {
+        if (m_entity[i].GetType() == "Player")
+        {
+            m_entity[i].GetInventory()->LoadInventory();
+        }
+    }
 }
 
 void Level::CreateUI()
@@ -495,7 +503,7 @@ void Level::CleanUpEntities()
 #else
     for (int i = 0; i < m_entity.size(); i++)
     {
-        if (m_entity[i].GetType() != "Player" && m_entity[i].GetType() != "Decoration")
+        if (m_entity[i].GetType() != "Player" && m_entity[i].GetType() != "Decoration" && m_entity[i].GetType() != "Item" && m_entity[i].GetType() != "LevelTrigger")
         {
             m_collisionHandler.RemoveCollider(m_entity[i].GetCollider());
             std::string texture = "Resources\\Textures\\Tiles\\transparent.png";
