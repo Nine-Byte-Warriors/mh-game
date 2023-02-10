@@ -132,7 +132,7 @@ void GameManager::HandleEvent(Event* event)
 		m_fSaveMoney = *static_cast<int*>(event->GetData());
 		break;
 	case EVENTID::LoadPlayerMoney:
-		EventSystem::Instance()->AddEvent(EVENTID::GetPlayerHealth, &m_fSaveMoney);
+		EventSystem::Instance()->AddEvent(EVENTID::GetPlayerMoney, &m_fSaveMoney);
 		break;
 	default:
 		break;

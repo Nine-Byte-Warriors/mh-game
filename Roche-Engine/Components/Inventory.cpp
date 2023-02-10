@@ -227,13 +227,12 @@ void Inventory::HandleEvent( Event* event )
 		EventSystem::Instance()->AddEvent(EVENTID::SetPlayerMoney, &m_iCoinAmount);
 	}
 	break;
-	case EVENTID::GetPlayerHealth:
+	case EVENTID::GetPlayerMoney:
 		if (m_sType == "Player")
 		{
 			m_iCoinAmount = *static_cast<int*>(event->GetData());
 		}
-	break;
-	
+		break;
 	default: break;
 	}
 }
