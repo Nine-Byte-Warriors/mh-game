@@ -21,6 +21,8 @@ Entity::Entity(EntityController& entityController, int EntityNum)
 
 	m_entityController = &entityController;
 	m_iEntityNum = EntityNum;
+
+	m_sName = m_entityController->GetName(m_iEntityNum);
 }
 
 Entity::~Entity()

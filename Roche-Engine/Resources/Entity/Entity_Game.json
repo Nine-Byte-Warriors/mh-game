@@ -672,7 +672,7 @@
         "bColliderInteractDecoration": false,
         "bColliderInteractEnemy": false,
         "bColliderInteractEnemyProjectile": false,
-        "bColliderInteractPlayer": true,
+        "bColliderInteractPlayer": false,
         "bColliderInteractPlayerProjectile": true,
         "bColliderStatic": false,
         "bColliderTrigger": true,
