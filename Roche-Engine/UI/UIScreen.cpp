@@ -406,6 +406,10 @@ void UIScreen::Update( const float dt )
 			{
 				m_vWidgets[i]->GetImageWidget()->Resolve("00", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::LARGE);
 			}
+			if (m_vWidgets[i]->GetAction() == "Input Label")
+			{
+				m_vWidgets[i]->GetImageWidget()->Resolve("Name :", Colors::AntiqueWhite, "Resources\\Textures\\Tiles\\transparent.png", FontSize::LARGE);
+			}
 
 			if ( m_vWidgets[i]->GetAction() == "Coins" )
 			{
@@ -769,7 +773,7 @@ void UIScreen::Update( const float dt )
 					EventSystem::Instance()->AddEvent( EVENTID::KeyInputUpdate_Interact, static_cast<void*>( inputText ) );
 				}
 			}
-			if ( m_vWidgets[i]->GetAction() == "Player Name" )
+			if ( m_vWidgets[i]->GetAction() == "Score Input" )
 			{
 				// Input that allows the user to enter their name
 			}

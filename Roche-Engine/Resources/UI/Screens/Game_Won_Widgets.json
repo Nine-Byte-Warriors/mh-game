@@ -5,11 +5,11 @@
         "name": "Pop Up background",
         "position": [
             647.0,
-            381.0
+            273.0
         ],
         "scale": [
             700.0,
-            700.0
+            806.0
         ],
         "type": "Image",
         "zindex": 0
@@ -20,7 +20,7 @@
         "name": "Pop Up Label",
         "position": [
             949.0,
-            474.0
+            392.0
         ],
         "scale": [
             64.0,
@@ -65,7 +65,7 @@
         "name": "Score Label",
         "position": [
             946.0,
-            611.0
+            536.0
         ],
         "scale": [
             64.0,
@@ -73,5 +73,35 @@
         ],
         "type": "Image",
         "zindex": 4
+    },
+    {
+        "action": "Score Input",
+        "hide": false,
+        "name": "Input",
+        "position": [
+            926.0,
+            665.0
+        ],
+        "scale": [
+            264.0,
+            78.0
+        ],
+        "type": "Input",
+        "zindex": 5
+    },
+    {
+        "action": "Input Label",
+        "hide": false,
+        "name": "Input Label",
+        "position": [
+            698.0,
+            665.0
+        ],
+        "scale": [
+            64.0,
+            64.0
+        ],
+        "type": "Image",
+        "zindex": 6
     }
 ]
