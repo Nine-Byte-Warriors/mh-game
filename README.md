@@ -77,6 +77,13 @@ _Game Developers_
 | Glen Nelson               | [glennelson1](https://github.com/glennelson1)             |
 | Eleftherios Karakyritsis  | [lefk36](https://github.com/lefk36)                       |
 
+## Appendix
+
+*- Click image to view on YouTube -*
+<a href="https://youtu.be/5b-HF-X_-II" target="_blank">
+  <img src="Midnight Harvest.png" alt="Midnight Harvest Thumbnail" border="10" />
+</a>
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE.txt file for details.
