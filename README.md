@@ -80,6 +80,7 @@ _Game Developers_
 ## Appendix
 
 *- Click image to view on YouTube -*
+
 <a href="https://youtu.be/5b-HF-X_-II" target="_blank">
   <img src="Midnight Harvest.png" alt="Midnight Harvest Thumbnail" border="10" />
 </a>
